@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Bitcoin", "Bitcoin\", "{0C47981E-7082-4A9D-A3B7-09FF91A9DE2A}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		ProjectReferences = "{05069de6-659d-4862-aef1-ba804ba663be}|Bitcoin.Data.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/localhost_50651"
 		Debug.AspNetCompiler.PhysicalPath = "Bitcoin\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_50651\"

@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\UserBLL.cs" />
+    <Compile Include="DAL\UserDAL.cs" />
     <Compile Include="DTO\Bid.cs">
       <DependentUpon>BitcoinModel.tt</DependentUpon>
     </Compile>
@@ -80,10 +82,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BLL\" />
-    <Folder Include="DAL\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EntityDeploy Include="DTO\BitcoinModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
