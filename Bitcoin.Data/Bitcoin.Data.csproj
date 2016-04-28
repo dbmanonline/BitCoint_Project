@@ -51,7 +51,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\BidBLL.cs" />
+    <Compile Include="BLL\LevelBLL.cs" />
     <Compile Include="BLL\UserBLL.cs" />
+    <Compile Include="DAL\BidDAL.cs" />
+    <Compile Include="DAL\LevelDAL.cs" />
     <Compile Include="DAL\UserDAL.cs" />
     <Compile Include="DTO\Bid.cs">
       <DependentUpon>BitcoinModel.tt</DependentUpon>
