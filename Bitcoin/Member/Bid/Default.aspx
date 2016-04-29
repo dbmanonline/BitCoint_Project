@@ -24,6 +24,24 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <asp:Panel ID="pnBidInfo" runat="server">
+                    <div class="padding-15">
+                        <div class="col-md-6">
+                            <div class="alert alert-theme-color margin-bottom-30">
+                                <h4>
+                                    <strong><asp:Label ID="lblBidID" runat="server" Text=""></asp:Label></strong>
+                                </h4>
+                                <div>Participant: <asp:Label ID="lblFullName" runat="server" Text="" Font-Bold="True"></asp:Label></div>
+                                <div>Amount: <asp:Label ID="lblAmount" runat="server" Text="" Font-Bold="True"></asp:Label></div>
+                                <div>Remaining Amount: <asp:Label ID="lblRemainingAmount" runat="server" Text="" Font-Bold="True"></asp:Label></div>
+                                <div>Date: <asp:Label ID="lblCreateDate" runat="server" Text="" Font-Bold="True"></asp:Label></div>
+                                <div>Status: <asp:Label ID="lblStatus" runat="server" Text="" Font-Italic="True"></asp:Label></div>
+                            </div>
+                        </div>
+                    </div>
+                </asp:Panel>
+            </div>
         </div>
     </section>
     <div id="bidModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -40,9 +58,11 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12">
-                            <label>Enter Deposit Amount</label>
-                            <asp:TextBox ID="txtDepositAmount" runat="server" class="form-control required"></asp:TextBox>
-                        </div>                        
+                            <label>Deposit Amount</label>
+                            <asp:TextBox ID="txtDepositAmount" runat="server" class="form-control required" ReadOnly="True"></asp:TextBox>
+                            <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Please enter deposit amount !"
+                            ControlToValidate="txtDepositAmount" Display="Dynamic" SetFocusOnError="True" ValidationGroup="Bid" ForeColor="Red"></asp:RequiredFieldValidator>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -50,6 +70,7 @@
                             <div class="fancy-form fancy-form-select">
                                 <asp:DropDownList ID="ddlCurrency" runat="server" class="form-control">
                                     <asp:ListItem Value="1">BitCoin</asp:ListItem>
+                                    <asp:ListItem Value="2">Dollar</asp:ListItem>
                                 </asp:DropDownList>
                                 <i class="fancy-arrow"></i>
                             </div>
@@ -60,7 +81,7 @@
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <asp:Button ID="btnSave" runat="server" Text="Submit" class="btn btn-primary" OnClick="btnSave_Click" />
+                    <asp:Button ID="btnSave" runat="server" Text="Submit" class="btn btn-primary" OnClick="btnSave_Click" ValidationGroup="Bid"/>
                 </div>
 
             </div>
