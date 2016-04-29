@@ -23,7 +23,7 @@ public partial class Member_Bid_Default : System.Web.UI.Page
     
     public void InsertBid()
     {
-        _bid.BidID = RandomValue.RandomNumber();
+        _bid.BidID = RandomValue.RandomStringToNumber();
         _bid.UserID = 4;
         _bid.Amount = Double.Parse(txtDepositAmount.Text);
         _bid.Currency = Convert.ToInt16(ddlCurrency.SelectedValue);
@@ -32,7 +32,6 @@ public partial class Member_Bid_Default : System.Web.UI.Page
         _bid.Status = 0;
         _bidBll.InsertBid(_bid);
     }
-
 
     protected void btnSave_Click(object sender, EventArgs e)
     {
