@@ -16,5 +16,11 @@ namespace Bitcoin.Data.BLL
         {
             BidDal.InsertBid(bid);
         }
+
+        public Bid GetLatestBid(int userId)
+        {
+            return BidDal.GetLatestBid(userId);
+        }
+
     }
 }
