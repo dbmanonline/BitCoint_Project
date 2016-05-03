@@ -34,9 +34,9 @@ namespace Bitcoin.Data.BLL
             return _bidDal.GetAllBids();
         }
 
-        public Bid GetBidById(int id)
+        public Bid GetBidById(string bidCode)
         {
-            return _bidDal.GetBidById(id);
+            return _bidDal.GetBidById(bidCode);
         }
 
         public void UpdateBid(Bid bid)
