@@ -66,7 +66,6 @@
                                                 <asp:Image ID="Image1" runat="server" />
                                             </td>
                                             <td>
-                                                <asp:HiddenField ID="hdfBidId" runat="server" Value='<%# Eval("Id") %>' />
                                                 <asp:Label ID="lblBidCode" runat="server" Text='<%# Eval("BidCode") %>'></asp:Label>
                                             </td>
                                             <td>
@@ -79,8 +78,8 @@
                                                 <asp:Label ID="lblPercentage" runat="server" Text='<%# Eval("Percentage") %>'></asp:Label>
                                                 <span>%</span>
                                             </td>
-                                            <td>
-                                                <span class="label label-info">
+                                            <td> 
+                                                <span id="spanStatus" runat="server">
                                                     <asp:Label ID="lblStatus" runat="server" Text='<%# Eval("Status") %>'></asp:Label>
                                                 </span>
                                             </td>
@@ -90,8 +89,6 @@
                                             <td>
                                                 <asp:LinkButton ID="lbtnEdit" runat="server" class="btn btn-default btn-xs" CommandName="Edit"><i class="fa fa-edit white"></i>Edit </asp:LinkButton>
                                                 <asp:LinkButton ID="lbtnDelete" runat="server" class="btn btn-default btn-xs"><i class="fa fa-times white"></i>Delete </asp:LinkButton>
-<%--                                                <a href="#" class="btn btn-default btn-xs"><i class="fa fa-edit white"></i>Edit </a>
-                                                <a href="#" class="btn btn-default btn-xs"><i class="fa fa-times white"></i>Delete </a>--%>
                                             </td>
                                         </tr>
                                     </ItemTemplate>

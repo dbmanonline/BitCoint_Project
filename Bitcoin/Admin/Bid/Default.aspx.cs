@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.UI.HtmlControls;
 using Bitcoin.Data.BLL;
 
 public partial class Admin_Bid_Default : System.Web.UI.Page
@@ -33,10 +34,22 @@ public partial class Admin_Bid_Default : System.Web.UI.Page
         foreach (RepeaterItem repeaterItem in rptBids.Items)
         {
             var lblStatus = repeaterItem.FindControl("lblStatus") as Label;
+            var span = (HtmlControl)repeaterItem.FindControl("spanStatus");
 
             if (lblStatus.Text == "0")
             {
                 lblStatus.Text = "Pending";
+                span.Attributes.Add("class", "label label-info");
+            }
+            if (lblStatus.Text == "1")
+            {
+                lblStatus.Text = "Approve";
+                span.Attributes.Add("class", "label label-success");
+            }
+            if (lblStatus.Text == "2")
+            {
+                lblStatus.Text = "Close";
+                span.Attributes.Add("class", "label label-danger");
             }
         }
     }
@@ -46,8 +59,8 @@ public partial class Admin_Bid_Default : System.Web.UI.Page
         if (e.CommandName == "Edit")
         {
             RepeaterItem repeaterItem = (RepeaterItem)(((LinkButton)e.CommandSource).NamingContainer);
-            int id = Convert.ToInt32(((HiddenField)repeaterItem.FindControl("hdfBidId")).Value);
-            Response.Redirect("Form.aspx?id=" + id + "&action=edit");
+            string bidCode = ((Label)repeaterItem.FindControl("lblBidCode")).Text;
+            Response.Redirect("Form.aspx?bidcode=" + bidCode + "&action=edit");
         }
     }
 }
