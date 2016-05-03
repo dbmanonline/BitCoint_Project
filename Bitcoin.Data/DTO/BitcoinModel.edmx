@@ -7,9 +7,8 @@
     <Schema Namespace="BitcoinModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Bid">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="BidCode" />
           </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="BidCode" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="Amount" Type="float" Nullable="false" />
@@ -22,9 +21,9 @@
             <PropertyRef Name="BPID" />
           </Key>
           <Property Name="BPID" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="Percentage" Type="float" />
-          <Property Name="Status" Type="bit" />
-          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="Percentage" Type="float" Nullable="false" />
+          <Property Name="Status" Type="bit" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="Level">
           <Key>
@@ -35,16 +34,6 @@
           <Property Name="Status" Type="bit" Nullable="false" />
           <Property Name="Rate" Type="float" Nullable="false" />
           <Property Name="PersonNumber" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="principal_id" Type="int" Nullable="false" />
-          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="version" Type="int" />
-          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -94,7 +83,6 @@
           <EntitySet Name="Bid" EntityType="Self.Bid" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BidPercentage" EntityType="Self.BidPercentage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Level" EntityType="Self.Level" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Bid_User" Association="Self.FK_Bid_User">
             <End Role="User" EntitySet="User" />
@@ -119,16 +107,6 @@
           <Property Name="Rate" Type="Double" Nullable="false" />
           <Property Name="PersonNumber" Type="Int32" Nullable="false" />
           <NavigationProperty Name="User" Relationship="Self.FK_User_Level" FromRole="Level" ToRole="User" />
-        </EntityType>
-        <EntityType Name="sysdiagrams">
-          <Key>
-            <PropertyRef Name="diagram_id" />
-          </Key>
-          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="principal_id" Type="Int32" Nullable="false" />
-          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="version" Type="Int32" />
-          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -166,7 +144,6 @@
         </Association>
         <EntityContainer Name="BitcoinEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Level" EntityType="Self.Level" />
-          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="User" EntityType="Self.User" />
           <AssociationSet Name="FK_User_Level" Association="Self.FK_User_Level">
             <End Role="Level" EntitySet="Level" />
@@ -184,15 +161,14 @@
             <PropertyRef Name="BPID" />
           </Key>
           <Property Name="BPID" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Percentage" Type="Double" />
-          <Property Name="Status" Type="Boolean" />
-          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="Percentage" Type="Double" Nullable="false" />
+          <Property Name="Status" Type="Boolean" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" Nullable="false" />
         </EntityType>
         <EntityType Name="Bid">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="BidCode" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="BidCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="Amount" Type="Double" Nullable="false" />
@@ -227,17 +203,6 @@
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Rate" ColumnName="Rate" />
                 <ScalarProperty Name="PersonNumber" ColumnName="PersonNumber" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sysdiagrams">
-            <EntityTypeMapping TypeName="BitcoinModel.sysdiagrams">
-              <MappingFragment StoreEntitySet="sysdiagrams">
-                <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-                <ScalarProperty Name="version" ColumnName="version" />
-                <ScalarProperty Name="definition" ColumnName="definition" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -281,7 +246,6 @@
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="BidCode" ColumnName="BidCode" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

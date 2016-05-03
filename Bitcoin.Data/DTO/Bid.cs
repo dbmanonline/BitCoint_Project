@@ -14,7 +14,6 @@ namespace Bitcoin.Data.DTO
     
     public partial class Bid
     {
-        public int Id { get; set; }
         public string BidCode { get; set; }
         public int UserID { get; set; }
         public double Amount { get; set; }
