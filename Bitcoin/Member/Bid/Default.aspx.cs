@@ -39,7 +39,8 @@ public partial class Member_Bid_Default : System.Web.UI.Page
                 pnBidInfo.Visible = false;
             }
 
-            // This is a temp name that will replace by a real fullname when get user from session of current user.
+            // This is a temporary name that will replace by 
+            // a real fullname when get user from session of current user.
             lblFullName.Text = "Nguyen Superman";
 
         }
@@ -84,6 +85,12 @@ public partial class Member_Bid_Default : System.Web.UI.Page
         if (bid.Status == 1)
         {
             lblStatus.Text = "This request processed.";
+            lbDeleteBid.Visible = false;
+        }
+        if (bid.Status == 2)
+        {
+            lblStatus.Text = "This request closed.";
+            lbDeleteBid.Visible = false;
         }
     }
 
