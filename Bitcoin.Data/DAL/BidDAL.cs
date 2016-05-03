@@ -30,10 +30,7 @@ namespace Bitcoin.Data.DAL
         public Bid GetLatestBid(int userId)
         {
             var latestBid = _bitCoinEntities.Bids
-                .Where(b => b.UserID == userId)
-                .OrderByDescending(b => b.Id)
-                .FirstOrDefault();
-
+                .FirstOrDefault(b => b.UserID == userId);
             return latestBid;
         }
 
@@ -66,11 +63,11 @@ namespace Bitcoin.Data.DAL
         /// </summary>
         /// <param name="id">id of bid</param>
         /// <returns>Single bid</returns>
-        public Bid GetBidById(int id)
+        public Bid GetBidById(string bidCode)
         {
             var result = _bitCoinEntities.Bids
                 .Include("User")
-                .Where(b => b.Id == id);
+                .Where(b => b.BidCode == bidCode);
                 
             return result.FirstOrDefault();
         }
