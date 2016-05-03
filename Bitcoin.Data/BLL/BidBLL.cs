@@ -10,17 +10,38 @@ namespace Bitcoin.Data.BLL
 {
     public class BidBLL
     {
-        private static readonly BidDAL BidDal = new BidDAL();
+        private static readonly BidDAL _bidDal = new BidDAL();
 
         public void InsertBid(Bid bid)
         {
-            BidDal.InsertBid(bid);
+            // Prefix of Bid is GP
+            bid.BidCode = "GP" + bid.BidCode;
+            _bidDal.InsertBid(bid);
         }
 
         public Bid GetLatestBid(int userId)
         {
-            return BidDal.GetLatestBid(userId);
+            return _bidDal.GetLatestBid(userId);
         }
 
+        public void DeleteBid(Bid bid)
+        {
+            _bidDal.DeleteBid(bid);
+        }
+
+        public IEnumerable<Bid> GetAllBids()
+        {
+            return _bidDal.GetAllBids();
+        }
+
+        public Bid GetBidById(int id)
+        {
+            return _bidDal.GetBidById(id);
+        }
+
+        public void UpdateBid(Bid bid)
+        {
+            _bidDal.UpdateBid(bid);
+        }
     }
 }
