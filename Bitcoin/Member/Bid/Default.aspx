@@ -38,7 +38,7 @@
                                 <div>Date: <asp:Label ID="lblCreateDate" runat="server" Text="" Font-Bold="True"></asp:Label></div>
                                 <div>Status: <asp:Label ID="lblStatus" runat="server" Text="" Font-Italic="True"></asp:Label></div>
                                 <div>
-                                    <asp:LinkButton ID="lbDeleteBid" runat="server" ForeColor="Red" Font-Underline="True" OnClick="lbDeleteBid_Click">Delete Request</asp:LinkButton>
+                                    <asp:LinkButton ID="lbDeleteBid" runat="server" ForeColor="White" Font-Underline="True" OnClick="lbDeleteBid_Click">Delete Request </asp:LinkButton>
                                 </div>
                             </div>
                         </div>
