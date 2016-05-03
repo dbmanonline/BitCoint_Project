@@ -332,7 +332,7 @@
         <script type="text/javascript">var plugin_path = '/Member/template/assets/plugins/';</script>
         <script type="text/javascript" src="/Member/template/assets/plugins/jquery/jquery-2.1.4.min.js"></script>
         <script type="text/javascript" src="/Member/template/assets/js/app.js"></script>
-
+        <asp:ContentPlaceHolder ID="ctplScript" runat="server"></asp:ContentPlaceHolder>
     </form>
 </body>
 </html>
