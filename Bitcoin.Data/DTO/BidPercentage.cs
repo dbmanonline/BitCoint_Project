@@ -12,16 +12,11 @@ namespace Bitcoin.Data.DTO
     using System;
     using System.Collections.Generic;
     
-    public partial class Bid
+    public partial class BidPercentage
     {
-        public int Id { get; set; }
-        public string BidCode { get; set; }
-        public int UserID { get; set; }
-        public double Amount { get; set; }
+        public string BPID { get; set; }
         public double Percentage { get; set; }
-        public int Status { get; set; }
+        public bool Status { get; set; }
         public System.DateTime CreateDate { get; set; }
-    
-        public virtual User User { get; set; }
     }
 }

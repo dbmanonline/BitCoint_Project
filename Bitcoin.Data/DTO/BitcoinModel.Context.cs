@@ -25,9 +25,10 @@ namespace Bitcoin.Data.DTO
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Bid> Bid { get; set; }
         public virtual DbSet<Level> Level { get; set; }
         public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<BidPercentage> BidPercentages { get; set; }
+        public virtual DbSet<Bid> Bids { get; set; }
     }
 }

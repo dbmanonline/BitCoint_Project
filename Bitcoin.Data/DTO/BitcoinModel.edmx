@@ -7,15 +7,24 @@
     <Schema Namespace="BitcoinModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Bid">
           <Key>
-            <PropertyRef Name="BidID" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="BidID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BidCode" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="Amount" Type="float" Nullable="false" />
-          <Property Name="Currency" Type="int" Nullable="false" />
-          <Property Name="PaidAmount" Type="float" Nullable="false" />
+          <Property Name="Percentage" Type="float" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
-          <Property Name="Status" Type="tinyint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BidPercentage">
+          <Key>
+            <PropertyRef Name="BPID" />
+          </Key>
+          <Property Name="BPID" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Percentage" Type="float" />
+          <Property Name="Status" Type="bit" />
+          <Property Name="CreateDate" Type="datetime" />
         </EntityType>
         <EntityType Name="Level">
           <Key>
@@ -83,6 +92,7 @@
         </Association>
         <EntityContainer Name="BitcoinModelStoreContainer">
           <EntitySet Name="Bid" EntityType="Self.Bid" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="BidPercentage" EntityType="Self.BidPercentage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Level" EntityType="Self.Level" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
@@ -99,19 +109,6 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BitcoinModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Bid">
-          <Key>
-            <PropertyRef Name="BidID" />
-          </Key>
-          <Property Name="BidID" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="Amount" Type="Double" Nullable="false" />
-          <Property Name="Currency" Type="Int32" Nullable="false" />
-          <Property Name="PaidAmount" Type="Double" Nullable="false" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Status" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Bid_User" FromRole="Bid" ToRole="User" />
-        </EntityType>
         <EntityType Name="Level">
           <Key>
             <PropertyRef Name="LevelID" />
@@ -152,21 +149,9 @@
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LevelID" Type="Int32" Nullable="false" />
           <Property Name="Rate" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Bid" Relationship="Self.FK_Bid_User" FromRole="User" ToRole="Bid" />
           <NavigationProperty Name="Level" Relationship="Self.FK_User_Level" FromRole="User" ToRole="Level" />
+          <NavigationProperty Name="Bids" Relationship="BitcoinModel.FK_Bid_User" FromRole="User" ToRole="Bid" />
         </EntityType>
-        <Association Name="FK_Bid_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Bid" Type="Self.Bid" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Bid">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_User_Level">
           <End Role="Level" Type="Self.Level" Multiplicity="1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
@@ -180,38 +165,60 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="BitcoinEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Bid" EntityType="Self.Bid" />
           <EntitySet Name="Level" EntityType="Self.Level" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
           <EntitySet Name="User" EntityType="Self.User" />
-          <AssociationSet Name="FK_Bid_User" Association="Self.FK_Bid_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="Bid" EntitySet="Bid" />
-          </AssociationSet>
           <AssociationSet Name="FK_User_Level" Association="Self.FK_User_Level">
             <End Role="Level" EntitySet="Level" />
             <End Role="User" EntitySet="User" />
           </AssociationSet>
+          <EntitySet Name="BidPercentages" EntityType="BitcoinModel.BidPercentage" />
+          <EntitySet Name="Bids" EntityType="BitcoinModel.Bid" />
+          <AssociationSet Name="FK_Bid_User" Association="BitcoinModel.FK_Bid_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="Bid" EntitySet="Bids" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="BidPercentage">
+          <Key>
+            <PropertyRef Name="BPID" />
+          </Key>
+          <Property Name="BPID" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Percentage" Type="Double" />
+          <Property Name="Status" Type="Boolean" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Bid">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BidCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Double" Nullable="false" />
+          <Property Name="Percentage" Type="Double" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="User" Relationship="BitcoinModel.FK_Bid_User" FromRole="Bid" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Bid_User">
+          <End Type="BitcoinModel.User" Role="User" Multiplicity="1" />
+          <End Type="BitcoinModel.Bid" Role="Bid" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Bid">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BitcoinModelStoreContainer" CdmEntityContainer="BitcoinEntities">
-          <EntitySetMapping Name="Bid">
-            <EntityTypeMapping TypeName="BitcoinModel.Bid">
-              <MappingFragment StoreEntitySet="Bid">
-                <ScalarProperty Name="BidID" ColumnName="BidID" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="Currency" ColumnName="Currency" />
-                <ScalarProperty Name="PaidAmount" ColumnName="PaidAmount" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Level">
             <EntityTypeMapping TypeName="BitcoinModel.Level">
               <MappingFragment StoreEntitySet="Level">
@@ -255,6 +262,29 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="BidPercentages">
+            <EntityTypeMapping TypeName="BitcoinModel.BidPercentage">
+              <MappingFragment StoreEntitySet="BidPercentage">
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Percentage" ColumnName="Percentage" />
+                <ScalarProperty Name="BPID" ColumnName="BPID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Bids">
+            <EntityTypeMapping TypeName="BitcoinModel.Bid">
+              <MappingFragment StoreEntitySet="Bid">
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Percentage" ColumnName="Percentage" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="BidCode" ColumnName="BidCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
@@ -269,7 +299,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
         <DesignerProperty Name="UseLegacyProvider" Value="false" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
