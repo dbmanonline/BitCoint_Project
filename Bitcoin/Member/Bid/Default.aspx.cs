@@ -10,14 +10,15 @@ using Bitcoin.Data.DTO;
 
 public partial class Member_Bid_Default : System.Web.UI.Page
 {
+    //jurefisiz@leeching.net Password id : 123456 Security Code : 123456
+
     #region Fields
 
     readonly BidBLL _bidBll = new BidBLL();
+    readonly BidPercentageBLL _bidPercentageBll = new BidPercentageBLL();
     readonly Bid _bid = new Bid();
 
     #endregion
-
-    #region Methods
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -54,14 +55,12 @@ public partial class Member_Bid_Default : System.Web.UI.Page
     /// </summary>
     private void InsertBid()
     {
-        _bid.BidID = RandomValue.RandomStringToNumber();
+        _bid.BidCode = RandomValue.RandomStringToNumber();
         _bid.UserID = 4;
-        _bid.Amount = 0.5;
-        _bid.Currency = Convert.ToInt16(ddlCurrency.SelectedValue);
-        _bid.Percentage = 20;
-        _bid.PaidAmount = ((_bid.Amount*_bid.Percentage)/100);
-        _bid.CreateDate = DateTime.Now.Date;
+        _bid.Amount = float.Parse(txtDepositAmount.Text);
+        _bid.Percentage = _bidPercentageBll.GetCurrentPercentage().Percentage;
         _bid.Status = 0;
+        _bid.CreateDate = DateTime.Now.Date;
         _bidBll.InsertBid(_bid);
         DisplayMessage.ShowMessage("Your Bid have been saved successfully !", Page);
         pnBidInfo.Visible = true;
@@ -74,13 +73,13 @@ public partial class Member_Bid_Default : System.Web.UI.Page
     private void GetLatestBidOfUser()
     {
         var bid = _bidBll.GetLatestBid(4);
-        lblBidID.Text = bid.BidID;
+        lblBidID.Text = bid.BidCode;
         lblAmount.Text = Convert.ToDouble(bid.Amount).ToString();
         lblRemainingAmount.Text = Convert.ToDouble((bid.Amount - ((bid.Amount * bid.Percentage) / 100))).ToString();
         lblCreateDate.Text = Convert.ToDateTime(bid.CreateDate).ToString("d MMM, yyyy");
         if (bid.Status == 0)
         {
-            lblStatus.Text = "This request is waiting approve by admin in next 24 hours.";
+            lblStatus.Text = "This request is waiting approve by admin.";
         }
         if (bid.Status == 1)
         {
@@ -88,7 +87,20 @@ public partial class Member_Bid_Default : System.Web.UI.Page
         }
     }
 
-    #endregion
-
-
+    protected void lbDeleteBid_Click(object sender, EventArgs e)
+    {
+        var bid = _bidBll.GetLatestBid(4);
+        if (bid != null)
+        {
+            if (bid.Status == 0)
+            {
+                _bidBll.DeleteBid(bid);
+                pnBidInfo.Visible = false;
+            }
+            else
+            {
+                DisplayMessage.ShowMessage("You can not delete because this request processed  !", Page);
+            }
+        }
+    }
 }

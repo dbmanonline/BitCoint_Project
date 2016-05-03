@@ -7,8 +7,8 @@
         <header id="page-header">
             <h1>Bids</h1>
             <ol class="breadcrumb">
-                <li><a href="#">Home</a></li>
-                <li class="active">Bids</li>
+                <li><a href="#">Member</a></li>
+                <li class="active">Bid</li>
             </ol>
         </header>
         <div id="content" class="padding-20">
@@ -17,7 +17,7 @@
                     <div class="col-md-6">
                         <button id="btnBid" type="button" class="btn btn-default btn-lg btn-block"
                             data-toggle="modal" data-target="#bidModal">
-                            Bids BitCoin</button>
+                            Bid BitCoin</button>
                     </div>
                     <div class="col-md-6">
                         <button type="button" class="btn btn-default btn-lg btn-block">Ask BitCoin</button>
@@ -37,6 +37,9 @@
                                 <div>Remaining Amount: <asp:Label ID="lblRemainingAmount" runat="server" Text="" Font-Bold="True"></asp:Label></div>
                                 <div>Date: <asp:Label ID="lblCreateDate" runat="server" Text="" Font-Bold="True"></asp:Label></div>
                                 <div>Status: <asp:Label ID="lblStatus" runat="server" Text="" Font-Italic="True"></asp:Label></div>
+                                <div>
+                                    <asp:LinkButton ID="lbDeleteBid" runat="server" ForeColor="Red" Font-Underline="True" OnClick="lbDeleteBid_Click">Delete Request</asp:LinkButton>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -57,14 +60,14 @@
                 <!-- Modal Body -->
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-12">
-                            <label>Deposit Amount</label>
+                        <div class="col-md-8">
+                            <label>Deposit Amount  ( BitCoint )</label>
                             <asp:TextBox ID="txtDepositAmount" runat="server" class="form-control required" ReadOnly="True"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Please enter deposit amount !"
                             ControlToValidate="txtDepositAmount" Display="Dynamic" SetFocusOnError="True" ValidationGroup="Bid" ForeColor="Red"></asp:RequiredFieldValidator>
                         </div>
                     </div>
-                    <div class="row">
+                    <%--<div class="row">
                         <div class="col-md-12">
                             <label>Currency</label>
                             <div class="fancy-form fancy-form-select">
@@ -75,7 +78,7 @@
                                 <i class="fancy-arrow"></i>
                             </div>
                         </div>
-                    </div>
+                    </div>--%>
                 </div>
 
                 <!-- Modal Footer -->
