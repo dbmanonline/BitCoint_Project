@@ -1,6 +1,7 @@
 ﻿using Bitcoin.Data.DTO;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Bitcoin.Data.DAL
         /// <summary>
         /// Insert Bid BitCoin
         /// </summary>
-        /// <param name="bid"> bid< /param>
+        /// <param name="bid"> bid </param>
         public void InsertBid(Bid bid)
         {
             _bitCoinEntities.Bids.Add(bid);
@@ -30,11 +31,59 @@ namespace Bitcoin.Data.DAL
         {
             var latestBid = _bitCoinEntities.Bids
                 .Where(b => b.UserID == userId)
-                .OrderByDescending(b => b.CreateDate)
+                .OrderByDescending(b => b.Id)
                 .FirstOrDefault();
 
             return latestBid;
         }
 
+        /// <summary>
+        /// Delete a bid with condition of status equal 0
+        /// </summary>
+        /// <param name="bid"> bid </param>
+        public void DeleteBid(Bid bid)
+        {
+            _bitCoinEntities.Bids.Remove(bid);
+            _bitCoinEntities.SaveChanges();
+        }
+
+        /// <summary>
+        /// Get all bids
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Bid> GetAllBids()
+        {
+            var listBids = _bitCoinEntities.Bids.ToList();
+            var listUsers = _bitCoinEntities.User.ToList();
+            var result = _bitCoinEntities.Bids
+                .Include("User")
+                .ToList();
+            return result;
+        }
+
+        /// <summary>
+        /// Get a bid that match id
+        /// </summary>
+        /// <param name="id">id of bid</param>
+        /// <returns>Single bid</returns>
+        public Bid GetBidById(int id)
+        {
+            var result = _bitCoinEntities.Bids
+                .Include("User")
+                .Where(b => b.Id == id);
+                
+            return result.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Update values of Bid
+        /// </summary>
+        /// <param name="bid"> models of bid</param>
+        public void UpdateBid(Bid bid)
+        {
+            _bitCoinEntities.Bids.Attach(bid);
+            _bitCoinEntities.Entry(bid).State = EntityState.Modified;
+            _bitCoinEntities.SaveChanges();
+        }
     }
 }
