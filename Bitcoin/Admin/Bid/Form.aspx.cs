@@ -29,8 +29,8 @@ public partial class Admin_Bid_Form : System.Web.UI.Page
 
     private void GetBid()
     {
-        if (Request.QueryString["id"] == null) return;
-        var bid = _bidBll.GetBidById(Convert.ToInt32(Request.QueryString["id"]));
+        if (Request.QueryString["bidcode"] == null) return;
+        var bid = _bidBll.GetBidById(Request.QueryString["bidcode"]);
         if (bid != null)
         {
             txtBidCode.Text = bid.BidCode;
@@ -56,10 +56,15 @@ public partial class Admin_Bid_Form : System.Web.UI.Page
 
     private void UpdateBid()
     {
-        var bid = _bidBll.GetBidById(Convert.ToInt32(Request.QueryString["id"]));
+        var bid = _bidBll.GetBidById(Request.QueryString["bidcode"]);
 
         bid.Status = Convert.ToInt16(dlStatus.SelectedValue);
         _bidBll.UpdateBid(bid);
         DisplayMessage.ShowMessage("Your Bid have been saved successfully !", Page);
+    }
+
+    protected void btnBack_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("Default.aspx");
     }
 }
