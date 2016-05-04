@@ -56,11 +56,16 @@ public partial class Admin_Bid_Default : System.Web.UI.Page
 
     protected void rptBids_ItemCommand(object source, RepeaterCommandEventArgs e)
     {
+        RepeaterItem repeaterItem = (RepeaterItem)(((LinkButton)e.CommandSource).NamingContainer);
+        string gpCode = ((Label)repeaterItem.FindControl("lblBidCode")).Text;
+
         if (e.CommandName == "Edit")
         {
-            RepeaterItem repeaterItem = (RepeaterItem)(((LinkButton)e.CommandSource).NamingContainer);
-            string bidCode = ((Label)repeaterItem.FindControl("lblBidCode")).Text;
-            Response.Redirect("Form.aspx?bidcode=" + bidCode + "&action=edit");
+            Response.Redirect("Form.aspx?bidcode=" + gpCode + "&action=edit");
+        }
+        if (e.CommandName == "CreateGR")
+        {
+            Response.Redirect("../BidDetail/Form.aspx?gpcode=" + gpCode + "&action=insert");
         }
     }
 }

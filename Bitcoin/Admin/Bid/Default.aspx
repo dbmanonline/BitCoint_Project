@@ -13,48 +13,27 @@
         </header>
         <div id="content" class="padding-20">
 
-            <!-- 
-						PANEL CLASSES:
-							panel-default
-							panel-danger
-							panel-warning
-							panel-info
-							panel-success
-
-						INFO: 	panel collapse - stored on user localStorage (handled by app.js _panels() function).
-								All pannels should have an unique ID or the panel collapse status will not be stored!
-					-->
             <div id="panel-1" class="panel panel-default">
                 <div class="panel-heading">
                     <span class="title elipsis">
                         <strong>LIST BIDS</strong>
                         <!-- panel title -->
                     </span>
-
-                    <!-- right options -->
-                    <ul class="options pull-right list-inline">
-                        <li><a href="#" class="opt panel_colapse" data-toggle="tooltip" title="Colapse" data-placement="bottom"></a></li>
-                        <li><a href="#" class="opt panel_fullscreen hidden-xs" data-toggle="tooltip" title="Fullscreen" data-placement="bottom"><i class="fa fa-expand"></i></a></li>
-                        <li><a href="#" class="opt panel_close" data-confirm-title="Confirm" data-confirm-message="Are you sure you want to remove this panel?" data-toggle="tooltip" title="Close" data-placement="bottom"><i class="fa fa-times"></i></a></li>
-                    </ul>
-                    <!-- /right options -->
-
                 </div>
 
                 <!-- panel content -->
                 <div class="panel-body">
-
                     <div class="table-responsive">
                         <table class="table table-bordered table-vertical-middle nomargin">
                             <thead>
                                 <tr>
-                                    <th class="width-30">Img</th>
                                     <th>Bid Code</th>
                                     <th>Email</th>
                                     <th>Amount</th>
-                                    <th>Percentage</th>
+                                    <th>Payed</th>
                                     <th>Status</th>
                                     <th>Create Date</th>
+                                    <th></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -62,9 +41,6 @@
                                 <asp:Repeater ID="rptBids" runat="server" OnItemCommand="rptBids_ItemCommand">
                                     <ItemTemplate>
                                         <tr>
-                                            <td>
-                                                <asp:Image ID="Image1" runat="server" />
-                                            </td>
                                             <td>
                                                 <asp:Label ID="lblBidCode" runat="server" Text='<%# Eval("BidCode") %>'></asp:Label>
                                             </td>
@@ -85,6 +61,9 @@
                                             </td>
                                             <td>
                                                 <asp:Label ID="lblCreateDate" runat="server" Text='<%# Eval("CreateDate", "{0:d MMM, yyyy}") %>'></asp:Label>
+                                            </td>
+                                            <td>
+                                                <asp:LinkButton ID="lbCreateGR" runat="server" class="btn btn-default btn-xs" CommandName="CreateGR">Create GR</asp:LinkButton> 
                                             </td>
                                             <td>
                                                 <asp:LinkButton ID="lbtnEdit" runat="server" class="btn btn-default btn-xs" CommandName="Edit"><i class="fa fa-edit white"></i>Edit </asp:LinkButton>

@@ -10,7 +10,7 @@ using Bitcoin.Data.DTO;
 public partial class Admin_Bid_Form : System.Web.UI.Page
 {
     /// <summary>
-    /// *** Status of Bid is hard code and don't change value, please. ***
+    /// *** Status of Bid is hard code and please don't change value. ***
     ///     0 : Pending
     ///     1 : Approve
     ///     2 : Close
@@ -18,6 +18,8 @@ public partial class Admin_Bid_Form : System.Web.UI.Page
 
     readonly BidBLL _bidBll = new BidBLL();
     readonly Bid _bid = new Bid();
+    readonly BidDetailBLL _bidDetailBll = new BidDetailBLL();
+    readonly BidDetail _bidDetail = new BidDetail();
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -46,6 +48,24 @@ public partial class Admin_Bid_Form : System.Web.UI.Page
         }
     }
 
+    private void UpdateBid()
+    {
+        var bid = _bidBll.GetBidById(Request.QueryString["bidcode"]);
+        bid.Status = Convert.ToByte(dlStatus.SelectedValue);
+        _bidBll.UpdateBid(bid);
+        if (ckb20.Checked && bid.Status == 1)
+        {
+            _bidDetail.BidDetailCode = "GR" + RandomValue.RandomNumberToString();
+            _bidDetail.BidCode = bid.BidCode;
+            _bidDetail.Percentage = 20;
+            _bidDetail.Status = false;
+            _bidDetail.CreateDate = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+            _bidDetailBll.InsertBidDetail(_bidDetail);
+        }
+        
+        DisplayMessage.ShowMessage("Your Bid have been saved successfully !", Page);
+    }
+   
     protected void btnSave_Click(object sender, EventArgs e)
     {
         if (Request.QueryString["action"] != null && Request.QueryString["action"] == "edit")
@@ -54,16 +74,7 @@ public partial class Admin_Bid_Form : System.Web.UI.Page
         }
     }
 
-    private void UpdateBid()
-    {
-        var bid = _bidBll.GetBidById(Request.QueryString["bidcode"]);
-
-        bid.Status = Convert.ToInt16(dlStatus.SelectedValue);
-        _bidBll.UpdateBid(bid);
-        DisplayMessage.ShowMessage("Your Bid have been saved successfully !", Page);
-    }
-
-    protected void btnBack_Click(object sender, EventArgs e)
+    protected void btnList_Click(object sender, EventArgs e)
     {
         Response.Redirect("Default.aspx");
     }
