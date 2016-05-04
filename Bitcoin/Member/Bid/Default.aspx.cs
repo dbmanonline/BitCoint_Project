@@ -17,6 +17,7 @@ public partial class Member_Bid_Default : System.Web.UI.Page
     readonly BidBLL _bidBll = new BidBLL();
     readonly BidPercentageBLL _bidPercentageBll = new BidPercentageBLL();
     readonly Bid _bid = new Bid();
+    readonly BidDetailBLL _bidDetailBll = new BidDetailBLL();
 
     #endregion
 
@@ -28,7 +29,7 @@ public partial class Member_Bid_Default : System.Web.UI.Page
             txtDepositAmount.Text = "0.5";
 
             // Default panel of BidInfo will be invisible if records of Bid is null.
-            // Only display when user have bided successfully.
+            // only display when user have bided successfully.
             if (_bidBll.GetLatestBid(4) != null)
             {
                 pnBidInfo.Visible = true;
@@ -43,7 +44,20 @@ public partial class Member_Bid_Default : System.Web.UI.Page
             // a real fullname when get user from session of current user.
             lblFullName.Text = "Nguyen Superman";
 
+            LoadBidDetail();
+
         }
+    }
+
+    private void LoadBidDetail()
+    {
+        var bidDetail = _bidDetailBll.GetBidDetailByGPCode(lblBidID.Text);
+        lblGRCode.Text = bidDetail.BidDetailCode;
+        lblBankName.Text = bidDetail.BankName;
+        lblAccountNumber.Text = bidDetail.AccountNumber;
+        lblName.Text = bidDetail.AccountName;
+        lblBranchName.Text = bidDetail.BranchName;
+        lblBitCoinAddress.Text = bidDetail.BitCoinAddress;
     }
 
     protected void btnSave_Click(object sender, EventArgs e)
@@ -56,10 +70,10 @@ public partial class Member_Bid_Default : System.Web.UI.Page
     /// </summary>
     private void InsertBid()
     {
-        _bid.BidCode = RandomValue.RandomStringToNumber();
+        _bid.BidCode = RandomValue.RandomNumberToString();
         _bid.UserID = 4;
         _bid.Amount = float.Parse(txtDepositAmount.Text);
-        _bid.Percentage = _bidPercentageBll.GetCurrentPercentage().Percentage;
+        _bid.Percentage = 0;
         _bid.Status = 0;
         _bid.CreateDate = DateTime.Now.Date;
         _bidBll.InsertBid(_bid);

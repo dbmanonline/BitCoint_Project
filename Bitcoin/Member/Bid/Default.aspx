@@ -38,7 +38,8 @@
                                 <div>Date: <asp:Label ID="lblCreateDate" runat="server" Text="" Font-Bold="True"></asp:Label></div>
                                 <div>Status: <asp:Label ID="lblStatus" runat="server" Text="" Font-Italic="True"></asp:Label></div>
                                 <div>
-                                    <asp:LinkButton ID="lbDeleteBid" runat="server" ForeColor="White" Font-Underline="True" OnClick="lbDeleteBid_Click">Delete Request </asp:LinkButton>
+                                    <asp:LinkButton ID="lbDeleteBid" runat="server" ForeColor="White" Font-Underline="True" OnClick="lbDeleteBid_Click">Delete Request </asp:LinkButton>  << >>
+                                    <asp:LinkButton ID="lbViewDetail" runat="server" ForeColor="#FF9900" Font-Underline="True" data-toggle="modal" data-target="#bidDetailModal">View Details</asp:LinkButton>
                                 </div>
                             </div>
                         </div>
@@ -60,31 +61,87 @@
                 <!-- Modal Body -->
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-9">
                             <label>Deposit Amount  ( BitCoint )</label>
                             <asp:TextBox ID="txtDepositAmount" runat="server" class="form-control required" ReadOnly="True"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Please enter deposit amount !"
                             ControlToValidate="txtDepositAmount" Display="Dynamic" SetFocusOnError="True" ValidationGroup="Bid" ForeColor="Red"></asp:RequiredFieldValidator>
                         </div>
                     </div>
-                    <%--<div class="row">
-                        <div class="col-md-12">
-                            <label>Currency</label>
-                            <div class="fancy-form fancy-form-select">
-                                <asp:DropDownList ID="ddlCurrency" runat="server" class="form-control">
-                                    <asp:ListItem Value="1">BitCoin</asp:ListItem>
-                                    <asp:ListItem Value="2">Dollar</asp:ListItem>
-                                </asp:DropDownList>
-                                <i class="fancy-arrow"></i>
-                            </div>
-                        </div>
-                    </div>--%>
                 </div>
 
                 <!-- Modal Footer -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     <asp:Button ID="btnSave" runat="server" Text="Submit" class="btn btn-primary" OnClick="btnSave_Click" ValidationGroup="Bid"/>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <div id="bidDetailModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Bid Detail</h4>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div class="row">
+                         <div class="col-md-3">
+                             <label>Order: </label>
+                         </div>
+                        <div class="col-md-9">
+                            <asp:Label ID="lblGRCode" runat="server" Text="" Font-Bold="True"></asp:Label>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-md-3">
+                             <label>Bank Name: </label>
+                         </div>
+                        <div class="col-md-9">
+                            <asp:Label ID="lblBankName" runat="server" Text="" Font-Bold="True"></asp:Label>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-md-3">
+                             <label>Account Number: </label>
+                         </div>
+                        <div class="col-md-9">
+                            <asp:Label ID="lblAccountNumber" runat="server" Text="" Font-Bold="True"></asp:Label>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-md-3">
+                             <label>Name: </label>
+                         </div>
+                        <div class="col-md-9">
+                               <asp:Label ID="lblName" runat="server" Text="" Font-Bold="True"></asp:Label>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-md-3">
+                             <label>Branch Name: </label>
+                         </div>
+                        <div class="col-md-9">
+                               <asp:Label ID="lblBranchName" runat="server" Text="" Font-Bold="True"></asp:Label>
+                        </div>
+                    </div>
+                    <div class="row">
+                         <div class="col-md-3">
+                             <label>BitCoin Addresss: <span></span></label>
+                         </div>
+                        <div class="col-md-9"><asp:Label ID="lblBitCoinAddress" runat="server" Text="" Font-Bold="True"></asp:Label></div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="modal-footer">
                 </div>
 
             </div>
