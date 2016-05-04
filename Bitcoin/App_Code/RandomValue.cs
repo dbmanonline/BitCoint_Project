@@ -8,7 +8,7 @@ using System.Web;
 /// </summary>
 public class RandomValue
 {
-    public static string RandomStringToNumber()
+    public static string RandomNumberToString()
     {
         Random random = new Random();
         string str = "";
