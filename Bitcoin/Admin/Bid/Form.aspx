@@ -48,7 +48,7 @@
                                 <div class="row">
                                     <div class="form-group">
                                         <div class="col-md-12 col-sm-12">
-                                            <label>Percentage</label>
+                                            <label>Payed %</label>
                                             <asp:TextBox ID="txtPercentage" runat="server" class="form-control" ReadOnly="True"></asp:TextBox>
                                         </div>
                                     </div>
@@ -80,10 +80,10 @@
                                                 <asp:CheckBox ID="ckb20" runat="server" />
                                                 <i></i>Pay 20 %
                                             </label>
-                                            <%--                                          <label class="checkbox">
-                                                <asp:CheckBox ID="ckb80" runat="server" /> 
-                                                <i></i> 80 %
-                                            </label>--%>
+                                            <label class="checkbox">
+                                                <asp:CheckBox ID="ckb80" runat="server" />
+                                                <i></i>Pay 80 %
+                                            </label>
                                         </div>
                                     </div>
                                 </div>

@@ -106,6 +106,14 @@
                                 </div>
                                 <div class="row">
                                     <div class="form-group">
+                                        <div class="col-md-6 col-sm-6">
+                                            <label>Photo Confirmation</label>
+                                            <asp:Image ID="imgConfirm" runat="server" Width="100" Height="100" class="form-control"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group">
                                         <div class="col-md-12 col-sm-12">
                                             <asp:Button ID="btnList" runat="server" Text="List" class="btn btn-default btn-3d" OnClick="btnList_Click" />
                                             <asp:Button ID="btnSave" runat="server" Text="Save" class="btn btn-primary btn-3d" OnClick="btnSave_Click" />

@@ -82,6 +82,7 @@ public partial class Admin_BidDetail_Form : System.Web.UI.Page
             txtBranchName.Text = bidDetail.BranchName;
             txtBitCoinAddress.Text = bidDetail.BitCoinAddress;
             ckbStatus.Checked = Convert.ToBoolean(bidDetail.Status);
+            imgConfirm.ImageUrl = "/Uploads/Confirmation/" + bidDetail.PhotoConfirmation;
         }
         else
         {
@@ -101,6 +102,22 @@ public partial class Admin_BidDetail_Form : System.Web.UI.Page
         bidDetail.BitCoinAddress = txtBitCoinAddress.Text.Trim();
         bidDetail.Status = ckbStatus.Checked;
         _bidDetailBll.UpdateBidDetail(bidDetail);
+
+        // Only update percentage of bid when status of bid detail is true
+        if (bidDetail.Status == true)
+        {
+            var bid = _bidBll.GetBidById(bidDetail.BidCode);
+            bid.BidCode = bid.BidCode;
+            if (bidDetail.Percentage == 20)
+            {
+                bid.Percentage = 20;
+            }
+            else if (bidDetail.Percentage == 80)
+            {
+                bid.Percentage = 100;
+            }
+            _bidBll.UpdateBid(bid);
+        }
     }
 
     protected void btnSave_Click(object sender, EventArgs e)
@@ -156,6 +173,6 @@ public partial class Admin_BidDetail_Form : System.Web.UI.Page
 
     protected void btnList_Click(object sender, EventArgs e)
     {
-
+        Response.Redirect("Default.aspx");
     }
 }

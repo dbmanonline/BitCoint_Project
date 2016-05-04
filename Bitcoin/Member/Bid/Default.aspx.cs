@@ -45,19 +45,38 @@ public partial class Member_Bid_Default : System.Web.UI.Page
             lblFullName.Text = "Nguyen Superman";
 
             LoadBidDetail();
+            LoadAllBidDetails();
 
         }
     }
 
+    private void LoadAllBidDetails()
+    {
+        rptBidDetail.DataSource = _bidDetailBll.GetAllBidDetailOfUser(4);
+        rptBidDetail.DataBind();
+    }
+
+
     private void LoadBidDetail()
     {
         var bidDetail = _bidDetailBll.GetBidDetailByGPCode(lblBidID.Text);
-        lblGRCode.Text = bidDetail.BidDetailCode;
-        lblBankName.Text = bidDetail.BankName;
-        lblAccountNumber.Text = bidDetail.AccountNumber;
-        lblName.Text = bidDetail.AccountName;
-        lblBranchName.Text = bidDetail.BranchName;
-        lblBitCoinAddress.Text = bidDetail.BitCoinAddress;
+        if (bidDetail != null)
+        {
+            lblGRCode.Text = bidDetail.BidDetailCode;
+            lblBankName.Text = bidDetail.BankName;
+            lblAccountNumber.Text = bidDetail.AccountNumber;
+            lblName.Text = bidDetail.AccountName;
+            lblBranchName.Text = bidDetail.BranchName;
+            lblBitCoinAddress.Text = bidDetail.BitCoinAddress;
+            if (bidDetail.Status == true)
+            {
+                trConfirm.Visible = false;
+            }
+        }
+        else
+        {
+            return;
+        }
     }
 
     protected void btnSave_Click(object sender, EventArgs e)
@@ -122,6 +141,33 @@ public partial class Member_Bid_Default : System.Web.UI.Page
             {
                 DisplayMessage.ShowMessage("You can not delete because this request processed  !", Page);
             }
+        }
+    }
+
+    /// <summary>
+    /// Upload a photo confirmation for your bid
+    /// and file can upload photo when status of bid detail is False
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void btnSavePhoto_Click(object sender, EventArgs e)
+    {
+        if (!fuPhotoConfirmation.HasFiles)
+        {
+            DisplayMessage.ShowMessage("Please select a photo confirmation before save !", Page);
+        }
+        else
+        {
+            var fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + fuPhotoConfirmation.FileName;
+            fuPhotoConfirmation.SaveAs(Path.Combine(Server.MapPath("~/Uploads/Confirmation"), fileName));
+            var bidDetail = _bidDetailBll.GetBidDetailById(lblGRCode.Text);
+            if (bidDetail.Status == false)
+            {
+                bidDetail.BidDetailCode = bidDetail.BidDetailCode;
+                bidDetail.PhotoConfirmation = fileName;
+                _bidDetailBll.UpdateBidDetail(bidDetail);
+            }
+            
         }
     }
 }
