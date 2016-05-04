@@ -64,5 +64,20 @@ namespace Bitcoin.Data.DAL
         {
             return _bitcoinEntities.BidDetails.FirstOrDefault(x => x.BidCode == gpCode);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public IEnumerable<Bid> GetAllBidDetailOfUser(int userID)
+        {
+            var result = _bitcoinEntities.Bids
+                .Include("BidDetail")
+                //.Include("User")
+                .ToList()
+                .Where(x => x.UserID == userID);
+            return result;
+        }
     }
 }

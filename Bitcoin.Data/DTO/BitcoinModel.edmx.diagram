@@ -4,13 +4,15 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="fe4de4b4f12b48debbc6d3a1e34575e7" Name="Diagram1" ZoomLevel="84">
-        <EntityTypeShape EntityType="BitcoinModel.Level" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="BitcoinModel.User" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <AssociationConnector Association="BitcoinModel.FK_User_Level" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="BitcoinModel.BidPercentage" Width="1.5" PointX="7.875" PointY="0.875" />
-        <EntityTypeShape EntityType="BitcoinModel.Bid" Width="1.5" PointX="5.25" PointY="2" />
-        <AssociationConnector Association="BitcoinModel.FK_Bid_User" />
+      <Diagram DiagramId="711a02886a754837a349a26e13c56354" Name="Diagram1">
+        <EntityTypeShape EntityType="BitCoinModel.Bid" Width="1.5" PointX="5.25" PointY="1.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="BitCoinModel.BidDetail" Width="1.5" PointX="7.5" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BitCoinModel.BidPercentage" Width="1.5" PointX="5.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BitCoinModel.Level" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BitCoinModel.User" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <AssociationConnector Association="BitCoinModel.FK_Bid_User" ManuallyRouted="false" />
+        <AssociationConnector Association="BitCoinModel.FK_BidDetail_Bid" ManuallyRouted="false" />
+        <AssociationConnector Association="BitCoinModel.FK_User_Level" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

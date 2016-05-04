@@ -36,8 +36,8 @@ namespace Bitcoin.Data.DTO
         public int LevelID { get; set; }
         public double Rate { get; set; }
     
-        public virtual Level Level { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bid> Bids { get; set; }
+        public virtual Level Level { get; set; }
     }
 }
