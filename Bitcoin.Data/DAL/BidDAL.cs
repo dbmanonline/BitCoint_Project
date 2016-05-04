@@ -47,11 +47,9 @@ namespace Bitcoin.Data.DAL
         /// <summary>
         /// Get all bids
         /// </summary>
-        /// <returns></returns>
+        /// <returns>list bids</returns>
         public IEnumerable<Bid> GetAllBids()
         {
-            var listBids = _bitCoinEntities.Bids.ToList();
-            var listUsers = _bitCoinEntities.User.ToList();
             var result = _bitCoinEntities.Bids
                 .Include("User")
                 .ToList();
