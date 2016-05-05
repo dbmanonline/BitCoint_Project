@@ -53,25 +53,25 @@ public partial class Admin_Bid_Form : System.Web.UI.Page
     {
         var bid = _bidBll.GetBidById(Request.QueryString["bidcode"]);
         bid.Status = Convert.ToByte(dlStatus.SelectedValue);
-        _bidDetail.BidDetailCode = "GR" + RandomValue.RandomNumberToString();
-        _bidDetail.BidCode = bid.BidCode;
-        _bidDetail.Status = false;
-        _bidDetail.CreateDate = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+        //_bidDetail.BidDetailCode = "GR" + RandomValue.RandomNumberToString();
+        //_bidDetail.BidCode = bid.BidCode;
+        //_bidDetail.Status = false;
+        //_bidDetail.CreateDate = Convert.ToDateTime(DateTime.Now.ToShortDateString());
         _bidBll.UpdateBid(bid);
-        if (ckb20.Checked && bid.Status == 1)
-        {
-            _bidDetail.Percentage = 20;
-            _bidDetailBll.InsertBidDetail(_bidDetail);
-        }
-        else if (ckb80.Checked && bid.Status == 1)
-        {
-            _bidDetail.Percentage = 80;
-            _bidDetailBll.InsertBidDetail(_bidDetail);
-        }
-        else
-        {
-            return;
-        }
+        //if (ckb20.Checked && bid.Status == 1)
+        //{
+        //    _bidDetail.Percentage = 20;
+        //    _bidDetailBll.InsertBidDetail(_bidDetail);
+        //}
+        //else if (ckb80.Checked && bid.Status == 1)
+        //{
+        //    _bidDetail.Percentage = 80;
+        //    _bidDetailBll.InsertBidDetail(_bidDetail);
+        //}
+        //else
+        //{
+        //    return;
+        //}
         
         DisplayMessage.ShowMessage("Your Bid have been saved successfully !", Page);
     }
@@ -100,6 +100,18 @@ public partial class Admin_Bid_Form : System.Web.UI.Page
         if (Request.QueryString["action"] != null && Request.QueryString["action"] == "edit")
         {
             UpdateBid();
+            if (ckb20.Checked && Convert.ToByte(dlStatus.SelectedValue) == 1)
+            {
+                Response.Redirect("../BidDetail/Form.aspx?gpcode=" + txtBidCode.Text.Trim() + "&percentage=20" +"&action=insert");
+            }
+            if (ckb80.Checked && Convert.ToByte(dlStatus.SelectedValue) == 1)
+            {
+                Response.Redirect("../BidDetail/Form.aspx?gpcode=" + txtBidCode.Text.Trim() + "&percentage=80" + "&action=insert");
+            }
+            else
+            {
+                return;
+            }
         }
     }
 

@@ -34,7 +34,6 @@
                                     <th>Status</th>
                                     <th>Create Date</th>
                                     <th></th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -61,9 +60,6 @@
                                             </td>
                                             <td>
                                                 <asp:Label ID="lblCreateDate" runat="server" Text='<%# Eval("CreateDate", "{0:d MMM, yyyy}") %>'></asp:Label>
-                                            </td>
-                                            <td>
-                                                <asp:LinkButton ID="lbCreateGR" runat="server" class="btn btn-default btn-xs" CommandName="CreateGR">Create GR</asp:LinkButton> 
                                             </td>
                                             <td>
                                                 <asp:LinkButton ID="lbtnEdit" runat="server" class="btn btn-default btn-xs" CommandName="Edit"><i class="fa fa-edit white"></i>Edit </asp:LinkButton>

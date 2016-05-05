@@ -63,9 +63,5 @@ public partial class Admin_Bid_Default : System.Web.UI.Page
         {
             Response.Redirect("Form.aspx?bidcode=" + gpCode + "&action=edit");
         }
-        if (e.CommandName == "CreateGR")
-        {
-            Response.Redirect("../BidDetail/Form.aspx?gpcode=" + gpCode + "&action=insert");
-        }
     }
 }

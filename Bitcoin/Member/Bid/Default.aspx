@@ -15,9 +15,7 @@
             <div class="row">
                 <div class="padding-15">
                     <div class="col-md-6">
-                        <button id="btnBid" type="button" class="btn btn-default btn-lg btn-block"
-                            data-toggle="modal" data-target="#bidModal">
-                            Bid BitCoin</button>
+                        <asp:Button ID="btnBid" runat="server" Text="Bid BitCoin" class="btn btn-default btn-lg btn-block" OnClick="btnBid_Click" />
                     </div>
                     <div class="col-md-6">
                         <button type="button" class="btn btn-default btn-lg btn-block">Ask BitCoin</button>
@@ -25,58 +23,86 @@
                 </div>
             </div>
             <div class="row">
-                <asp:Panel ID="pnBidInfo" runat="server">
-                    <div class="padding-15">
-                        <div class="col-md-6">
-                            <div class="alert alert-theme-color margin-bottom-30">
+                <div class="col-md-6">
+                    <asp:Repeater ID="rptListBids" runat="server" OnItemDataBound="rptListBids_ItemDataBound" OnItemCommand="rptListBids_ItemCommand">
+                        <ItemTemplate>
+                            <asp:Panel ID="pnBidInfo" runat="server">
+                                <div class="alert alert-theme-color margin-bottom-30">
                                 <h4>
                                     <strong>
-                                        <asp:Label ID="lblBidID" runat="server" Text=""></asp:Label></strong>
+                                        <asp:Label ID="lblBidCode" runat="server" Text='<%# Eval("BidCode") %>'></asp:Label></strong>
                                 </h4>
                                 <div>
                                     Participant:
-                                    <asp:Label ID="lblFullName" runat="server" Text="" Font-Bold="True"></asp:Label>
+                                    <asp:Label ID="lblFullName" runat="server" Text='<%# Eval("User.FullName") %>' Font-Bold="True"></asp:Label>
                                 </div>
                                 <div>
                                     Amount:
-                                    <asp:Label ID="lblAmount" runat="server" Text="" Font-Bold="True"></asp:Label>
+                                    <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("Amount") %>' Font-Bold="True"></asp:Label>
                                 </div>
                                 <div>
                                     Remaining Amount:
-                                    <asp:Label ID="lblRemainingAmount" runat="server" Text="" Font-Bold="True"></asp:Label>
+                                    <asp:Label ID="lblRemainingAmount" runat="server" Text='<%# Eval("Percentage") %>' Font-Bold="True"></asp:Label>
                                 </div>
                                 <div>
                                     Date:
-                                    <asp:Label ID="lblCreateDate" runat="server" Text="" Font-Bold="True"></asp:Label>
+                                    <asp:Label ID="lblCreateDate" runat="server" Text='<%# Eval("CreateDate", "{0:d/MM/yyyy}") %>' Font-Bold="True"></asp:Label>
                                 </div>
                                 <div>
                                     Status:
-                                    <asp:Label ID="lblStatus" runat="server" Text="" Font-Italic="True"></asp:Label>
+                                    <asp:Label ID="lblStatus" runat="server" Text='<%# Eval("Status") %>' Font-Italic="True"></asp:Label>
                                 </div>
                                 <div>
-                                    <asp:LinkButton ID="lbDeleteBid" runat="server" ForeColor="White" Font-Underline="True" OnClick="lbDeleteBid_Click">Delete Request </asp:LinkButton>
-                                    << >>
-                                    <asp:LinkButton ID="lbViewDetail" runat="server" ForeColor="#FF9900" Font-Underline="True" data-toggle="modal" data-target="#bidDetailModal">View Details</asp:LinkButton>
+                                    <asp:LinkButton ID="lbtnDeleteBid" runat="server" ForeColor="White" Font-Underline="True" CommandName="Delete">Delete Request </asp:LinkButton>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <asp:Repeater ID="rptBidDetail" runat="server">
-                                <ItemTemplate>
-                                    <div class="alert alert-dark margin-bottom-30">
-                                        <!-- DARK -->
-                                        <h4><strong>
-                                            <asp:Label ID="lblGRCode" runat="server" Text='<%# Eval("BidDetails.BidDetailCode") %>'></asp:Label></strong></h4>
-                                    </div>
-                                </ItemTemplate>
-                            </asp:Repeater>
+                            </asp:Panel>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                </div>
 
-                        </div>
-                    </div>
-                </asp:Panel>
+                <div class="col-md-6">
+                    <asp:Panel ID="pListBidDetail" runat="server">
+                        <%--Start Panel Of List Bid Details--%>
+                        <asp:Repeater ID="rptBidDetail" runat="server" OnItemDataBound="rptBidDetail_ItemDataBound" OnItemCommand="rptBidDetail_ItemCommand">
+                            <ItemTemplate>
+                                <div class="alert alert-dark margin-bottom-30">
+                                    <!-- DARK -->
+                                    <h4><strong>
+                                        <i id="iCheck" runat="server" class="fa fa-check" style="color: green"></i>
+                                        <asp:Label ID="lblGRCode" runat="server" Text='<%# Eval("BidDetailCode") %>'></asp:Label></strong></h4>
+                                    <div>
+                                        <div>
+                                            Date of Creating:
+                                                <asp:Label ID="lblCreateDate" runat="server" Text='<%# Eval("CreateDate", "{0:d/MM/yyyy}") %>' Font-Bold="True"></asp:Label>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        You send
+                                            <asp:Label ID="lblAmount" runat="server" Text='<%# String.Format("{0}", (Convert.ToDouble(Eval("Bid.Amount")) * Convert.ToDouble(Eval("Percentage")))/100) %>' Font-Bold="True"></asp:Label>
+                                        <asp:Label ID="Label1" runat="server" Text="BitCoin" Font-Bold="True"></asp:Label>
+                                        to 
+                                            <asp:Label ID="lblName" runat="server" Text='<%# Eval("AccountName") %>' Font-Bold="True"></asp:Label>
+                                    </div>
+                                    <div>
+                                        Confirmation
+                                            <asp:Image ID="imgConfirmation" runat="server" Height="20" Width="20" ImageUrl='<%# "/Uploads/Confirmation/" + Eval("PhotoConfirmation") %>' />
+                                    </div>
+                                    <div>
+
+                                        <asp:LinkButton ID="lbViewDetail" runat="server" ForeColor="#FF9900" Font-Underline="True" CommandName="ViewDetail">View Details</asp:LinkButton>
+                                    </div>
+                                </div>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                        <%--End Panel Of List Bid Details--%>
+                    </asp:Panel>
+                </div>
             </div>
         </div>
     </section>
+
+    <%--Start Modal of Bid BitCoin--%>
     <div id="bidModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -108,11 +134,13 @@
             </div>
         </div>
     </div>
+    <%--End Modal of Bid BitCoin--%>
 
-    <div id="bidDetailModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <%--Start Modal of Bid Detail--%>
+    <div id="bidDetailModal" class="modal fade" tabindex="-1" role="dialog"
+        aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-
                 <!-- Modal Header -->
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -131,7 +159,7 @@
                                         <tr>
                                             <td class="col-md-3">Order </td>
                                             <td>
-                                                <asp:Label ID="lblGRCode" runat="server" Text=""></asp:Label></td>
+                                                <asp:Label ID="lblOrder" runat="server" Text=""></asp:Label></td>
                                         </tr>
                                         <tr>
                                             <td>Bank Name </td>
@@ -162,7 +190,6 @@
                                             <td>Attach Photo </td>
                                             <td>
                                                 <asp:FileUpload ID="fuPhotoConfirmation" runat="server" class="custom-file-upload" data-btn-text="Select a File" />
-                                                <%--<input class="custom-file-upload" type="file" id="file" name="contact[attachment]" id="contact:attachment" data-btn-text="Select a File" />--%>
                                                 <small class="text-muted block">Max file size: 2Mb (pdf/jpg/png)</small></td>
                                         </tr>
                                     </tbody>
@@ -175,9 +202,21 @@
                 <div class="modal-footer">
                     <asp:Button ID="btnSavePhoto" runat="server" Text="Save Photo" class="btn btn-primary" OnClick="btnSavePhoto_Click" />
                 </div>
-
             </div>
         </div>
     </div>
+    <%--End Modal of Bid Detail--%>
+</asp:Content>
+
+<asp:Content ID="Content3" ContentPlaceHolderID="ctplScript" runat="Server">
+    <script src="../template/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        function ShowBidDetailModal() {
+            $('#bidDetailModal').modal('show');
+        };
+        function ShowBidModal() {
+            $('#bidModal').modal('show');
+        };
+    </script>
 </asp:Content>
 

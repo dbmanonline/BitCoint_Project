@@ -43,7 +43,7 @@
                                     <ItemTemplate>
                                         <tr>
                                             <td>
-                                                <asp:Image ID="Image1" runat="server" />
+                                                <asp:Image ID="imgConfirm" runat="server" ImageUrl='<%# "/Uploads/Confirmation/" + Eval("PhotoConfirmation") %>' Height="20" Width="20" />
                                             </td>
                                             <td>
                                                 <asp:Label ID="lblGPCode" runat="server" Text='<%# Eval("BidCode") %>'></asp:Label>

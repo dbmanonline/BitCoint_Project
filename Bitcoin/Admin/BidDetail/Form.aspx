@@ -37,7 +37,7 @@
                                     <div class="form-group">
                                         <div class="col-md-12 col-sm-12">
                                             <label>Percentage (%)</label>
-                                            <asp:TextBox ID="txtPercentage" runat="server" class="form-control"></asp:TextBox>
+                                            <asp:TextBox ID="txtPercentage" runat="server" class="form-control" ReadOnly="True"></asp:TextBox>
 <%--                                            <asp:DropDownList ID="ddlPercentage" runat="server" class="form-control">
                                                 <asp:ListItem Value="">-- Select --</asp:ListItem>
                                                 <asp:ListItem Value="BP20">20</asp:ListItem>
