@@ -26,6 +26,7 @@ namespace Bitcoin.Data.DTO
         public string BitCoinAddress { get; set; }
         public Nullable<bool> Status { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }
+        public int Order { get; set; }
     
         public virtual Bid Bid { get; set; }
     }

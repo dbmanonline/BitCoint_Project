@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BitCoinModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BitCoinModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Bid">
           <Key>
             <PropertyRef Name="BidCode" />
@@ -15,6 +15,7 @@
           <Property Name="Percentage" Type="float" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Status" Type="tinyint" Nullable="false" />
+          <Property Name="Order" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="BidDetail">
           <Key>
@@ -32,6 +33,7 @@
           <Property Name="BitCoinAddress" Type="varchar" MaxLength="250" />
           <Property Name="Status" Type="bit" />
           <Property Name="CreateDate" Type="datetime" />
+          <Property Name="Order" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="BidPercentage">
           <Key>
@@ -127,8 +129,7 @@
             <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BitCoinModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -144,6 +145,7 @@
           <Property Name="Status" Type="Byte" Nullable="false" />
           <NavigationProperty Name="User" Relationship="Self.FK_Bid_User" FromRole="Bid" ToRole="User" />
           <NavigationProperty Name="BidDetails" Relationship="Self.FK_BidDetail_Bid" FromRole="Bid" ToRole="BidDetail" />
+          <Property Name="Order" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="BidDetail">
           <Key>
@@ -162,6 +164,7 @@
           <Property Name="Status" Type="Boolean" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Bid" Relationship="Self.FK_BidDetail_Bid" FromRole="BidDetail" ToRole="Bid" />
+          <Property Name="Order" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="BidPercentage">
           <Key>
@@ -269,6 +272,7 @@
           <EntitySetMapping Name="Bids">
             <EntityTypeMapping TypeName="BitCoinModel.Bid">
               <MappingFragment StoreEntitySet="Bid">
+                <ScalarProperty Name="Order" ColumnName="Order" />
                 <ScalarProperty Name="BidCode" ColumnName="BidCode" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />
@@ -281,6 +285,7 @@
           <EntitySetMapping Name="BidDetails">
             <EntityTypeMapping TypeName="BitCoinModel.BidDetail">
               <MappingFragment StoreEntitySet="BidDetail">
+                <ScalarProperty Name="Order" ColumnName="Order" />
                 <ScalarProperty Name="BidDetailCode" ColumnName="BidDetailCode" />
                 <ScalarProperty Name="BidCode" ColumnName="BidCode" />
                 <ScalarProperty Name="Percentage" ColumnName="Percentage" />

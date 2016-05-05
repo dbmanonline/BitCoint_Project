@@ -22,9 +22,9 @@ namespace Bitcoin.Data.BLL
             return _bidDetailDal.GetAllBidDetails();
         }
 
-        public IEnumerable<Bid> GetAllBidDetailOfUser(int userID)
+        public IEnumerable<BidDetail> GetAllBidDetailOfUser(int userID)
         {
-            return _bidDetailDal.GetAllBidDetailOfUser(userID);
+            return _bidDetailDal.GettAllBidDetailOfUser(userID);
         }       
 
         public void UpdateBidDetail(BidDetail bidDetail)

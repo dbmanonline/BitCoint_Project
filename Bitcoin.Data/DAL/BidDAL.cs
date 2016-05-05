@@ -52,7 +52,18 @@ namespace Bitcoin.Data.DAL
         {
             var result = _bitCoinEntities.Bids
                 .Include("User")
-                .ToList();
+                .ToList()
+                .OrderByDescending(x => x.Order);
+            return result;
+        }
+
+        public IEnumerable<Bid> GetAllBidsOfUser(int userId)
+        {
+            var result = _bitCoinEntities.Bids
+                .Include("User")
+                .ToList()
+                .Where(x => x.UserID == userId)
+                .OrderByDescending(x => x.Order);
             return result;
         }
 
