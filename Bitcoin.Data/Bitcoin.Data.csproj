@@ -51,16 +51,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BLL\BankBLL.cs" />
     <Compile Include="BLL\BidBLL.cs" />
     <Compile Include="BLL\BidDetailBLL.cs" />
     <Compile Include="BLL\BidPercentageBLL.cs" />
     <Compile Include="BLL\LevelBLL.cs" />
     <Compile Include="BLL\UserBLL.cs" />
+    <Compile Include="DAL\BankDAL.cs" />
     <Compile Include="DAL\BidDAL.cs" />
     <Compile Include="DAL\BidDetailDAL.cs" />
     <Compile Include="DAL\BidPercentageDAL.cs" />
     <Compile Include="DAL\LevelDAL.cs" />
     <Compile Include="DAL\UserDAL.cs" />
+    <Compile Include="DTO\Bank.cs">
+      <DependentUpon>BitCoinModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DTO\Bid.cs">
       <DependentUpon>BitCoinModel.tt</DependentUpon>
     </Compile>
@@ -93,7 +98,6 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="App.Config" />
     <EntityDeploy Include="DTO\BitCoinModel.edmx">

@@ -20,6 +20,8 @@ public partial class Member_Bank_Default : System.Web.UI.Page
 
     #endregion
 
+    #region Events
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)
@@ -27,8 +29,6 @@ public partial class Member_Bank_Default : System.Web.UI.Page
             LoadAllUserBanks();
         }
     }
-
-    #region Events
 
     protected void btnSave_Click(object sender, EventArgs e)
     {
@@ -41,7 +41,7 @@ public partial class Member_Bank_Default : System.Web.UI.Page
     protected void gvBank_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         Pagination.PageIndexChanging(gvBank,e);
-        //LoadAllUserBanks();
+        LoadAllUserBanks();
     }
 
     #endregion

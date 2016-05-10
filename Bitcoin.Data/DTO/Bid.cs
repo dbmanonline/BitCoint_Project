@@ -26,7 +26,6 @@ namespace Bitcoin.Data.DTO
         public double Percentage { get; set; }
         public System.DateTime CreateDate { get; set; }
         public byte Status { get; set; }
-        public int Order { get; set; }
     
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

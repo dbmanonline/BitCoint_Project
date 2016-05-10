@@ -52,8 +52,8 @@ namespace Bitcoin.Data.DAL
         {
             var result = _bitCoinEntities.Bids
                 .Include("User")
-                .ToList()
-                .OrderByDescending(x => x.Order);
+                .ToList();
+                //.OrderByDescending(x => x.Order);
             return result;
         }
 
@@ -62,8 +62,8 @@ namespace Bitcoin.Data.DAL
             var result = _bitCoinEntities.Bids
                 .Include("User")
                 .ToList()
-                .Where(x => x.UserID == userId)
-                .OrderByDescending(x => x.Order);
+                .Where(x => x.UserID == userId);
+                //.OrderByDescending(x => x.Order);
             return result;
         }
 

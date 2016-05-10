@@ -120,7 +120,7 @@
                             <label>Deposit Amount  ( BitCoint )</label>
                             <asp:TextBox ID="txtDepositAmount" runat="server" class="form-control required" ReadOnly="True"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="Please enter deposit amount !"
-                                ControlToValidate="txtDepositAmount" Display="Dynamic" SetFocusOnError="True" ValidationGroup="Bid" ForeColor="Red"></asp:RequiredFieldValidator>
+                                ControlToValidate="txtDepositAmount" Display="Dynamic" SetFocusOnError="True" ValidationGroup="Bid" ForeColor="Red" CssClass="required"></asp:RequiredFieldValidator>
                         </div>
                     </div>
                 </div>
