@@ -13,6 +13,7 @@
         <AssociationConnector Association="BitCoinModel.FK_Bid_User" ManuallyRouted="false" />
         <AssociationConnector Association="BitCoinModel.FK_BidDetail_Bid" ManuallyRouted="false" />
         <AssociationConnector Association="BitCoinModel.FK_User_Level" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="BitCoinModel.Bank" Width="1.5" PointX="0.75" PointY="6.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
