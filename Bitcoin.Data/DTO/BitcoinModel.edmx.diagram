@@ -6,14 +6,14 @@
     <edmx:Diagrams>
       <Diagram DiagramId="8f627ccd3e0c4838be5c57c93ce2f60b" Name="Diagram1">
         <EntityTypeShape EntityType="BitCoinModel.Bank" Width="1.5" PointX="5.75" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BitCoinModel.Bid" Width="1.5" PointX="5.25" PointY="1.875" IsExpanded="true" />
         <EntityTypeShape EntityType="BitCoinModel.BidDetail" Width="1.5" PointX="7.5" PointY="1.375" IsExpanded="true" />
         <EntityTypeShape EntityType="BitCoinModel.BidPercentage" Width="1.5" PointX="0.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="BitCoinModel.Level" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
         <EntityTypeShape EntityType="BitCoinModel.User" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
-        <AssociationConnector Association="BitCoinModel.FK_Bid_User" ManuallyRouted="false" />
-        <AssociationConnector Association="BitCoinModel.FK_BidDetail_Bid" ManuallyRouted="false" />
         <AssociationConnector Association="BitCoinModel.FK_User_Level" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="BitCoinModel.Bid" Width="1.5" PointX="5.25" PointY="2" />
+        <AssociationConnector Association="BitCoinModel.FK_Bid_User" />
+        <AssociationConnector Association="BitCoinModel.FK_BidDetail_Bid" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

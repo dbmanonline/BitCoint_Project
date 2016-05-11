@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BitCoinModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BitCoinModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Bank">
           <Key>
             <PropertyRef Name="Id" />
@@ -24,6 +24,7 @@
           <Property Name="Percentage" Type="float" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Status" Type="tinyint" Nullable="false" />
+          <Property Name="Order" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="BidDetail">
           <Key>
@@ -41,6 +42,7 @@
           <Property Name="BitCoinAddress" Type="varchar" MaxLength="250" />
           <Property Name="Status" Type="bit" />
           <Property Name="CreateDate" Type="datetime" />
+          <Property Name="Order" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="BidPercentage">
           <Key>
@@ -137,8 +139,7 @@
             <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BitCoinModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -150,19 +151,6 @@
           <Property Name="UserID" Type="Int32" Nullable="false" />
           <Property Name="AccountName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="BitcoinAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Bid">
-          <Key>
-            <PropertyRef Name="BidCode" />
-          </Key>
-          <Property Name="BidCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="Amount" Type="Double" Nullable="false" />
-          <Property Name="Percentage" Type="Double" Nullable="false" />
-          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Status" Type="Byte" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Bid_User" FromRole="Bid" ToRole="User" />
-          <NavigationProperty Name="BidDetails" Relationship="Self.FK_BidDetail_Bid" FromRole="Bid" ToRole="BidDetail" />
         </EntityType>
         <EntityType Name="BidDetail">
           <Key>
@@ -180,7 +168,8 @@
           <Property Name="BitCoinAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="Status" Type="Boolean" />
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Bid" Relationship="Self.FK_BidDetail_Bid" FromRole="BidDetail" ToRole="Bid" />
+          <Property Name="Order" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Bid" Relationship="BitCoinModel.FK_BidDetail_Bid" FromRole="BidDetail" ToRole="Bid" />
         </EntityType>
         <EntityType Name="BidPercentage">
           <Key>
@@ -221,33 +210,9 @@
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LevelID" Type="Int32" Nullable="false" />
           <Property Name="Rate" Type="Double" Nullable="false" />
-          <NavigationProperty Name="Bids" Relationship="Self.FK_Bid_User" FromRole="User" ToRole="Bid" />
           <NavigationProperty Name="Level" Relationship="Self.FK_User_Level" FromRole="User" ToRole="Level" />
+          <NavigationProperty Name="Bids" Relationship="BitCoinModel.FK_Bid_User" FromRole="User" ToRole="Bid" />
         </EntityType>
-        <Association Name="FK_Bid_User">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="Bid" Type="Self.Bid" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="UserID" />
-            </Principal>
-            <Dependent Role="Bid">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_BidDetail_Bid">
-          <End Role="Bid" Type="Self.Bid" Multiplicity="1" />
-          <End Role="BidDetail" Type="Self.BidDetail" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Bid">
-              <PropertyRef Name="BidCode" />
-            </Principal>
-            <Dependent Role="BidDetail">
-              <PropertyRef Name="BidCode" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_User_Level">
           <End Role="Level" Type="Self.Level" Multiplicity="1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
@@ -262,24 +227,62 @@
         </Association>
         <EntityContainer Name="BitcoinEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Banks" EntityType="Self.Bank" />
-          <EntitySet Name="Bids" EntityType="Self.Bid" />
           <EntitySet Name="BidDetails" EntityType="Self.BidDetail" />
           <EntitySet Name="BidPercentages" EntityType="Self.BidPercentage" />
           <EntitySet Name="Levels" EntityType="Self.Level" />
           <EntitySet Name="Users" EntityType="Self.User" />
-          <AssociationSet Name="FK_Bid_User" Association="Self.FK_Bid_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="Bid" EntitySet="Bids" />
-          </AssociationSet>
-          <AssociationSet Name="FK_BidDetail_Bid" Association="Self.FK_BidDetail_Bid">
-            <End Role="Bid" EntitySet="Bids" />
-            <End Role="BidDetail" EntitySet="BidDetails" />
-          </AssociationSet>
           <AssociationSet Name="FK_User_Level" Association="Self.FK_User_Level">
             <End Role="Level" EntitySet="Levels" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
+          <EntitySet Name="Bids" EntityType="BitCoinModel.Bid" />
+          <AssociationSet Name="FK_Bid_User" Association="BitCoinModel.FK_Bid_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Bid" EntitySet="Bids" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BidDetail_Bid" Association="BitCoinModel.FK_BidDetail_Bid">
+            <End Role="Bid" EntitySet="Bids" />
+            <End Role="BidDetail" EntitySet="BidDetails" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="Bid">
+          <Key>
+            <PropertyRef Name="BidCode" />
+          </Key>
+          <Property Name="BidCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Double" Nullable="false" />
+          <Property Name="Percentage" Type="Double" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="Byte" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="BitCoinModel.FK_Bid_User" FromRole="Bid" ToRole="User" />
+          <NavigationProperty Name="BidDetails" Relationship="BitCoinModel.FK_BidDetail_Bid" FromRole="Bid" ToRole="BidDetail" />
+          <Property Name="Order" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <Association Name="FK_Bid_User">
+          <End Type="BitCoinModel.User" Role="User" Multiplicity="1" />
+          <End Type="BitCoinModel.Bid" Role="Bid" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Bid">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BidDetail_Bid">
+          <End Type="BitCoinModel.Bid" Role="Bid" Multiplicity="1" />
+          <End Type="BitCoinModel.BidDetail" Role="BidDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bid">
+              <PropertyRef Name="BidCode" />
+            </Principal>
+            <Dependent Role="BidDetail">
+              <PropertyRef Name="BidCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -296,21 +299,10 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Bids">
-            <EntityTypeMapping TypeName="BitCoinModel.Bid">
-              <MappingFragment StoreEntitySet="Bid">
-                <ScalarProperty Name="BidCode" ColumnName="BidCode" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="Percentage" ColumnName="Percentage" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="BidDetails">
             <EntityTypeMapping TypeName="BitCoinModel.BidDetail">
               <MappingFragment StoreEntitySet="BidDetail">
+                <ScalarProperty Name="Order" ColumnName="Order" />
                 <ScalarProperty Name="BidDetailCode" ColumnName="BidDetailCode" />
                 <ScalarProperty Name="BidCode" ColumnName="BidCode" />
                 <ScalarProperty Name="Percentage" ColumnName="Percentage" />
@@ -365,6 +357,19 @@
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="LevelID" ColumnName="LevelID" />
                 <ScalarProperty Name="Rate" ColumnName="Rate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Bids">
+            <EntityTypeMapping TypeName="BitCoinModel.Bid">
+              <MappingFragment StoreEntitySet="Bid">
+                <ScalarProperty Name="Order" ColumnName="Order" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Percentage" ColumnName="Percentage" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="BidCode" ColumnName="BidCode" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
