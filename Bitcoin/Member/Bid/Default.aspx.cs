@@ -119,7 +119,7 @@ public partial class Member_Bid_Default : System.Web.UI.Page
 
     private void LoadBidsOfUser()
     {
-        rptListBids.DataSource = _bidBll.GetAllBidsOfUser(userId);
+        rptListBids.DataSource = _bidBll.GetAllUserBids(userId);
         rptListBids.DataBind();
     }
 
