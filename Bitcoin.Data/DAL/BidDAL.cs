@@ -55,7 +55,6 @@ namespace Bitcoin.Data.DAL
             var result = _bitCoinEntities.Bids
                 .Include("User")
                 .Where(b => b.BidCode == bidCode);
-                
             return result.FirstOrDefault();
         }
 

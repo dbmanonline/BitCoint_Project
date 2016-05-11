@@ -37,7 +37,7 @@ namespace Bitcoin.Data.BLL
             _bidDal.UpdateBid(bid);
         }
 
-        public IEnumerable<Bid> GetAllUserBids(int userId)
+        public IEnumerable<Bid> GetAllUserGH(int userId)
         {
             var bids = _bidDal.GetAllBids()
                 .Where(x => x.UserID == userId && x.Status == 0)
@@ -45,17 +45,16 @@ namespace Bitcoin.Data.BLL
             return bids;
         }
 
+        public Bid GetLatestUserGH(int userId)
+        {
+            var bid = GetAllUserGH(userId).FirstOrDefault();
+            return bid;
+        }
+
         public bool CheckBidCodeIsExists(string bidCode)
         {
             var checkBidCodeExists = _bidDal.GetAllBids().Any(x => x.BidCode == bidCode);
-            if (checkBidCodeExists == true)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return checkBidCodeExists == true;
         }
     }
 }
