@@ -14,14 +14,7 @@ namespace Bitcoin.Data.BLL
 
         public void InsertBid(Bid bid)
         {
-            // Prefix of Bid is GP
-            bid.BidCode = "GP" + bid.BidCode;
             _bidDal.InsertBid(bid);
-        }
-
-        public Bid GetLatestBid(int userId)
-        {
-            return _bidDal.GetLatestBid(userId);
         }
 
         public void DeleteBid(Bid bid)
@@ -34,11 +27,6 @@ namespace Bitcoin.Data.BLL
             return _bidDal.GetAllBids();
         }
 
-        public IEnumerable<Bid> GetAllBidsOfUser(int userId)
-        {
-            return _bidDal.GetAllBidsOfUser(userId);
-        }
-
         public Bid GetBidById(string bidCode)
         {
             return _bidDal.GetBidById(bidCode);
@@ -47,6 +35,27 @@ namespace Bitcoin.Data.BLL
         public void UpdateBid(Bid bid)
         {
             _bidDal.UpdateBid(bid);
+        }
+
+        public IEnumerable<Bid> GetAllUserBids(int userId)
+        {
+            var bids = _bidDal.GetAllBids()
+                .Where(x => x.UserID == userId && x.Status == 0)
+                .OrderByDescending(x => x.Order);
+            return bids;
+        }
+
+        public bool CheckBidCodeIsExists(string bidCode)
+        {
+            var checkBidCodeExists = _bidDal.GetAllBids().Any(x => x.BidCode == bidCode);
+            if (checkBidCodeExists == true)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

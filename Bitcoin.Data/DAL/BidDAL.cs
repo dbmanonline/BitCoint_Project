@@ -23,18 +23,6 @@ namespace Bitcoin.Data.DAL
         }
 
         /// <summary>
-        /// Get latest bid of user
-        /// </summary>
-        /// <param name="userId"> UserId of Bid </param>
-        /// <returns> Single latest bid </returns>
-        public Bid GetLatestBid(int userId)
-        {
-            var latestBid = _bitCoinEntities.Bids
-                .FirstOrDefault(b => b.UserID == userId);
-            return latestBid;
-        }
-
-        /// <summary>
         /// Delete a bid with condition of status equal 0
         /// </summary>
         /// <param name="bid"> bid </param>
@@ -52,18 +40,8 @@ namespace Bitcoin.Data.DAL
         {
             var result = _bitCoinEntities.Bids
                 .Include("User")
-                .ToList();
-                //.OrderByDescending(x => x.Order);
-            return result;
-        }
-
-        public IEnumerable<Bid> GetAllBidsOfUser(int userId)
-        {
-            var result = _bitCoinEntities.Bids
-                .Include("User")
                 .ToList()
-                .Where(x => x.UserID == userId);
-                //.OrderByDescending(x => x.Order);
+                .OrderByDescending(x => x.Order);
             return result;
         }
 
