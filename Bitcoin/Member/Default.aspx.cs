@@ -32,6 +32,8 @@ public partial class Member_Default : System.Web.UI.Page
         if (!IsPostBack)
         {
             txtBitcoinAmount.Text = AmountBitcoin.ToString();
+            alertError.Visible = false;
+            alertSuccess.Visible = false;
             LoadAllUserBids();
         }
     }
@@ -40,7 +42,6 @@ public partial class Member_Default : System.Web.UI.Page
     {
         AddNewBid();
         LoadAllUserBids();
-        DisplayMessage.ShowMessage("Your Bid have been saved successfully !", Page);
     }
 
     protected void rptBid_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -70,23 +71,51 @@ public partial class Member_Default : System.Web.UI.Page
 
     private void AddNewBid()
     {
-        _bid.BidCode = RandomValue.RandomNumberToString();
-        while (_bidBll.CheckBidCodeIsExists(_bid.BidCode) == true)
+        if (CheckPhReceived() == false)
         {
             _bid.BidCode = RandomValue.RandomNumberToString();
+            while (_bidBll.CheckBidCodeIsExists(_bid.BidCode) == true)
+            {
+                _bid.BidCode = RandomValue.RandomNumberToString();
+            }
+            _bid.UserID = UserId;
+            _bid.Amount = AmountBitcoin;
+            _bid.Percentage = 0;
+            _bid.Status = 0;
+            _bid.CreateDate = DateTime.Now.Date;
+            _bidBll.InsertBid(_bid);
+            alertSuccess.Visible = true;
         }
-        _bid.UserID = UserId;
-        _bid.Amount = AmountBitcoin;
-        _bid.Percentage = 0;
-        _bid.Status = 0;
-        _bid.CreateDate = DateTime.Now.Date;
-        _bidBll.InsertBid(_bid);
+        else
+        {
+            alertError.Visible = true;
+            alertSuccess.Visible = false;
+        }
+        
     }
+    protected void DisplayToastr(string message, string type)
+    {
 
+        Page.ClientScript.RegisterStartupScript(this.GetType(), "toastr", "alertMe(" + "\"" + message + "\"" + "," + "\"" + type + "\"" + " );", true);
+    }
     private void LoadAllUserBids()
     {
-        rptBid.DataSource = _bidBll.GetAllUserBids(UserId);
+        rptBid.DataSource = _bidBll.GetAllUserGH(UserId);
         rptBid.DataBind();
+    }
+    
+    private bool CheckPhReceived()
+    {
+        var ph = _bidBll.GetLatestUserGH(UserId);
+        if (ph != null)
+        {
+            if (ph.Status == StatusPending) return true;
+            return false;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     #endregion

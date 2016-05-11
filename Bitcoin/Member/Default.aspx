@@ -6,9 +6,10 @@
             border: 0;
             padding: 3px 0;
         }
-        .list-group-item span {
-            font-size: 12px;
-        }
+
+            .list-group-item span {
+                font-size: 12px;
+            }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ctplContent" runat="Server">
@@ -22,6 +23,24 @@
         </header>
         <div class="padding-10">
             <div class="row">
+                <div class="col-md-12">
+                    <div id="alertError" runat="server" class="alert alert-danger margin-bottom-10">
+                        <!-- DANGER -->
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <strong>Error!</strong> You already have a pending give help request.
+                    </div>
+                    <div id="alertSuccess" runat="server" class="alert alert-success margin-bottom-10">
+                        <!-- SUCCESS -->
+                        <button type="button" class="close" data-dismiss="alert">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <strong>Success!</strong> Your Bid have been saved successfully.
+                    </div>
+                </div>
                 <div class="col-md-8 col-sm-8">
                     <a href="#" class="btn btn-featured btn-default btn-inverse size-20"
                         data-toggle="modal" data-target=".bs-example-modal-lg">
@@ -51,7 +70,7 @@
 
                                     <span class="elipsis">
                                         <!-- panel title -->
-                                        <strong>Provide Help (
+                                        <strong>Give Help (
                                             <asp:Label ID="lblBidCode" runat="server" Text='<%# Eval("BidCode") %>'></asp:Label>
                                             )</strong>
                                     </span>
