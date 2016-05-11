@@ -13,9 +13,9 @@ public class RandomValue
         Random random = new Random();
         string str = "";
         int i;
-        for (i = 1; i < 9; i++)
+        for (i = 1; i < 11; i++)
         {
-            str += random.Next(1, 8).ToString();
+            str += random.Next(1, 9).ToString();
         }
         return str;
     }
