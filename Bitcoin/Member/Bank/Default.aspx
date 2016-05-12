@@ -15,9 +15,8 @@
 
         <div class="padding-10">
             <div class="panel-body">
-                <div>
-                    <a data-toggle="modal" data-target=".bs-example-modal-lg" class="btn btn-default btn-3d">Add Your Bitcoin Addresss</a>
-                </div>
+                <asp:LinkButton ID="lbAddBitcoinAddress" runat="server" class="btn btn-success btn-3d" OnClick="lbAddBitcoinAddress_Click">Add Your Bitcoin Addresss</asp:LinkButton>
+                    <%--<a data-toggle="modal" data-target=".bs-example-modal-lg" class="btn btn-success btn-3d">Add Your Bitcoin Addresss</a>--%>
             </div>
         </div>
 
@@ -26,10 +25,10 @@
             <div class="panel-body">
                 <div class="table-responsive">
                     <asp:GridView ID="gvBank" runat="server"
-                        class="table table-striped table-bordered table-hover" 
+                        class="table table-striped table-bordered table-hover"
                         AutoGenerateColumns="False"
-                        EmptyDataText="You do not have any bank information !" 
-                        AllowPaging="True"                            
+                        EmptyDataText="You do not have any bank information !"
+                        AllowPaging="True"
                         PageSize="15"
                         OnPageIndexChanging="gvBank_PageIndexChanging">
                         <Columns>
@@ -44,7 +43,7 @@
                                 <ItemTemplate>
                                     <asp:Label ID="lblAccountName" runat="server" Text='<%# Eval("AccountName") %>'></asp:Label>
                                 </ItemTemplate>
-                            </asp:TemplateField> 
+                            </asp:TemplateField>
                             <asp:TemplateField HeaderText="Bitcoin Address">
                                 <ItemTemplate>
                                     <asp:Label ID="lblBitcoinAddress" runat="server" Text='<%# Eval("BitcoinAddress") %>'></asp:Label>
@@ -59,7 +58,7 @@
         </div>
 
         <!--- Add Bitcoin Address Modal -->
-        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="bankInfoModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
 
@@ -100,8 +99,33 @@
                 </div>
             </div>
         </div>
+
+        <!-- Alert Modals >-->
+        <div id="alertSuccessModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="alert alert-success margin-bottom-30">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <strong>Success!</strong> You have been saved successfully.
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </section>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ctplScript" runat="Server">
+    <script src="../template/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        function ShowAlertSuccess() {
+            $('#alertSuccessModal').modal('show');
+        };
+        function ShowBitcoinAddressModal() {
+            $('#bankInfoModal').modal('show');
+        };
+    </script>
 </asp:Content>
 

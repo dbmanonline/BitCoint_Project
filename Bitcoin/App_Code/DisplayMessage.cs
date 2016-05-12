@@ -20,4 +20,14 @@ public class DisplayMessage
     {
         ScriptManager.RegisterStartupScript(page, typeof(Page), "MyScript", "alert('" + content + "');", true);
     }
+
+    /// <summary>
+    /// Display a alert dialog
+    /// </summary>
+    /// <param name="functionName">Function name which call to modal</param>
+    /// <param name="page">Current page</param>
+    public static void ShowAlertModal(string functionName, Page page)
+    {
+        ScriptManager.RegisterStartupScript(page, typeof(Page), "AlertModal", functionName, true);
+    }
 }

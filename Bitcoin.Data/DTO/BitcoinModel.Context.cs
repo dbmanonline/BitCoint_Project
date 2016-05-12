@@ -26,10 +26,9 @@ namespace Bitcoin.Data.DTO
         }
     
         public virtual DbSet<Bank> Banks { get; set; }
-        public virtual DbSet<BidDetail> BidDetails { get; set; }
-        public virtual DbSet<BidPercentage> BidPercentages { get; set; }
         public virtual DbSet<Level> Levels { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Bid> Bids { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
     }
 }

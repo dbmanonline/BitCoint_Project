@@ -12,9 +12,9 @@ public partial class Member_Default : System.Web.UI.Page
 {
     #region Fields
 
-    private readonly BidBLL _bidBll = new BidBLL();
-    private readonly BidDetailBLL _bidDetailBll = new BidDetailBLL();
-    private readonly Bid _bid = new Bid();
+    private readonly OrderBLL _orderBll = new OrderBLL();
+    private readonly Order _order = new Order();
+    private readonly OrderDetailBLL _orderDetailBll = new OrderDetailBLL();
 
     // Current default of amount bitcoin is 0.5
     private const float AmountBitcoin = (float)0.5;
@@ -32,8 +32,6 @@ public partial class Member_Default : System.Web.UI.Page
         if (!IsPostBack)
         {
             txtBitcoinAmount.Text = AmountBitcoin.ToString();
-            alertError.Visible = false;
-            alertSuccess.Visible = false;
             LoadAllUserBids();
         }
     }
@@ -41,17 +39,18 @@ public partial class Member_Default : System.Web.UI.Page
     protected void btnSaveBid_Click(object sender, EventArgs e)
     {
         AddNewBid();
+        DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
         LoadAllUserBids();
     }
 
     protected void rptBid_ItemDataBound(object sender, RepeaterItemEventArgs e)
     {
         var lblAmount = e.Item.FindControl("lblAmount") as Label;
-        var lblRemainingAmount = e.Item.FindControl("lblRemainingAmount") as Label;
+        //var lblRemainingAmount = e.Item.FindControl("lblRemainingAmount") as Label;
         var lblStatus = e.Item.FindControl("lblStatus") as Label;
         var spanStatus = e.Item.FindControl("spanStatus") as HtmlControl;
 
-        lblRemainingAmount.Text = Convert.ToDouble(Convert.ToDouble(lblAmount.Text) - ((Convert.ToDouble(lblAmount.Text) * Convert.ToDouble(lblRemainingAmount.Text)) / 100)).ToString();
+        //lblRemainingAmount.Text = Convert.ToDouble(Convert.ToDouble(lblAmount.Text) - ((Convert.ToDouble(lblAmount.Text) * Convert.ToDouble(lblRemainingAmount.Text)) / 100)).ToString();
 
         if (lblStatus.Text == StatusPending.ToString())
         {
@@ -65,6 +64,11 @@ public partial class Member_Default : System.Web.UI.Page
         }
     }
 
+    protected void lbBidBitcoin_Click(object sender, EventArgs e)
+    {
+        DisplayMessage.ShowAlertModal("ShowBid()", Page);
+    }
+
     #endregion
 
     #region Methods
@@ -73,40 +77,33 @@ public partial class Member_Default : System.Web.UI.Page
     {
         if (CheckPhReceived() == false)
         {
-            _bid.BidCode = RandomValue.RandomNumberToString();
-            while (_bidBll.CheckBidCodeIsExists(_bid.BidCode) == true)
+            _order.OrderCode = RandomValue.RandomNumberToString();
+            while (_orderBll.CheckBidCodeIsExists(_order.OrderCode) == true)
             {
-                _bid.BidCode = RandomValue.RandomNumberToString();
+                _order.OrderCode = RandomValue.RandomNumberToString();
             }
-            _bid.UserID = UserId;
-            _bid.Amount = AmountBitcoin;
-            _bid.Percentage = 0;
-            _bid.Status = 0;
-            _bid.CreateDate = DateTime.Now.Date;
-            _bidBll.InsertBid(_bid);
-            alertSuccess.Visible = true;
+            _order.UserID = UserId;
+            _order.Amount = AmountBitcoin;
+            _order.Status = 0;
+            _order.CreateDate = DateTime.Now.Date;
+            _order.Type = "PH";
+            _orderBll.InsertBid(_order);
         }
         else
         {
-            alertError.Visible = true;
-            alertSuccess.Visible = false;
+            DisplayMessage.ShowAlertModal("ShowAlertError()", Page);
         }
-        
     }
-    protected void DisplayToastr(string message, string type)
-    {
 
-        Page.ClientScript.RegisterStartupScript(this.GetType(), "toastr", "alertMe(" + "\"" + message + "\"" + "," + "\"" + type + "\"" + " );", true);
-    }
     private void LoadAllUserBids()
     {
-        rptBid.DataSource = _bidBll.GetAllUserGH(UserId);
+        rptBid.DataSource = _orderBll.GetAllUserPH(UserId);
         rptBid.DataBind();
     }
-    
+
     private bool CheckPhReceived()
     {
-        var ph = _bidBll.GetLatestUserGH(UserId);
+        var ph = _orderBll.GetLatestUserPH(UserId);
         if (ph != null)
         {
             if (ph.Status == StatusPending) return true;
@@ -118,5 +115,12 @@ public partial class Member_Default : System.Web.UI.Page
         }
     }
 
+    private void LoadGHofUser()
+    {
+        
+
+    }
+
     #endregion
+
 }

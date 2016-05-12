@@ -16,7 +16,7 @@ public partial class Member_Bank_Default : System.Web.UI.Page
     private readonly Bank _bank = new Bank();
 
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 4;
+    private const int UserId = 6;
 
     #endregion
 
@@ -35,13 +35,18 @@ public partial class Member_Bank_Default : System.Web.UI.Page
         AddNewBank();
         ResetControl();
         LoadAllUserBanks();
-        DisplayMessage.ShowMessage("Your bank information have been saved successfully !", Page);
+        DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
     }
 
     protected void gvBank_PageIndexChanging(object sender, GridViewPageEventArgs e)
     {
         Pagination.PageIndexChanging(gvBank,e);
         LoadAllUserBanks();
+    }
+
+    protected void lbAddBitcoinAddress_Click(object sender, EventArgs e)
+    {
+        DisplayMessage.ShowAlertModal("ShowBitcoinAddressModal()", Page);
     }
 
     #endregion
@@ -69,4 +74,5 @@ public partial class Member_Bank_Default : System.Web.UI.Page
     }
 
     #endregion
+
 }

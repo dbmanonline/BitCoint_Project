@@ -23,30 +23,9 @@
         </header>
         <div class="padding-10">
             <div class="row">
-                <div class="col-md-12">
-                    <div id="alertError" runat="server" class="alert alert-danger margin-bottom-10">
-                        <!-- DANGER -->
-                        <button type="button" class="close" data-dismiss="alert">
-                            <span aria-hidden="true">×</span>
-                            <span class="sr-only">Close</span>
-                        </button>
-                        <strong>Error!</strong> You already have a pending give help request.
-                    </div>
-                    <div id="alertSuccess" runat="server" class="alert alert-success margin-bottom-10">
-                        <!-- SUCCESS -->
-                        <button type="button" class="close" data-dismiss="alert">
-                            <span aria-hidden="true">×</span>
-                            <span class="sr-only">Close</span>
-                        </button>
-                        <strong>Success!</strong> Your Bid have been saved successfully.
-                    </div>
-                </div>
                 <div class="col-md-8 col-sm-8">
-                    <a href="#" class="btn btn-featured btn-default btn-inverse size-20"
-                        data-toggle="modal" data-target=".bs-example-modal-lg">
-                        <span>Bid Bitcoin</span>
-                        <i class="glyphicon glyphicon-bitcoin"></i>
-                    </a>
+                    <asp:LinkButton ID="lbBidBitcoin" runat="server" class="btn btn-featured btn-default btn-inverse size-20" OnClick="lbBidBitcoin_Click"><span>Bid Bitcoin</span>
+                        <i class="glyphicon glyphicon-bitcoin"></i></asp:LinkButton>
                 </div>
                 <div class="col-md-4 col-sm-4">
                     <a href="#" class="btn btn-featured btn-red btn-inverse size-20">
@@ -60,6 +39,11 @@
         <div class="padding-10">
             <div class="row">
                 <div class="col-md-8">
+                    <asp:Repeater ID="rptAsk" runat="server">
+                        <ItemTemplate>
+                            <asp:Label ID="lblGHCode" runat="server" Text='<%# Eval("OrderDetailCode") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:Repeater>
                 </div>
                 <div class="col-md-4">
                     <asp:Repeater ID="rptBid" runat="server" OnItemDataBound="rptBid_ItemDataBound">
@@ -70,8 +54,8 @@
 
                                     <span class="elipsis">
                                         <!-- panel title -->
-                                        <strong>Give Help (
-                                            <asp:Label ID="lblBidCode" runat="server" Text='<%# Eval("BidCode") %>'></asp:Label>
+                                        <strong>Provide Help (
+                                            <asp:Label ID="lblBidCode" runat="server" Text='<%# Eval("OrderCode") %>'></asp:Label>
                                             )</strong>
                                     </span>
 
@@ -93,7 +77,7 @@
                                                 <li class="list-group-item"><span class="bold">TOTAL BITCOIN : </span><span>
                                                     <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("Amount") %>'></asp:Label></span></li>
                                                 <li class="list-group-item"><span class="bold">REMAINING BITCOIN : </span><span>
-                                                    <asp:Label ID="lblRemainingAmount" runat="server" Text='<%# Eval("Percentage") %>'></asp:Label></span></li>
+                                                    <asp:Label ID="lblRemainingAmount" runat="server" Text=''></asp:Label></span></li>
                                                 <li class="list-group-item"><span class="bold">DATE : </span><span>
                                                     <asp:Label ID="lblCreateDate" runat="server" Text='<%# Eval("CreateDate", "{0:MM/dd/yyyy}") %>'></asp:Label></span></li>
                                                 <li class="list-group-item"><span class="bold">STATUS : </span><span id="spanStatus" runat="server">
@@ -112,7 +96,7 @@
         </div>
 
         <!-- bid bitcoin modal -->
-        <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div id="bidModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
 
@@ -125,16 +109,27 @@
                     <!-- body modal -->
                     <div class="modal-body">
                         <div class="row">
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <label>Amount (Bitcoin) *</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon"><i class="fa fa-bitcoin"></i></div>
-                                        <asp:TextBox ID="txtBitcoinAmount" runat="server" class="form-control" ReadOnly="True"></asp:TextBox>
-                                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ErrorMessage="" SetFocusOnError="True" ControlToValidate="txtBitcoinAmount" Display="Dynamic" ValidationGroup="SaveBid"></asp:RequiredFieldValidator>
-                                    </div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label>Default Amount Bitcoin</label>
                                 </div>
-
+                                <div class="form-inline">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-addon"><i class="fa fa-bitcoin"></i></div>
+                                            <asp:TextBox ID="txtBitcoinAmount" runat="server" class="form-control" ReadOnly="True"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                    <asp:Button ID="btnSaveBid" runat="server" Text="Send" class="btn btn-success" OnClick="btnSaveBid_Click" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Please, Read the information !</h4>
+                                <p>We also have some new extensions available for you to try out. We are excited to announce that starting with this build, both AdBlock and Adblock Plus are now available for download in the Windows Store in addition to Pin It Button, Mouse Gestures, Reddit Enhancement Suite, Microsoft Translator, and OneNote Web Clipper. It is recommended that you only install one of either AdBlock or Adblock Plus as having them both running at the same time can cause issues with viewing websites in Microsoft Edge.</p>
+                                <p><em>Important note: There is a bug in this build that occurs if you turn off all extensions without uninstalling them, you may not be able to close the browser or get context menus to work. To avoid this issue, uninstall any extensions you no longer want to use instead of turning them off. If you do hit this issue, to get out of this state you will need to turn on one or more extensions or uninstall all extensions, kill any Microsoft Edge processes running in Task Manager, and restart Microsoft Edge.</em></p>
+                                <p><strong>Real-time web notifications in Microsoft Edge:</strong> Microsoft Edge now supports real-time web notifications, which allow participating websites to send notifications to you via Action Center, with your permission. For example, when your friend sends you a message on <a href="https://web.skype.com/"><strong>Skype for Web</strong></a> while you’re busy in the Xbox app, you won’t miss a thing. A notification from the website will appear in Windows, just like an app might send. Click on the notification and you’ll be right back in Microsoft Edge at the site that sent it!</p>
                             </div>
                         </div>
                     </div>
@@ -142,13 +137,54 @@
                     <!-- footer modal -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <asp:Button ID="btnSaveBid" runat="server" Text="Send Request" class="btn btn-primary" ValidationGroup="SaveBank" OnClick="btnSaveBid_Click" />
+
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Alert Modals >-->
+        <div id="alertErrorModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="alert alert-danger margin-bottom-30">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <strong>Error!</strong> You already have a pending provide help request.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="alertSuccessModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="alert alert-success margin-bottom-30">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">×</span>
+                            <span class="sr-only">Close</span>
+                        </button>
+                        <strong>Success!</strong> Your Bid have been saved successfully.
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </section>
 </asp:Content>
 <asp:Content ID="Content3" ContentPlaceHolderID="ctplScript" runat="Server">
+    <script src="template/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        function ShowAlertError() {
+            $('#alertErrorModal').modal('show');
+        };
+        function ShowAlertSuccess() {
+            $('#alertSuccessModal').modal('show');
+        };
+        function ShowBid() {
+            $('#bidModal').modal('show');
+        };
+    </script>
 </asp:Content>
 

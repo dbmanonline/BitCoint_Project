@@ -18,5 +18,7 @@ namespace Bitcoin.Data.DTO
         public int UserID { get; set; }
         public string AccountName { get; set; }
         public string BitcoinAddress { get; set; }
+    
+        public virtual User User { get; set; }
     }
 }

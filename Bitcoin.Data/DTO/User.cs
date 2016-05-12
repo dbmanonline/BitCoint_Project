@@ -17,7 +17,8 @@ namespace Bitcoin.Data.DTO
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
-            this.Bids = new HashSet<Bid>();
+            this.Orders = new HashSet<Order>();
+            this.Banks = new HashSet<Bank>();
         }
     
         public int UserID { get; set; }
@@ -38,6 +39,8 @@ namespace Bitcoin.Data.DTO
     
         public virtual Level Level { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Bid> Bids { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Bank> Banks { get; set; }
     }
 }
