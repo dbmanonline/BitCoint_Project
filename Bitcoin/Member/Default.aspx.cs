@@ -19,7 +19,7 @@ public partial class Member_Default : System.Web.UI.Page
     // Current default of amount bitcoin is 0.5
     private const float AmountBitcoin = (float)0.5;
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 4;
+    private const int UserId = 8;
     private const int StatusPending = 0;
     private const int StatusReceived = 1;
 
@@ -33,6 +33,7 @@ public partial class Member_Default : System.Web.UI.Page
         {
             txtBitcoinAmount.Text = AmountBitcoin.ToString();
             LoadAllUserBids();
+            LoadGHofUser();
         }
     }
 
@@ -117,8 +118,8 @@ public partial class Member_Default : System.Web.UI.Page
 
     private void LoadGHofUser()
     {
-        
-
+        rptAsk.DataSource = _orderDetailBll.GetAllGHforUser(UserId);
+        rptAsk.DataBind();
     }
 
     #endregion

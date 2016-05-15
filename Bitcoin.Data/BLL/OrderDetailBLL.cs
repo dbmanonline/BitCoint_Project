@@ -12,10 +12,10 @@ namespace Bitcoin.Data.BLL
     {
         private readonly OrderDetailDAL _orderDetailDal = new OrderDetailDAL();
 
-        public IEnumerable<OrderDetail> GetAllGHforUser(string orderCode)
+        public IEnumerable<OrderDetail> GetAllGHforUser(int userId)
         {
             return _orderDetailDal.GetAllOrderDetail()
-                .Where(x => x.OrderCode == orderCode);
+                .Where(x => x.SenderId == userId);
         } 
     }
 }

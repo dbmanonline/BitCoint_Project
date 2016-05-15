@@ -41,7 +41,55 @@
                 <div class="col-md-8">
                     <asp:Repeater ID="rptAsk" runat="server">
                         <ItemTemplate>
-                            <asp:Label ID="lblGHCode" runat="server" Text='<%# Eval("OrderDetailCode") %>'></asp:Label>
+                            <div id="panel-misc-portlet-r1" class="panel panel-default">
+                                <div class="panel-heading">
+                                    <span class="elipsis">
+                                        <!-- panel title -->
+                                        <strong>Give Help (
+                                            <asp:Label ID="lblGHCode" runat="server" Text='<%# Eval("OrderDetailCode") %>'></asp:Label>
+                                            )</strong>
+                                    </span>
+                                    <!-- right options -->
+                                    <ul class="options pull-right list-inline">
+                                        <li><a href="#" class="opt panel_colapse" data-toggle="tooltip" title="" data-placement="bottom" data-original-title="Colapse"></a></li>
+                                    </ul>
+                                    <!-- /right options -->
+                                </div>
+                                <!-- panel content -->
+                                <div class="panel-body" style="display: block;">
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <i class="fa fa-play-circle fa-2x"></i>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <strong>
+                                                <asp:Label ID="lblSenDate" runat="server" Text="15/05/2016"></asp:Label></strong>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <strong>You</strong>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <strong>>
+                                            <asp:Label ID="lblSendAmount" runat="server" Text="0.1 Bitcoin"></asp:Label>
+                                                >
+                                            </strong>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <strong>
+                                                <asp:Label ID="lblReceiverId" runat="server" Text="Arena Lala"></asp:Label></strong>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <span>
+                                                <asp:LinkButton ID="lbtnSendMessage" runat="server" class="label label-primary">Message <span>0</span></asp:LinkButton>
+                                            </span>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <asp:LinkButton ID="lbtn" runat="server">Details</asp:LinkButton>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /panel content -->
+                            </div>
                         </ItemTemplate>
                     </asp:Repeater>
                 </div>
