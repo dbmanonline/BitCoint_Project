@@ -16,7 +16,7 @@ namespace Bitcoin.Data.DAL
         /// Insert Order BitCoin
         /// </summary>
         /// <param name="order"> order </param>
-        public void InsertBid(Order order)
+        public void InsertOrder(Order order)
         {
             _bitCoinEntities.Orders.Add(order);
             _bitCoinEntities.SaveChanges();
@@ -26,7 +26,7 @@ namespace Bitcoin.Data.DAL
         /// Delete a order with condition of status equal 0
         /// </summary>
         /// <param name="order"> order </param>
-        public void DeleteBid(Order order)
+        public void DeleteOrder(Order order)
         {
             _bitCoinEntities.Orders.Remove(order);
             _bitCoinEntities.SaveChanges();
@@ -36,7 +36,7 @@ namespace Bitcoin.Data.DAL
         /// Get all orders
         /// </summary>
         /// <returns>list orders</returns>
-        public IEnumerable<Order> GetAllBids()
+        public IEnumerable<Order> GetAllOrders()
         {
             var result = _bitCoinEntities.Orders
                 .Include("User")
@@ -46,11 +46,11 @@ namespace Bitcoin.Data.DAL
         }
 
         /// <summary>
-        /// Get a order that match id
+        /// Get a order that match order code
         /// </summary>
         /// <param name="id">id of order</param>
         /// <returns>Single order</returns>
-        public Order GetBidById(string orderCode)
+        public Order GetOrderByCode(string orderCode)
         {
             var result = _bitCoinEntities.Orders
                 .Include("User")
@@ -62,7 +62,7 @@ namespace Bitcoin.Data.DAL
         /// Update values of Order
         /// </summary>
         /// <param name="bid"> models of order</param>
-        public void UpdateBid(Order order)
+        public void UpdateOrder(Order order)
         {
             _bitCoinEntities.Orders.Attach(order);
             _bitCoinEntities.Entry(order).State = EntityState.Modified;

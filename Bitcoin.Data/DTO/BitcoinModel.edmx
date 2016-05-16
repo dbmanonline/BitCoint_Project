@@ -31,6 +31,7 @@
           <Property Name="OrderCode" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="Amount" Type="float" Nullable="false" />
+          <Property Name="RemainingAmount" Type="float" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Status" Type="tinyint" Nullable="false" />
           <Property Name="OrderNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
@@ -45,6 +46,7 @@
           <Property Name="OrderCode" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="SenderId" Type="int" Nullable="false" />
           <Property Name="ReceiverId" Type="int" Nullable="false" />
+          <Property Name="Amount" Type="float" Nullable="false" />
           <Property Name="Confirmation" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="User">
@@ -235,6 +237,7 @@
           <Property Name="OrderCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="BitcoinAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="OrderDetails" Relationship="BitCoinModel.FK_OrderDetail_Order" FromRole="Order" ToRole="OrderDetail" />
+          <Property Name="RemainingAmount" Type="Double" />
         </EntityType>
         <Association Name="FK_Bid_User">
           <End Type="BitCoinModel.User" Role="User" Multiplicity="1" />
@@ -258,6 +261,7 @@
           <Property Name="ReceiverId" Type="Int32" Nullable="false" />
           <Property Name="Confirmation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Order" Relationship="BitCoinModel.FK_OrderDetail_Order" FromRole="OrderDetail" ToRole="Order" />
+          <Property Name="Amount" Type="Double" Nullable="false" />
         </EntityType>
         <Association Name="FK_Bank_User">
           <End Type="BitCoinModel.User" Role="User" Multiplicity="1" />
@@ -334,6 +338,7 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="BitCoinModel.Order">
               <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="RemainingAmount" ColumnName="RemainingAmount" />
                 <ScalarProperty Name="BitcoinAddress" ColumnName="BitcoinAddress" />
                 <ScalarProperty Name="OrderCode" ColumnName="OrderCode" />
                 <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
@@ -348,6 +353,7 @@
           <EntitySetMapping Name="OrderDetails">
             <EntityTypeMapping TypeName="BitCoinModel.OrderDetail">
               <MappingFragment StoreEntitySet="OrderDetail">
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="Confirmation" ColumnName="Confirmation" />
                 <ScalarProperty Name="ReceiverId" ColumnName="ReceiverId" />
                 <ScalarProperty Name="SenderId" ColumnName="SenderId" />

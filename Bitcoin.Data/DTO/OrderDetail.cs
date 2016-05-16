@@ -19,6 +19,7 @@ namespace Bitcoin.Data.DTO
         public int SenderId { get; set; }
         public int ReceiverId { get; set; }
         public string Confirmation { get; set; }
+        public double Amount { get; set; }
     
         public virtual Order Order { get; set; }
     }

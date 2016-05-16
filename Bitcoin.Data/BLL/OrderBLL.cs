@@ -10,36 +10,36 @@ namespace Bitcoin.Data.BLL
 {
     public class OrderBLL
     {
-        private static readonly OrderDAL _bidDal = new OrderDAL();
+        private static readonly OrderDAL _orderDal = new OrderDAL();
 
-        public void InsertBid(Order order)
+        public void InsertOrder(Order order)
         {
-            _bidDal.InsertBid(order);
+            _orderDal.InsertOrder(order);
         }
 
-        public void DeleteBid(Order order)
+        public void DeleteOrder(Order order)
         {
-            _bidDal.DeleteBid(order);
+            _orderDal.DeleteOrder(order);
         }
 
-        public IEnumerable<Order> GetAllBids()
+        public IEnumerable<Order> GetAllOrders()
         {
-            return _bidDal.GetAllBids();
+            return _orderDal.GetAllOrders();
         }
 
-        public Order GetBidById(string bidCode)
+        public Order GetByOrderCode(string orderCode)
         {
-            return _bidDal.GetBidById(bidCode);
+            return _orderDal.GetOrderByCode(orderCode);
         }
 
-        public void UpdateBid(Order bid)
+        public void UpdateOrder(Order order)
         {
-            _bidDal.UpdateBid(bid);
+            _orderDal.UpdateOrder(order);
         }
 
         public IEnumerable<Order> GetAllUserPH(int userId)
         {
-            var orders = _bidDal.GetAllBids()
+            var orders = _orderDal.GetAllOrders()
                 .Where(x => x.UserID == userId && x.Status == 0 && x.Type == "PH")
                 .OrderByDescending(x => x.OrderNumber);
             return orders;
@@ -54,8 +54,16 @@ namespace Bitcoin.Data.BLL
 
         public bool CheckBidCodeIsExists(string orderCode)
         {
-            var checkBidCodeExists = _bidDal.GetAllBids().Any(x => x.OrderCode == orderCode);
+            var checkBidCodeExists = _orderDal.GetAllOrders().Any(x => x.OrderCode == orderCode);
             return checkBidCodeExists == true;
         }
+
+        public Order GetEarlyGH()
+        {
+            return _orderDal.GetAllOrders()
+                .Where(x => x.Type == "GH" && x.Status == 0)
+                .OrderBy(x => x.OrderNumber)
+                .FirstOrDefault();
+        } 
     }
 }

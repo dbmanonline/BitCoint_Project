@@ -11,9 +11,23 @@ namespace Bitcoin.Data.DAL
     {
         private readonly BitcoinEntities _bitcoinEntities = new BitcoinEntities();
 
+        /// <summary>
+        /// Get all order details
+        /// </summary>
+        /// <returns>List order details</returns>
         public IEnumerable<OrderDetail> GetAllOrderDetail()
         {
             return _bitcoinEntities.OrderDetails.ToList();
+        }
+
+        /// <summary>
+        /// Insert order detail
+        /// </summary>
+        /// <param name="orderDetail"> order detail </param>
+        public void InsertOrderDetail(OrderDetail orderDetail)
+        {
+            _bitcoinEntities.OrderDetails.Add(orderDetail);
+            _bitcoinEntities.SaveChanges();
         }
     }
 }

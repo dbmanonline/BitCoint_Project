@@ -16,6 +16,11 @@ namespace Bitcoin.Data.BLL
         {
             return _orderDetailDal.GetAllOrderDetail()
                 .Where(x => x.SenderId == userId);
-        } 
+        }
+
+        public void InsertOrderDetail(OrderDetail orderDetail)
+        {
+            _orderDetailDal.InsertOrderDetail(orderDetail);
+        }
     }
 }

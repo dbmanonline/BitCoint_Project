@@ -15,11 +15,12 @@ public partial class Member_Default : System.Web.UI.Page
     private readonly OrderBLL _orderBll = new OrderBLL();
     private readonly Order _order = new Order();
     private readonly OrderDetailBLL _orderDetailBll = new OrderDetailBLL();
+    private readonly OrderDetail _orderDetail = new OrderDetail();
 
     // Current default of amount bitcoin is 0.5
     private const float AmountBitcoin = (float)0.5;
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 8;
+    private const int UserId = 4;
     private const int StatusPending = 0;
     private const int StatusReceived = 1;
 
@@ -32,8 +33,9 @@ public partial class Member_Default : System.Web.UI.Page
         if (!IsPostBack)
         {
             txtBitcoinAmount.Text = AmountBitcoin.ToString();
-            LoadAllUserBids();
-            LoadGHofUser();
+            LoadAllUserPH();
+            //GetGhToInsertIntoOrderDetail();
+            //LoadGHofUser();
         }
     }
 
@@ -41,7 +43,7 @@ public partial class Member_Default : System.Web.UI.Page
     {
         AddNewBid();
         DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
-        LoadAllUserBids();
+        LoadAllUserPH();
     }
 
     protected void rptBid_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -70,6 +72,11 @@ public partial class Member_Default : System.Web.UI.Page
         DisplayMessage.ShowAlertModal("ShowBid()", Page);
     }
 
+    protected void lbtnShowOrderDetail_Click(object sender, EventArgs e)
+    {
+        DisplayMessage.ShowAlertModal("ShowOrderDetail()", Page);
+    }
+
     #endregion
 
     #region Methods
@@ -88,7 +95,7 @@ public partial class Member_Default : System.Web.UI.Page
             _order.Status = 0;
             _order.CreateDate = DateTime.Now.Date;
             _order.Type = "PH";
-            _orderBll.InsertBid(_order);
+            _orderBll.InsertOrder(_order);
         }
         else
         {
@@ -96,7 +103,7 @@ public partial class Member_Default : System.Web.UI.Page
         }
     }
 
-    private void LoadAllUserBids()
+    private void LoadAllUserPH()
     {
         rptBid.DataSource = _orderBll.GetAllUserPH(UserId);
         rptBid.DataBind();
@@ -122,6 +129,17 @@ public partial class Member_Default : System.Web.UI.Page
         rptAsk.DataBind();
     }
 
-    #endregion
+    private void GetGhToInsertIntoOrderDetail()
+    {
+        var gh = _orderBll.GetEarlyGH();
+        var currentUserAmount = _orderBll.GetLatestUserPH(UserId);
+        _orderDetail.OrderDetailCode = RandomValue.RandomNumberToString();
+        _orderDetail.OrderCode = gh.OrderCode;
+        _orderDetail.SenderId = UserId;
+        _orderDetail.ReceiverId = gh.UserID;
+        _orderDetail.Amount = ( currentUserAmount.Amount * 20 ) / 100;
+        _orderDetailBll.InsertOrderDetail(_orderDetail);
+    }
 
+    #endregion
 }

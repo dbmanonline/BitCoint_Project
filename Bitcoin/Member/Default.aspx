@@ -49,6 +49,9 @@
                                             <asp:Label ID="lblGHCode" runat="server" Text='<%# Eval("OrderDetailCode") %>'></asp:Label>
                                             )</strong>
                                     </span>
+                                    <span>
+                                        <asp:LinkButton ID="lbtnShowOrderDetail" runat="server" class="label label-default" OnClick="lbtnShowOrderDetail_Click">Show details</asp:LinkButton>
+                                    </span>
                                     <!-- right options -->
                                     <ul class="options pull-right list-inline">
                                         <li><a href="#" class="opt panel_colapse" data-toggle="tooltip" title="" data-placement="bottom" data-original-title="Colapse"></a></li>
@@ -57,34 +60,26 @@
                                 </div>
                                 <!-- panel content -->
                                 <div class="panel-body" style="display: block;">
-                                    <div class="row">
+                                    <div class="row size-12">
                                         <div class="col-md-1">
                                             <i class="fa fa-play-circle fa-2x"></i>
                                         </div>
                                         <div class="col-md-2">
-                                            <strong>
-                                                <asp:Label ID="lblSenDate" runat="server" Text="15/05/2016"></asp:Label></strong>
-                                        </div>
-                                        <div class="col-md-1">
-                                            <strong>You</strong>
+                                            <asp:Label ID="lblSendDate" runat="server" Text="15 May 2016"></asp:Label>
                                         </div>
                                         <div class="col-md-2">
-                                            <strong>>
-                                            <asp:Label ID="lblSendAmount" runat="server" Text="0.1 Bitcoin"></asp:Label>
-                                                >
-                                            </strong>
+                                            You
                                         </div>
-                                        <div class="col-md-3">
-                                            <strong>
-                                                <asp:Label ID="lblReceiverId" runat="server" Text="Arena Lala"></asp:Label></strong>
+                                        <div class="col-md-3 bold" style="color: green">
+                                            >
+                                                <asp:Label ID="lblSendAmount" runat="server" Text="0.1 Bitcoin"></asp:Label>
+                                            >
                                         </div>
                                         <div class="col-md-2">
-                                            <span>
-                                                <asp:LinkButton ID="lbtnSendMessage" runat="server" class="label label-primary">Message <span>0</span></asp:LinkButton>
-                                            </span>
+                                            <asp:Label ID="lblReceiverId" runat="server" Text="Arena Lala"></asp:Label>
                                         </div>
-                                        <div class="col-md-1">
-                                            <asp:LinkButton ID="lbtn" runat="server">Details</asp:LinkButton>
+                                        <div class="col-md-2">
+                                            <asp:LinkButton ID="lbtnSendMessage" runat="server" class="label label-primary">Message <span>0</span></asp:LinkButton>
                                         </div>
                                     </div>
                                 </div>
@@ -125,7 +120,7 @@
                                                 <li class="list-group-item"><span class="bold">TOTAL BITCOIN : </span><span>
                                                     <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("Amount") %>'></asp:Label></span></li>
                                                 <li class="list-group-item"><span class="bold">REMAINING BITCOIN : </span><span>
-                                                    <asp:Label ID="lblRemainingAmount" runat="server" Text=''></asp:Label></span></li>
+                                                    <asp:Label ID="lblRemainingAmount" runat="server" Text='<%# Eval("RemainingAmount") %>'></asp:Label></span></li>
                                                 <li class="list-group-item"><span class="bold">DATE : </span><span>
                                                     <asp:Label ID="lblCreateDate" runat="server" Text='<%# Eval("CreateDate", "{0:MM/dd/yyyy}") %>'></asp:Label></span></li>
                                                 <li class="list-group-item"><span class="bold">STATUS : </span><span id="spanStatus" runat="server">
@@ -191,6 +186,93 @@
             </div>
         </div>
 
+        <!-- order detail modal -->
+        <div id="orderDetailModal" class="modal fade bs-example-modal-default" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-default">
+                <div class="modal-content">
+
+                    <!-- header modal -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Order Detail</h4>
+                    </div>
+
+                    <!-- body modal -->
+                    <div class="modal-body">
+                        <div class="row text-center">
+                            <div class="col-md-12">
+                                <label class="size-18">Bitcoin Address</label>
+                            </div>
+                            <div class="col-md-12">
+                                <asp:TextBox ID="txtBitcoinAddress" runat="server" class="form-control" Text="fs8124hjkvkhv9283yrbvxcvbi23419cvc923830czxfj38923czs" ReadOnly="True"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td colspan="2" class="bold text-center">RECEPIENT</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Recepient</td>
+                                            <td>Klose</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Country</td>
+                                            <td>Korea</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Mobile No</td>
+                                            <td>38976245879</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-md-6">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <td colspan="2" class="bold text-center">SENDER</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Sender</td>
+                                            <td>Kabu</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Country</td>
+                                            <td>Cambodia</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Mobile No</td>
+                                            <td>2579456587</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Attach photo</label>
+                                <asp:FileUpload ID="fuPhoto" runat="server" class="custom-file-upload" data-btn-text="Select a File" />
+                                <small class="text-muted block">Max file size: 1Mb (jpeg/jpg/png)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- footer modal -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <asp:Button ID="btnCompletePayment" runat="server" Text="I complete this payment" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Alert Modals >-->
         <div id="alertErrorModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -232,6 +314,9 @@
         };
         function ShowBid() {
             $('#bidModal').modal('show');
+        };
+        function ShowOrderDetail() {
+            $('#orderDetailModal').modal('show');
         };
     </script>
 </asp:Content>
