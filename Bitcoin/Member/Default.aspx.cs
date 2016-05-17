@@ -34,7 +34,7 @@ public partial class Member_Default : System.Web.UI.Page
         {
             txtBitcoinAmount.Text = AmountBitcoin.ToString();
             LoadAllUserPH();
-            GetGhToInsertIntoOrderDetail();
+            //GetGhToInsertIntoOrderDetail();
             LoadGHofUser();
         }
     }
