@@ -39,18 +39,18 @@
         <div class="padding-10">
             <div class="row">
                 <div class="col-md-8">
-                    <asp:Repeater ID="rptAsk" runat="server">
+                    <asp:Repeater ID="rptOrderDetail" runat="server" OnItemDataBound="rptOrderDetail_ItemDataBound" OnItemCommand="rptOrderDetail_ItemCommand">
                         <ItemTemplate>
                             <div id="panel-misc-portlet-r1" class="panel panel-default">
                                 <div class="panel-heading">
                                     <span class="elipsis">
                                         <!-- panel title -->
                                         <strong>Give Help (
-                                            <asp:Label ID="lblGHCode" runat="server" Text='<%# Eval("OrderDetailCode") %>'></asp:Label>
+                                            <asp:Label ID="lblOrderDetailCode" runat="server" Text='<%# Eval("OrderDetailCode") %>'></asp:Label>
                                             )</strong>
                                     </span>
                                     <span>
-                                        <asp:LinkButton ID="lbtnShowOrderDetail" runat="server" class="label label-default" OnClick="lbtnShowOrderDetail_Click">Show details</asp:LinkButton>
+                                        <asp:LinkButton ID="lbtnShowOrderDetail" runat="server" class="label label-default" OnClick="lbtnShowOrderDetail_Click" CommandName="ShowDetail">Show details</asp:LinkButton>
                                     </span>
                                     <!-- right options -->
                                     <ul class="options pull-right list-inline">
@@ -62,21 +62,22 @@
                                 <div class="panel-body" style="display: block;">
                                     <div class="row size-12">
                                         <div class="col-md-1">
-                                            <i class="fa fa-play-circle fa-2x"></i>
+                                            <i id="iconStatus" runat="server"></i>
+                                            <asp:HiddenField ID="hfStatus" runat="server" Value='<%# Eval("Status") %>'/>
                                         </div>
                                         <div class="col-md-2">
-                                            <asp:Label ID="lblSendDate" runat="server" Text="15 May 2016"></asp:Label>
+                                            <asp:Label ID="lblSendDate" runat="server" Text='<%# Eval("CreateDate", "{0: dd MMM yyyy}") %>'></asp:Label>
                                         </div>
                                         <div class="col-md-2">
                                             You
                                         </div>
                                         <div class="col-md-3 bold" style="color: green">
                                             >
-                                                <asp:Label ID="lblSendAmount" runat="server" Text="0.1 Bitcoin"></asp:Label>
+                                                <asp:Label ID="lblSendAmount" runat="server" Text='<%# Eval("Amount") %>'></asp:Label> Bitcoin
                                             >
                                         </div>
                                         <div class="col-md-2">
-                                            <asp:Label ID="lblReceiverId" runat="server" Text="Arena Lala"></asp:Label>
+                                            <asp:Label ID="lblReceiverId" runat="server" Text='<%# Eval("User.AssociateName") %>'></asp:Label>
                                         </div>
                                         <div class="col-md-2">
                                             <asp:LinkButton ID="lbtnSendMessage" runat="server" class="label label-primary">Message <span>0</span></asp:LinkButton>
@@ -98,7 +99,7 @@
                                     <span class="elipsis">
                                         <!-- panel title -->
                                         <strong>Provide Help (
-                                            <asp:Label ID="lblBidCode" runat="server" Text='<%# Eval("OrderCode") %>'></asp:Label>
+                                            <asp:Label ID="lblOrderCode" runat="server" Text='<%# Eval("OrderCode") %>'></asp:Label>
                                             )</strong>
                                     </span>
 
@@ -194,7 +195,8 @@
                     <!-- header modal -->
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Order Detail</h4>
+                        <h4 class="modal-title">Order Detail <asp:HiddenField ID="hfOrderDetailCode" runat="server" />
+                        </h4>
                     </div>
 
                     <!-- body modal -->
@@ -204,7 +206,7 @@
                                 <label class="size-18">Bitcoin Address</label>
                             </div>
                             <div class="col-md-12">
-                                <asp:TextBox ID="txtBitcoinAddress" runat="server" class="form-control" Text="fs8124hjkvkhv9283yrbvxcvbi23419cvc923830czxfj38923czs" ReadOnly="True"></asp:TextBox>
+                                <asp:TextBox ID="txtBitcoinAddress" runat="server" class="form-control text-center bold size-12 color-black" Text="" ReadOnly="True"></asp:TextBox>
                             </div>
                         </div>
                         <div class="row">
@@ -218,7 +220,8 @@
                                     <tbody>
                                         <tr>
                                             <td>Recepient</td>
-                                            <td>Klose</td>
+                                            <td>
+                                                <asp:Label ID="lblReceiverName" runat="server" Text=""></asp:Label></td>
                                         </tr>
                                         <tr>
                                             <td>Country</td>
@@ -241,7 +244,8 @@
                                     <tbody>
                                         <tr>
                                             <td>Sender</td>
-                                            <td>Kabu</td>
+                                            <td>
+                                                <asp:Label ID="lblSenderName" runat="server" Text=""></asp:Label></td>
                                         </tr>
                                         <tr>
                                             <td>Country</td>
@@ -267,7 +271,7 @@
                     <!-- footer modal -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <asp:Button ID="btnCompletePayment" runat="server" Text="I complete this payment" class="btn btn-success" />
+                        <asp:Button ID="btnCompletePayment" runat="server" Text="I complete this payment" class="btn btn-success" OnClick="btnCompletePayment_Click" />
                     </div>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using Bitcoin.Data.DAL;
@@ -21,6 +22,26 @@ namespace Bitcoin.Data.BLL
         public void InsertOrderDetail(OrderDetail orderDetail)
         {
             _orderDetailDal.InsertOrderDetail(orderDetail);
+        }
+
+        /// <summary>
+        /// Check order code have already exists in OrderDetail
+        /// </summary>
+        /// <param name="orderCode">Order code</param>
+        /// <returns>true or false</returns>
+        public bool CheckOrderCodeExistsInOrderDetail(string orderCode)
+        {
+            return _orderDetailDal.GetAllOrderDetail().Any(m => m.PHOrderCode == orderCode);
+        }
+
+        public OrderDetail GetOrderDetailByOrderDetailCode(string orderDetailCode)
+        {
+            return _orderDetailDal.GetOrderDetailByOrderDetailCode(orderDetailCode);
+        }
+
+        public void UpdateOrderDetail(OrderDetail orderDetail)
+        {
+            _orderDetailDal.UpdateOrderDetail(orderDetail);
         }
     }
 }

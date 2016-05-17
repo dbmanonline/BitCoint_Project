@@ -35,7 +35,7 @@ public partial class Member_Default : System.Web.UI.Page
             txtBitcoinAmount.Text = AmountBitcoin.ToString();
             LoadAllUserPH();
             //GetGhToInsertIntoOrderDetail();
-            //LoadGHofUser();
+            LoadGHofUser();
         }
     }
 
@@ -49,11 +49,8 @@ public partial class Member_Default : System.Web.UI.Page
     protected void rptBid_ItemDataBound(object sender, RepeaterItemEventArgs e)
     {
         var lblAmount = e.Item.FindControl("lblAmount") as Label;
-        //var lblRemainingAmount = e.Item.FindControl("lblRemainingAmount") as Label;
         var lblStatus = e.Item.FindControl("lblStatus") as Label;
         var spanStatus = e.Item.FindControl("spanStatus") as HtmlControl;
-
-        //lblRemainingAmount.Text = Convert.ToDouble(Convert.ToDouble(lblAmount.Text) - ((Convert.ToDouble(lblAmount.Text) * Convert.ToDouble(lblRemainingAmount.Text)) / 100)).ToString();
 
         if (lblStatus.Text == StatusPending.ToString())
         {
@@ -75,6 +72,59 @@ public partial class Member_Default : System.Web.UI.Page
     protected void lbtnShowOrderDetail_Click(object sender, EventArgs e)
     {
         DisplayMessage.ShowAlertModal("ShowOrderDetail()", Page);
+    }
+
+    protected void rptOrderDetail_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        var iconStatus = e.Item.FindControl("iconStatus") as HtmlControl;
+        var hfStatus = e.Item.FindControl("hfStatus") as HiddenField;
+
+        if (Convert.ToByte(hfStatus.Value) == 0)
+        {
+            iconStatus.Attributes.Add("class", "fa fa-play-circle fa-2x");
+        }
+        if (Convert.ToByte(hfStatus.Value) == 1)
+        {
+            iconStatus.Attributes.Add("class", "fa fa-check-circle fa-2x");
+            iconStatus.Attributes.Add("style", "color:orange");
+        }
+        if (Convert.ToByte(hfStatus.Value) == 2)
+        {
+            iconStatus.Attributes.Add("class", "fa fa-check-circle fa-2x");
+            iconStatus.Attributes.Add("style", "color:green");
+        }
+    }
+
+    protected void rptOrderDetail_ItemCommand(object source, RepeaterCommandEventArgs e)
+    {
+        var lblOrderDetailCode = e.Item.FindControl("lblOrderDetailCode") as Label;
+        if (e.CommandName == "ShowDetail")
+        {
+            var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(lblOrderDetailCode.Text);
+            if (orderDetail == null) throw new ArgumentNullException("orderDetail");
+
+            var order = _orderBll.GetByOrderCode(orderDetail.GHOrderCode);
+            if (order == null) throw new ArgumentNullException("order");
+
+            hfOrderDetailCode.Value = orderDetail.OrderDetailCode;
+            lblReceiverName.Text = orderDetail.ReceiverId.ToString();
+            lblSenderName.Text = orderDetail.SenderId.ToString();
+            txtBitcoinAddress.Text = order.BitcoinAddress;
+        }
+    }
+
+    protected void btnCompletePayment_Click(object sender, EventArgs e)
+    {
+        var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(hfOrderDetailCode.Value);
+        if (orderDetail == null) throw new ArgumentNullException("orderDetail");
+
+        orderDetail.OrderDetailCode = hfOrderDetailCode.Value;
+        orderDetail.Confirmation = fuPhoto.FileName;
+        orderDetail.Status = 1;
+        _orderDetailBll.UpdateOrderDetail(orderDetail);
+
+        LoadAllUserPH();
+        LoadGHofUser();
     }
 
     #endregion
@@ -125,21 +175,35 @@ public partial class Member_Default : System.Web.UI.Page
 
     private void LoadGHofUser()
     {
-        rptAsk.DataSource = _orderDetailBll.GetAllGHforUser(UserId);
-        rptAsk.DataBind();
+        rptOrderDetail.DataSource = _orderDetailBll.GetAllGHforUser(UserId);
+        rptOrderDetail.DataBind();
     }
 
     private void GetGhToInsertIntoOrderDetail()
     {
+        
+
         var gh = _orderBll.GetEarlyGH();
-        var currentUserAmount = _orderBll.GetLatestUserPH(UserId);
+        var latestUserPH = _orderBll.GetLatestUserPH(UserId);
         _orderDetail.OrderDetailCode = RandomValue.RandomNumberToString();
-        _orderDetail.OrderCode = gh.OrderCode;
+        _orderDetail.PHOrderCode = latestUserPH.OrderCode;
+        _orderDetail.GHOrderCode = gh.OrderCode;
         _orderDetail.SenderId = UserId;
         _orderDetail.ReceiverId = gh.UserID;
-        _orderDetail.Amount = ( currentUserAmount.Amount * 20 ) / 100;
+        _orderDetail.Status = 0;
+        _orderDetail.CreateDate = Convert.ToDateTime(DateTime.Now.ToLongDateString());
+        if (_orderDetailBll.CheckOrderCodeExistsInOrderDetail(latestUserPH.OrderCode) == false)
+        {
+            _orderDetail.Amount = (latestUserPH.Amount * 20) / 100;
+        }
+        //else if (_orderDetailBll.CheckOrderCodeExistsInOrderDetail(latestUserPH.OrderCode) == true)
+        //{
+        //    _orderDetail.Amount = (latestUserPH.Amount * 80) / 100;
+        //}
         _orderDetailBll.InsertOrderDetail(_orderDetail);
     }
 
     #endregion
+
+
 }

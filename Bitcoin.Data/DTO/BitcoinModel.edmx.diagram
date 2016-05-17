@@ -11,10 +11,11 @@
         <AssociationConnector Association="BitCoinModel.FK_User_Level" ManuallyRouted="false" />
         <EntityTypeShape EntityType="BitCoinModel.Order" Width="1.5" PointX="5.25" PointY="1.875" />
         <AssociationConnector Association="BitCoinModel.FK_Bid_User" />
-        <EntityTypeShape EntityType="BitCoinModel.OrderDetail" Width="1.5" PointX="7.5" PointY="2.25" />
         <AssociationConnector Association="BitCoinModel.FK_Bank_User" />
+        <EntityTypeShape EntityType="BitCoinModel.OrderDetail" Width="1.5" PointX="7.5" PointY="1.75" />
         <AssociationConnector Association="BitCoinModel.FK_OrderDetail_Order" />
-      </Diagram>
+        <AssociationConnector Association="BitCoinModel.FK_OrderDetail_User" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

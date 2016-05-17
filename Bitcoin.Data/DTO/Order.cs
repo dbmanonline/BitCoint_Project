@@ -28,7 +28,7 @@ namespace Bitcoin.Data.DTO
         public int OrderNumber { get; set; }
         public string OrderCode { get; set; }
         public string BitcoinAddress { get; set; }
-        public Nullable<double> RemainingAmount { get; set; }
+        public double RemainingAmount { get; set; }
     
         public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

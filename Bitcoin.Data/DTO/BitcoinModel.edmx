@@ -31,7 +31,7 @@
           <Property Name="OrderCode" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="Amount" Type="float" Nullable="false" />
-          <Property Name="RemainingAmount" Type="float" />
+          <Property Name="RemainingAmount" Type="float" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Status" Type="tinyint" Nullable="false" />
           <Property Name="OrderNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
@@ -43,11 +43,14 @@
             <PropertyRef Name="OrderDetailCode" />
           </Key>
           <Property Name="OrderDetailCode" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="OrderCode" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="PHOrderCode" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="GHOrderCode" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="SenderId" Type="int" Nullable="false" />
           <Property Name="ReceiverId" Type="int" Nullable="false" />
           <Property Name="Amount" Type="float" Nullable="false" />
           <Property Name="Confirmation" Type="nvarchar(max)" />
+          <Property Name="Status" Type="tinyint" Nullable="false" />
+          <Property Name="CreateDate" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -101,7 +104,19 @@
               <PropertyRef Name="OrderCode" />
             </Principal>
             <Dependent Role="OrderDetail">
-              <PropertyRef Name="OrderCode" />
+              <PropertyRef Name="PHOrderCode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetail_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="ReceiverId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -133,6 +148,10 @@
           </AssociationSet>
           <AssociationSet Name="FK_OrderDetail_Order" Association="Self.FK_OrderDetail_Order">
             <End Role="Order" EntitySet="Order" />
+            <End Role="OrderDetail" EntitySet="OrderDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_User" Association="Self.FK_OrderDetail_User">
+            <End Role="User" EntitySet="User" />
             <End Role="OrderDetail" EntitySet="OrderDetail" />
           </AssociationSet>
           <AssociationSet Name="FK_User_Level" Association="Self.FK_User_Level">
@@ -187,6 +206,7 @@
           <NavigationProperty Name="Level" Relationship="Self.FK_User_Level" FromRole="User" ToRole="Level" />
           <NavigationProperty Name="Orders" Relationship="BitCoinModel.FK_Bid_User" FromRole="User" ToRole="Order" />
           <NavigationProperty Name="Banks" Relationship="BitCoinModel.FK_Bank_User" FromRole="User" ToRole="Bank" />
+          <NavigationProperty Name="OrderDetails" Relationship="BitCoinModel.FK_OrderDetail_User" FromRole="User" ToRole="OrderDetail" />
         </EntityType>
         <Association Name="FK_User_Level">
           <End Role="Level" Type="Self.Level" Multiplicity="1" />
@@ -213,16 +233,20 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Order" EntitySet="Orders" />
           </AssociationSet>
-          <EntitySet Name="OrderDetails" EntityType="BitCoinModel.OrderDetail" />
           <AssociationSet Name="FK_Bank_User" Association="BitCoinModel.FK_Bank_User">
             <End Role="User" EntitySet="Users" />
             <End Role="Bank" EntitySet="Banks" />
           </AssociationSet>
+          <EntitySet Name="OrderDetails" EntityType="BitCoinModel.OrderDetail" />
           <AssociationSet Name="FK_OrderDetail_Order" Association="BitCoinModel.FK_OrderDetail_Order">
             <End Role="Order" EntitySet="Orders" />
             <End Role="OrderDetail" EntitySet="OrderDetails" />
           </AssociationSet>
-        </EntityContainer>
+          <AssociationSet Name="FK_OrderDetail_User" Association="BitCoinModel.FK_OrderDetail_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="Order">
           <Key>
             <PropertyRef Name="OrderCode" />
@@ -236,8 +260,8 @@
           <Property Name="OrderNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="OrderCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="BitcoinAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="RemainingAmount" Type="Double" Nullable="false" />
           <NavigationProperty Name="OrderDetails" Relationship="BitCoinModel.FK_OrderDetail_Order" FromRole="Order" ToRole="OrderDetail" />
-          <Property Name="RemainingAmount" Type="Double" />
         </EntityType>
         <Association Name="FK_Bid_User">
           <End Type="BitCoinModel.User" Role="User" Multiplicity="1" />
@@ -251,18 +275,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="OrderDetail">
-          <Key>
-            <PropertyRef Name="OrderDetailCode" />
-          </Key>
-          <Property Name="OrderDetailCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="OrderCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="SenderId" Type="Int32" Nullable="false" />
-          <Property Name="ReceiverId" Type="Int32" Nullable="false" />
-          <Property Name="Confirmation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Order" Relationship="BitCoinModel.FK_OrderDetail_Order" FromRole="OrderDetail" ToRole="Order" />
-          <Property Name="Amount" Type="Double" Nullable="false" />
-        </EntityType>
         <Association Name="FK_Bank_User">
           <End Type="BitCoinModel.User" Role="User" Multiplicity="1" />
           <End Type="BitCoinModel.Bank" Role="Bank" Multiplicity="*" />
@@ -275,6 +287,22 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="OrderDetail">
+          <Key>
+            <PropertyRef Name="OrderDetailCode" />
+          </Key>
+          <Property Name="OrderDetailCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="PHOrderCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="GHOrderCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SenderId" Type="Int32" Nullable="false" />
+          <Property Name="ReceiverId" Type="Int32" Nullable="false" />
+          <Property Name="Amount" Type="Double" Nullable="false" />
+          <Property Name="Confirmation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Byte" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Order" Relationship="BitCoinModel.FK_OrderDetail_Order" FromRole="OrderDetail" ToRole="Order" />
+          <NavigationProperty Name="User" Relationship="BitCoinModel.FK_OrderDetail_User" FromRole="OrderDetail" ToRole="User" />
+        </EntityType>
         <Association Name="FK_OrderDetail_Order">
           <End Type="BitCoinModel.Order" Role="Order" Multiplicity="1" />
           <End Type="BitCoinModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
@@ -283,11 +311,23 @@
               <PropertyRef Name="OrderCode" />
             </Principal>
             <Dependent Role="OrderDetail">
-              <PropertyRef Name="OrderCode" />
+              <PropertyRef Name="PHOrderCode" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <Association Name="FK_OrderDetail_User">
+          <End Type="BitCoinModel.User" Role="User" Multiplicity="1" />
+          <End Type="BitCoinModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="OrderDetail">
+              <PropertyRef Name="ReceiverId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -353,11 +393,14 @@
           <EntitySetMapping Name="OrderDetails">
             <EntityTypeMapping TypeName="BitCoinModel.OrderDetail">
               <MappingFragment StoreEntitySet="OrderDetail">
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Confirmation" ColumnName="Confirmation" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
                 <ScalarProperty Name="ReceiverId" ColumnName="ReceiverId" />
                 <ScalarProperty Name="SenderId" ColumnName="SenderId" />
-                <ScalarProperty Name="OrderCode" ColumnName="OrderCode" />
+                <ScalarProperty Name="GHOrderCode" ColumnName="GHOrderCode" />
+                <ScalarProperty Name="PHOrderCode" ColumnName="PHOrderCode" />
                 <ScalarProperty Name="OrderDetailCode" ColumnName="OrderDetailCode" />
               </MappingFragment>
             </EntityTypeMapping>

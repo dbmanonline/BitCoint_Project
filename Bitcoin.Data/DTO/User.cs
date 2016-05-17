@@ -19,6 +19,7 @@ namespace Bitcoin.Data.DTO
         {
             this.Orders = new HashSet<Order>();
             this.Banks = new HashSet<Bank>();
+            this.OrderDetails = new HashSet<OrderDetail>();
         }
     
         public int UserID { get; set; }
@@ -42,5 +43,7 @@ namespace Bitcoin.Data.DTO
         public virtual ICollection<Order> Orders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bank> Banks { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }
