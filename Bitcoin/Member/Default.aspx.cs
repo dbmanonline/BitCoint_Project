@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -16,6 +17,7 @@ public partial class Member_Default : System.Web.UI.Page
     private readonly Order _order = new Order();
     private readonly OrderDetailBLL _orderDetailBll = new OrderDetailBLL();
     private readonly OrderDetail _orderDetail = new OrderDetail();
+    private readonly BankBLL _bankBll = new BankBLL();
 
     // Current default of amount bitcoin is 0.5
     private const float AmountBitcoin = (float)0.5;
@@ -23,6 +25,8 @@ public partial class Member_Default : System.Web.UI.Page
     private const int UserId = 4;
     private const int StatusPending = 0;
     private const int StatusReceived = 1;
+    private const float GrowthWallet = (float)0.2;
+    private const float CommissionWallet = (float)0.1;
 
     #endregion
 
@@ -33,17 +37,24 @@ public partial class Member_Default : System.Web.UI.Page
         if (!IsPostBack)
         {
             txtBitcoinAmount.Text = AmountBitcoin.ToString();
-            LoadAllUserPH();
-            //GetGhToInsertIntoOrderDetail();
+            LoadAllUserPh();
+            GetGhToInsertIntoOrderDetail();
             LoadGHofUser();
         }
     }
 
     protected void btnSaveBid_Click(object sender, EventArgs e)
     {
-        AddNewBid();
-        DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
-        LoadAllUserPH();
+        if (CheckPhReceived() == false)
+        {
+            AddNewBid("Bid");
+            DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
+            LoadAllUserPh();
+        }
+        else
+        {
+            DisplayMessage.ShowAlertModal("ShowAlertError()", Page);
+        }
     }
 
     protected void rptBid_ItemDataBound(object sender, RepeaterItemEventArgs e)
@@ -116,36 +127,32 @@ public partial class Member_Default : System.Web.UI.Page
     protected void btnCompletePayment_Click(object sender, EventArgs e)
     {
         var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(hfOrderDetailCode.Value);
-        if (orderDetail == null) throw new ArgumentNullException("orderDetail");
+        if (orderDetail == null) return;
 
         orderDetail.OrderDetailCode = hfOrderDetailCode.Value;
-        orderDetail.Confirmation = fuPhoto.FileName;
         orderDetail.Status = 1;
-        _orderDetailBll.UpdateOrderDetail(orderDetail);
+        if (!fuPhotoConfirmation.HasFiles)
+        {
+            DisplayMessage.ShowMessage("Please select a photo to confirm before complete this payment !", Page);
+        }
+        else
+        {
+            var fileName = DateTime.Now.ToString("yyyyMMddHHmmssfff") + fuPhotoConfirmation.FileName;
+            fuPhotoConfirmation.SaveAs(Path.Combine(Server.MapPath("~/Member/Upload/PhConfirm"), fileName));
+            orderDetail.Confirmation = fuPhotoConfirmation.FileName;
+            _orderDetailBll.UpdateOrderDetail(orderDetail);
+        }
 
-        LoadAllUserPH();
+        LoadAllUserPh();
         LoadGHofUser();
     }
 
-    #endregion
-
-    #region Methods
-
-    private void AddNewBid()
+    protected void lbtnAskBitcoin_Click(object sender, EventArgs e)
     {
         if (CheckPhReceived() == false)
         {
-            _order.OrderCode = RandomValue.RandomNumberToString();
-            while (_orderBll.CheckBidCodeIsExists(_order.OrderCode) == true)
-            {
-                _order.OrderCode = RandomValue.RandomNumberToString();
-            }
-            _order.UserID = UserId;
-            _order.Amount = AmountBitcoin;
-            _order.Status = 0;
-            _order.CreateDate = DateTime.Now.Date;
-            _order.Type = "PH";
-            _orderBll.InsertOrder(_order);
+            DisplayMessage.ShowAlertModal("ShowAsk()", Page);
+            LoadAllUserBanks();
         }
         else
         {
@@ -153,7 +160,43 @@ public partial class Member_Default : System.Web.UI.Page
         }
     }
 
-    private void LoadAllUserPH()
+    protected void btnWithdrawRequest_Click(object sender, EventArgs e)
+    {
+        AddNewBid("Ask");
+        DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
+        LoadAllUserPh();
+    }
+
+    #endregion
+
+    #region Methods
+
+    private void AddNewBid(string typeAction)
+    {
+        _order.OrderCode = RandomValue.RandomNumberToString();
+        while (_orderBll.CheckBidCodeIsExists(_order.OrderCode) == true)
+        {
+            _order.OrderCode = RandomValue.RandomNumberToString();
+        }
+        _order.UserID = UserId;
+        _order.Status = 0;
+        _order.CreateDate = DateTime.Now.Date;
+        if (typeAction == "Bid")
+        {
+            _order.Amount = AmountBitcoin;
+            _order.Type = "PH";
+        }
+        else if(typeAction == "Ask")
+        {
+            _order.Type = "GH";
+            _order.BitcoinAddress = ddlBitcoinAddress.SelectedValue;
+            _order.Amount = float.Parse(lblTotalWithdrawAmount.Text);
+        }
+        _order.RemainingAmount = _order.Amount;
+        _orderBll.InsertOrder(_order);
+    }
+
+    private void LoadAllUserPh()
     {
         rptBid.DataSource = _orderBll.GetAllUserPH(UserId);
         rptBid.DataBind();
@@ -181,10 +224,13 @@ public partial class Member_Default : System.Web.UI.Page
 
     private void GetGhToInsertIntoOrderDetail()
     {
-        
+
 
         var gh = _orderBll.GetEarlyGH();
+        if (gh == null) return;
         var latestUserPH = _orderBll.GetLatestUserPH(UserId);
+        if (latestUserPH == null) return;
+
         _orderDetail.OrderDetailCode = RandomValue.RandomNumberToString();
         _orderDetail.PHOrderCode = latestUserPH.OrderCode;
         _orderDetail.GHOrderCode = gh.OrderCode;
@@ -203,7 +249,13 @@ public partial class Member_Default : System.Web.UI.Page
         _orderDetailBll.InsertOrderDetail(_orderDetail);
     }
 
+    private void LoadAllUserBanks()
+    {
+        ddlBitcoinAddress.DataSource = _bankBll.GetAllUserBanks(UserId);
+        ddlBitcoinAddress.DataTextField = "BitcoinAddress";
+        ddlBitcoinAddress.DataValueField = "BitcoinAddress";
+        ddlBitcoinAddress.DataBind();
+    }
+
     #endregion
-
-
 }

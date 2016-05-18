@@ -28,10 +28,8 @@
                         <i class="glyphicon glyphicon-bitcoin"></i></asp:LinkButton>
                 </div>
                 <div class="col-md-4 col-sm-4">
-                    <a href="#" class="btn btn-featured btn-red btn-inverse size-20">
-                        <span>Ask Bitcoin</span>
-                        <i class="glyphicon glyphicon-bitcoin"></i>
-                    </a>
+                    <asp:LinkButton ID="lbtnAskBitcoin" runat="server" class="btn btn-featured btn-red btn-inverse size-20" OnClick="lbtnAskBitcoin_Click"><span>Ask Bitcoin</span>
+                        <i class="glyphicon glyphicon-bitcoin"></i></asp:LinkButton>
                 </div>
             </div>
         </div>
@@ -63,7 +61,7 @@
                                     <div class="row size-12">
                                         <div class="col-md-1">
                                             <i id="iconStatus" runat="server"></i>
-                                            <asp:HiddenField ID="hfStatus" runat="server" Value='<%# Eval("Status") %>'/>
+                                            <asp:HiddenField ID="hfStatus" runat="server" Value='<%# Eval("Status") %>' />
                                         </div>
                                         <div class="col-md-2">
                                             <asp:Label ID="lblSendDate" runat="server" Text='<%# Eval("CreateDate", "{0: dd MMM yyyy}") %>'></asp:Label>
@@ -73,7 +71,8 @@
                                         </div>
                                         <div class="col-md-3 bold" style="color: green">
                                             >
-                                                <asp:Label ID="lblSendAmount" runat="server" Text='<%# Eval("Amount") %>'></asp:Label> Bitcoin
+                                                <asp:Label ID="lblSendAmount" runat="server" Text='<%# Eval("Amount") %>'></asp:Label>
+                                            Bitcoin
                                             >
                                         </div>
                                         <div class="col-md-2">
@@ -187,6 +186,58 @@
             </div>
         </div>
 
+        <!-- ask bitcoin modal -->
+        <div id="withdrawModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+
+                    <!-- header modal -->
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">WITHDRAW</h4>
+                    </div>
+
+                    <!-- body modal -->
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Select Existing Bank</label>
+                                <div class="fancy-form fancy-form-select">
+                                    <asp:DropDownList ID="ddlBitcoinAddress" runat="server" class="form-control"></asp:DropDownList>
+                                    <i class="fancy-arrow"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Growth Wallet</label>
+                                <asp:TextBox ID="txtGrowthWallet" runat="server" class="form-control" ReadOnly="True" Text="1"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Commission Wallet</label>
+                                <asp:TextBox ID="txtCommissionWallet" runat="server" class="form-control" ReadOnly="True" Text="0"></asp:TextBox>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Total withdraw amount: </label>
+                                <span><strong>
+                                    <asp:Label ID="lblTotalWithdrawAmount" runat="server" Text="1"></asp:Label></strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- footer modal -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <asp:Button ID="btnWithdrawRequest" runat="server" Text="Send" class="btn btn-success" OnClick="btnWithdrawRequest_Click" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- order detail modal -->
         <div id="orderDetailModal" class="modal fade bs-example-modal-default" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-default">
@@ -195,7 +246,8 @@
                     <!-- header modal -->
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Order Detail <asp:HiddenField ID="hfOrderDetailCode" runat="server" />
+                        <h4 class="modal-title">Order Detail
+                            <asp:HiddenField ID="hfOrderDetailCode" runat="server" />
                         </h4>
                     </div>
 
@@ -262,8 +314,13 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <label>Attach photo</label>
-                                <asp:FileUpload ID="fuPhoto" runat="server" class="custom-file-upload" data-btn-text="Select a File" />
+                                <asp:FileUpload ID="fuPhotoConfirmation" runat="server" class="custom-file-upload" data-btn-text="Select a File" />
                                 <small class="text-muted block">Max file size: 1Mb (jpeg/jpg/png)</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <asp:Image ID="imgPhotConfirmation" runat="server" />
                             </div>
                         </div>
                     </div>
@@ -321,6 +378,9 @@
         };
         function ShowOrderDetail() {
             $('#orderDetailModal').modal('show');
+        };
+        function ShowAsk() {
+            $('#withdrawModal').modal('show');
         };
     </script>
 </asp:Content>
