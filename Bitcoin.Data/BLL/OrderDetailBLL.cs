@@ -16,7 +16,7 @@ namespace Bitcoin.Data.BLL
         public IEnumerable<OrderDetail> GetAllGHforUser(int userId)
         {
             return _orderDetailDal.GetAllOrderDetail()
-                .Where(x => x.SenderId == userId);
+            .Where(x => x.SenderId == userId  || x.ReceiverId == userId);
         }
 
         public void InsertOrderDetail(OrderDetail orderDetail)

@@ -67,7 +67,7 @@
                                             <asp:Label ID="lblSendDate" runat="server" Text='<%# Eval("CreateDate", "{0: dd MMM yyyy}") %>'></asp:Label>
                                         </div>
                                         <div class="col-md-2">
-                                            You
+                                            <asp:Label ID="lblName1" runat="server" Text=""></asp:Label>
                                         </div>
                                         <div class="col-md-3 bold" style="color: green">
                                             >
@@ -91,14 +91,15 @@
                 <div class="col-md-4">
                     <asp:Repeater ID="rptBid" runat="server" OnItemDataBound="rptBid_ItemDataBound">
                         <ItemTemplate>
-                            <div id="panel-misc-portlet-r1" class="panel panel-default">
+                            <div class="panel panel-default">
 
                                 <div class="panel-heading">
 
                                     <span class="elipsis">
                                         <!-- panel title -->
-                                        <strong>Provide Help (
-                                            <asp:Label ID="lblOrderCode" runat="server" Text='<%# Eval("OrderCode") %>'></asp:Label>
+                                        <strong>
+                                            <asp:Label ID="lblOrderTitle" runat="server" Text=""></asp:Label> (
+                                            <asp:Label ID="lblOrderType" runat="server" Text='<%# Eval("Type") %>'></asp:Label><asp:Label ID="lblOrderCode" runat="server" Text='<%# Eval("OrderCode") %>'></asp:Label>
                                             )</strong>
                                     </span>
 
@@ -111,7 +112,7 @@
                                 </div>
 
                                 <!-- panel content -->
-                                <div class="panel-body" style="display: block;">
+                                <div id="orderPanelBody" runat="server"  class="panel-body" style="display: block;">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <ul class="list-group">

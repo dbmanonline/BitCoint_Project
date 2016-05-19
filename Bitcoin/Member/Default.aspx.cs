@@ -22,7 +22,7 @@ public partial class Member_Default : System.Web.UI.Page
     // Current default of amount bitcoin is 0.5
     private const float AmountBitcoin = (float)0.5;
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 4;
+    private const int UserId = 6;
     private const int StatusPending = 0;
     private const int StatusReceived = 1;
     private const float GrowthWallet = (float)0.2;
@@ -38,7 +38,7 @@ public partial class Member_Default : System.Web.UI.Page
         {
             txtBitcoinAmount.Text = AmountBitcoin.ToString();
             LoadAllUserPh();
-            GetGhToInsertIntoOrderDetail();
+            //GetGhToInsertIntoOrderDetail();
             LoadGHofUser();
         }
     }
@@ -62,6 +62,9 @@ public partial class Member_Default : System.Web.UI.Page
         var lblAmount = e.Item.FindControl("lblAmount") as Label;
         var lblStatus = e.Item.FindControl("lblStatus") as Label;
         var spanStatus = e.Item.FindControl("spanStatus") as HtmlControl;
+        var lblOrderType = e.Item.FindControl("lblOrderType") as Label;
+        var orderPanelBody = e.Item.FindControl("orderPanelBody") as HtmlControl;
+        var lblOrderTitile = e.Item.FindControl("lblOrderTitle") as Label;
 
         if (lblStatus.Text == StatusPending.ToString())
         {
@@ -72,6 +75,16 @@ public partial class Member_Default : System.Web.UI.Page
         {
             lblStatus.Text = "RECEIVED";
             spanStatus.Attributes.Add("class", "label label-success");
+        }
+
+        if (lblOrderType.Text == "GH")
+        {
+            lblOrderTitile.Text = "GET HELP";
+            orderPanelBody.Attributes.Add("style", "background-color: #E66454; color: white");
+        }
+        if (lblOrderType.Text == "PH")
+        {
+            lblOrderTitile.Text = "PROVIDE HELP";
         }
     }
 
@@ -89,6 +102,8 @@ public partial class Member_Default : System.Web.UI.Page
     {
         var iconStatus = e.Item.FindControl("iconStatus") as HtmlControl;
         var hfStatus = e.Item.FindControl("hfStatus") as HiddenField;
+        var lblOrderDetailCode = e.Item.FindControl("lblOrderDetailCode") as Label;
+        var lblName1 = e.Item.FindControl("lblName1") as Label;
 
         if (Convert.ToByte(hfStatus.Value) == 0)
         {
@@ -103,6 +118,19 @@ public partial class Member_Default : System.Web.UI.Page
         {
             iconStatus.Attributes.Add("class", "fa fa-check-circle fa-2x");
             iconStatus.Attributes.Add("style", "color:green");
+        }
+
+        var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(lblOrderDetailCode.Text);
+        var checkOrderType = _orderBll.GetByOrderCode(orderDetail.GHOrderCode);
+        
+        if (orderDetail.SenderId == UserId)
+        {
+            lblName1.Text = "You";
+
+        }
+        if (orderDetail.ReceiverId == UserId)
+        {
+            lblName1.Text = orderDetail.SenderId.ToString();
         }
     }
 
@@ -224,8 +252,6 @@ public partial class Member_Default : System.Web.UI.Page
 
     private void GetGhToInsertIntoOrderDetail()
     {
-
-
         var gh = _orderBll.GetEarlyGH();
         if (gh == null) return;
         var latestUserPH = _orderBll.GetLatestUserPH(UserId);

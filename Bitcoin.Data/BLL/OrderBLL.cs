@@ -40,7 +40,7 @@ namespace Bitcoin.Data.BLL
         public IEnumerable<Order> GetAllUserPH(int userId)
         {
             var orders = _orderDal.GetAllOrders()
-                .Where(x => x.UserID == userId && x.Status == 0 && x.Type == "PH")
+                .Where(x => x.UserID == userId && x.Status == 0)
                 .OrderByDescending(x => x.OrderNumber);
             return orders;
         }
