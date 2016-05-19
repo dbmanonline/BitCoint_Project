@@ -57,7 +57,7 @@
                                     <!-- /right options -->
                                 </div>
                                 <!-- panel content -->
-                                <div class="panel-body" style="display: block;">
+                                <div id="orderDetailPanelBody" runat="server" class="panel-body" style="display: block;">
                                     <div class="row size-12">
                                         <div class="col-md-1">
                                             <i id="iconStatus" runat="server"></i>
@@ -69,14 +69,14 @@
                                         <div class="col-md-2">
                                             <asp:Label ID="lblName1" runat="server" Text=""></asp:Label>
                                         </div>
-                                        <div class="col-md-3 bold" style="color: green">
+                                        <div class="col-md-3 bold">
                                             >
                                                 <asp:Label ID="lblSendAmount" runat="server" Text='<%# Eval("Amount") %>'></asp:Label>
                                             Bitcoin
                                             >
                                         </div>
                                         <div class="col-md-2">
-                                            <asp:Label ID="lblReceiverId" runat="server" Text='<%# Eval("User.AssociateName") %>'></asp:Label>
+                                            <asp:Label ID="lblName2" runat="server" Text='<%# Eval("User.AssociateName") %>'></asp:Label>
                                         </div>
                                         <div class="col-md-2">
                                             <asp:LinkButton ID="lbtnSendMessage" runat="server" class="label label-primary">Message <span>0</span></asp:LinkButton>
@@ -312,7 +312,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="row">
+                        <div id="divUploadPhoto" runat="server" class="row">
                             <div class="col-md-12">
                                 <label>Attach photo</label>
                                 <asp:FileUpload ID="fuPhotoConfirmation" runat="server" class="custom-file-upload" data-btn-text="Select a File" />
@@ -321,7 +321,7 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <asp:Image ID="imgPhotConfirmation" runat="server" />
+                                <a id="aViewPhotoConfirmation" runat="server" target="_blank"><asp:Image ID="imgPhotoConfirmation" runat="server" Height="100" Width="100" /></a>
                             </div>
                         </div>
                     </div>
@@ -330,6 +330,7 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <asp:Button ID="btnCompletePayment" runat="server" Text="I complete this payment" class="btn btn-success" OnClick="btnCompletePayment_Click" />
+                        <asp:Button ID="btnConfirm" runat="server" Text="Confirm" class="btn btn-success" OnClick="btnConfirm_Click"/>
                     </div>
                 </div>
             </div>

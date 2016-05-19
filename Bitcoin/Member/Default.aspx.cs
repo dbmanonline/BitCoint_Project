@@ -22,7 +22,7 @@ public partial class Member_Default : System.Web.UI.Page
     // Current default of amount bitcoin is 0.5
     private const float AmountBitcoin = (float)0.5;
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 6;
+    private const int UserId = 4;
     private const int StatusPending = 0;
     private const int StatusReceived = 1;
     private const float GrowthWallet = (float)0.2;
@@ -104,6 +104,8 @@ public partial class Member_Default : System.Web.UI.Page
         var hfStatus = e.Item.FindControl("hfStatus") as HiddenField;
         var lblOrderDetailCode = e.Item.FindControl("lblOrderDetailCode") as Label;
         var lblName1 = e.Item.FindControl("lblName1") as Label;
+        var lblName2 = e.Item.FindControl("lblName2") as Label;
+        var orderDetailPanelBody = e.Item.FindControl("orderDetailPanelBody") as HtmlControl;
 
         if (Convert.ToByte(hfStatus.Value) == 0)
         {
@@ -121,16 +123,20 @@ public partial class Member_Default : System.Web.UI.Page
         }
 
         var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(lblOrderDetailCode.Text);
-        var checkOrderType = _orderBll.GetByOrderCode(orderDetail.GHOrderCode);
-        
+
         if (orderDetail.SenderId == UserId)
         {
             lblName1.Text = "You";
-
+            lblName2.Text = orderDetail.ReceiverId.ToString();
+            btnConfirm.Visible = false;
         }
         if (orderDetail.ReceiverId == UserId)
         {
+            lblName2.Text = "You";
             lblName1.Text = orderDetail.SenderId.ToString();
+            divUploadPhoto.Visible = false;
+            btnCompletePayment.Visible = false;
+            orderDetailPanelBody.Attributes.Add("style", "background-color: #E66454; color: white");
         }
     }
 
@@ -140,15 +146,17 @@ public partial class Member_Default : System.Web.UI.Page
         if (e.CommandName == "ShowDetail")
         {
             var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(lblOrderDetailCode.Text);
-            if (orderDetail == null) throw new ArgumentNullException("orderDetail");
+            if (orderDetail == null) return;
 
             var order = _orderBll.GetByOrderCode(orderDetail.GHOrderCode);
-            if (order == null) throw new ArgumentNullException("order");
+            if (order == null) return;
 
             hfOrderDetailCode.Value = orderDetail.OrderDetailCode;
             lblReceiverName.Text = orderDetail.ReceiverId.ToString();
             lblSenderName.Text = orderDetail.SenderId.ToString();
             txtBitcoinAddress.Text = order.BitcoinAddress;
+            imgPhotoConfirmation.ImageUrl = "/Member/Upload/PhConfirm/" + orderDetail.Confirmation;
+            aViewPhotoConfirmation.HRef = "/Member/Upload/PhConfirm/" + orderDetail.Confirmation;
         }
     }
 
@@ -193,6 +201,19 @@ public partial class Member_Default : System.Web.UI.Page
         AddNewBid("Ask");
         DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
         LoadAllUserPh();
+    }
+
+    protected void btnConfirm_Click(object sender, EventArgs e)
+    {
+        var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(hfOrderDetailCode.Value);
+        if (orderDetail == null) return;
+
+        orderDetail.OrderDetailCode = hfOrderDetailCode.Value;
+        orderDetail.Status = 2;
+        _orderDetailBll.UpdateOrderDetail(orderDetail);
+        DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
+        LoadAllUserPh();
+        LoadGHofUser();
     }
 
     #endregion
@@ -284,4 +305,5 @@ public partial class Member_Default : System.Web.UI.Page
     }
 
     #endregion
+
 }
