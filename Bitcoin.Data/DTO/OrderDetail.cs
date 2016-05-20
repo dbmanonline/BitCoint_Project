@@ -23,6 +23,7 @@ namespace Bitcoin.Data.DTO
         public string Confirmation { get; set; }
         public byte Status { get; set; }
         public System.DateTime CreateDate { get; set; }
+        public int OrderNumber { get; set; }
     
         public virtual Order Order { get; set; }
         public virtual User User { get; set; }

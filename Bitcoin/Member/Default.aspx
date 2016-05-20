@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/AdminPage.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="Member_Default" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Member/MasterPage.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="Member_Default" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
     <style>
@@ -89,7 +89,7 @@
                     </asp:Repeater>
                 </div>
                 <div class="col-md-4">
-                    <asp:Repeater ID="rptBid" runat="server" OnItemDataBound="rptBid_ItemDataBound">
+                    <asp:Repeater ID="rptOrder" runat="server" OnItemDataBound="rptOrder_ItemDataBound">
                         <ItemTemplate>
                             <div class="panel panel-default">
 

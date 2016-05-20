@@ -16,7 +16,7 @@ public partial class Member_Bank_Default : System.Web.UI.Page
     private readonly Bank _bank = new Bank();
 
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 6;
+    private const int UserId = 9;
 
     #endregion
 

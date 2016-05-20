@@ -51,6 +51,7 @@
           <Property Name="Confirmation" Type="nvarchar(max)" />
           <Property Name="Status" Type="tinyint" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
+          <Property Name="OrderNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="User">
           <Key>
@@ -302,6 +303,7 @@
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Order" Relationship="BitCoinModel.FK_OrderDetail_Order" FromRole="OrderDetail" ToRole="Order" />
           <NavigationProperty Name="User" Relationship="BitCoinModel.FK_OrderDetail_User" FromRole="OrderDetail" ToRole="User" />
+          <Property Name="OrderNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <Association Name="FK_OrderDetail_Order">
           <End Type="BitCoinModel.Order" Role="Order" Multiplicity="1" />
@@ -393,6 +395,7 @@
           <EntitySetMapping Name="OrderDetails">
             <EntityTypeMapping TypeName="BitCoinModel.OrderDetail">
               <MappingFragment StoreEntitySet="OrderDetail">
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Confirmation" ColumnName="Confirmation" />
