@@ -22,7 +22,7 @@ public partial class Member_Default : System.Web.UI.Page
     // Current default of amount bitcoin is 0.5
     private const float AmountBitcoin = (float)0.5;
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 4;
+    private const int UserId = 9;
     private const int StatusPending = 0;
     private const int StatusRequestProcessed = 1;
     private const int StatusDone = 2;
@@ -289,23 +289,27 @@ public partial class Member_Default : System.Web.UI.Page
 
     private void LoadAllUserOrderDetail()
     {
-        rptOrderDetail.DataSource = _orderDetailBll.GetAllGHforUser(UserId);
+        rptOrderDetail.DataSource = _orderDetailBll.GetAllUserOrderDetails(UserId);
         rptOrderDetail.DataBind();
     }
 
     private void GetGhToInsertIntoOrderDetail()
     {
-        var gh = _orderBll.GetEarlyGH();
-        if (gh == null) return;
+        var order = _orderBll.GetLatestGhOrder();
+        if (order == null) return;
         var latestUserPH = _orderBll.GetLatestUserPH(UserId);
         if (latestUserPH == null) return;
-        if (latestUserPH.RemainingAmount != 0)
+        var userOrderDetail = _orderDetailBll.GetLatestUserOrderDetail(UserId);
+        var userOrderDetailPhOrderCode = _orderDetailBll.GetOrderDetailByPhOrderCode(latestUserPH.OrderCode);
+        //var checkSumOfAmount = _orderDetailBll.SumOfAmount(userOrderDetail.GHOrderCode);
+        if (userOrderDetailPhOrderCode == null 
+            || (userOrderDetailPhOrderCode != null && userOrderDetailPhOrderCode.Status == StatusDone))                                                                   
         {
             _orderDetail.OrderDetailCode = RandomValue.RandomNumberToString();
             _orderDetail.PHOrderCode = latestUserPH.OrderCode;
-            _orderDetail.GHOrderCode = gh.OrderCode;
+            _orderDetail.GHOrderCode = order.OrderCode;
             _orderDetail.SenderId = UserId;
-            _orderDetail.ReceiverId = gh.UserID;
+            _orderDetail.ReceiverId = order.UserID;
             _orderDetail.Status = 0;
             _orderDetail.CreateDate = Convert.ToDateTime(DateTime.Now.ToLongDateString());
 
@@ -316,7 +320,6 @@ public partial class Member_Default : System.Web.UI.Page
                 if (_orderDetailBll.CheckOrderCodeExistsInOrderDetail(latestUserPH.OrderCode) == false)
                 {
                     _orderDetail.Amount = (latestUserPH.Amount * 20) / 100;
-                    _orderDetailBll.InsertOrderDetail(_orderDetail);
                 }
             }
 
@@ -325,9 +328,9 @@ public partial class Member_Default : System.Web.UI.Page
                 if (_orderDetailBll.CheckOrderCodeExistsInOrderDetail(latestUserPH.OrderCode) == true)
                 {
                     _orderDetail.Amount = (latestUserPH.Amount * 80) / 100;
-                    _orderDetailBll.InsertOrderDetail(_orderDetail);
                 }
             }
+            _orderDetailBll.InsertOrderDetail(_orderDetail);
         }
     }
 

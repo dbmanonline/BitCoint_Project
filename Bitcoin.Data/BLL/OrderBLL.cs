@@ -58,7 +58,7 @@ namespace Bitcoin.Data.BLL
             return checkBidCodeExists == true;
         }
 
-        public Order GetEarlyGH()
+        public Order GetLatestGhOrder()
         {
             return _orderDal.GetAllOrders()
                 .Where(x => x.Type == "GH" && (x.Status == 0 || x.Status == 1))

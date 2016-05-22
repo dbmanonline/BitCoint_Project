@@ -13,7 +13,7 @@ namespace Bitcoin.Data.BLL
     {
         private readonly OrderDetailDAL _orderDetailDal = new OrderDetailDAL();
 
-        public IEnumerable<OrderDetail> GetAllGHforUser(int userId)
+        public IEnumerable<OrderDetail> GetAllUserOrderDetails(int userId)
         {
             return _orderDetailDal.GetAllOrderDetail()
             .Where(x => x.SenderId == userId  || x.ReceiverId == userId)
@@ -40,9 +40,30 @@ namespace Bitcoin.Data.BLL
             return _orderDetailDal.GetOrderDetailByOrderDetailCode(orderDetailCode);
         }
 
+        public OrderDetail GetOrderDetailByPhOrderCode(string phOrderCode)
+        {
+            return _orderDetailDal.GetAllOrderDetail()
+                .FirstOrDefault(m => m.PHOrderCode == phOrderCode);
+        }
+
         public void UpdateOrderDetail(OrderDetail orderDetail)
         {
             _orderDetailDal.UpdateOrderDetail(orderDetail);
         }
+
+        public OrderDetail GetLatestUserOrderDetail(int userId)
+        {
+            return _orderDetailDal.GetAllOrderDetail()
+                .FirstOrDefault(m => m.ReceiverId == userId);
+        }
+
+        public Double SumOfAmount(string ghOrderCode)
+        {
+            var result = _orderDetailDal.GetAllOrderDetail()
+               .Where(m => m.GHOrderCode == ghOrderCode)
+               .Select(m => m.Amount)
+               .Sum();
+            return result;
+        }    
     }
 }
