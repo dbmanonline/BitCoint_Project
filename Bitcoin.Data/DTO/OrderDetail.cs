@@ -26,6 +26,8 @@ namespace Bitcoin.Data.DTO
         public int OrderNumber { get; set; }
     
         public virtual Order Order { get; set; }
+        public virtual Order Order1 { get; set; }
         public virtual User User { get; set; }
+        public virtual User User1 { get; set; }
     }
 }

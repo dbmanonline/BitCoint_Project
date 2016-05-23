@@ -18,20 +18,23 @@ namespace Bitcoin.Data.DTO
         public Order()
         {
             this.OrderDetails = new HashSet<OrderDetail>();
+            this.OrderDetails1 = new HashSet<OrderDetail>();
         }
     
+        public string OrderCode { get; set; }
         public int UserID { get; set; }
         public double Amount { get; set; }
+        public double RemainingAmount { get; set; }
         public System.DateTime CreateDate { get; set; }
         public byte Status { get; set; }
-        public string Type { get; set; }
         public int OrderNumber { get; set; }
-        public string OrderCode { get; set; }
+        public string Type { get; set; }
         public string BitcoinAddress { get; set; }
-        public double RemainingAmount { get; set; }
     
-        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderDetail> OrderDetails1 { get; set; }
+        public virtual User User { get; set; }
     }
 }

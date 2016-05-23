@@ -17,9 +17,10 @@ namespace Bitcoin.Data.DTO
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
-            this.Orders = new HashSet<Order>();
             this.Banks = new HashSet<Bank>();
+            this.Orders = new HashSet<Order>();
             this.OrderDetails = new HashSet<OrderDetail>();
+            this.OrderDetails1 = new HashSet<OrderDetail>();
         }
     
         public int UserID { get; set; }
@@ -35,15 +36,14 @@ namespace Bitcoin.Data.DTO
         public byte Status { get; set; }
         public string FullName { get; set; }
         public System.DateTime CreateDate { get; set; }
-        public int LevelID { get; set; }
-        public double Rate { get; set; }
     
-        public virtual Level Level { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Order> Orders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Bank> Banks { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Order> Orders { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderDetail> OrderDetails1 { get; set; }
     }
 }

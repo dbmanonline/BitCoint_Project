@@ -37,6 +37,30 @@ namespace Bitcoin.Data.BLL
             _orderDal.UpdateOrder(order);
         }
 
+        /// <summary>
+        /// Get a oldest order get help
+        /// </summary>
+        /// <returns></returns>
+        public Order GetOldestOrderGetHelp()
+        {
+            var orderGH = _orderDal.GetAllOrders()
+                .OrderByDescending(m => m.OrderNumber)
+                .FirstOrDefault(m => m.Type == "GH" && (m.Status == 0 || m.Status == 1));
+            return orderGH;
+        }
+
+        /// <summary>
+        /// Get a oldest order provide help
+        /// </summary>
+        /// <returns></returns>
+        public Order GetOldestOrderProvideHelp(int userId)
+        {
+            var orderGH = _orderDal.GetAllOrders()
+                .OrderBy(m => m.OrderNumber)
+                .FirstOrDefault(m => m.UserID == userId && m.Type == "PH" && (m.Status == 0 || m.Status == 1));
+            return orderGH;
+        }
+
         public IEnumerable<Order> GetAllUserPH(int userId)
         {
             var orders = _orderDal.GetAllOrders()
@@ -58,12 +82,12 @@ namespace Bitcoin.Data.BLL
             return checkBidCodeExists == true;
         }
 
-        public Order GetLatestGhOrder()
-        {
-            return _orderDal.GetAllOrders()
-                .Where(x => x.Type == "GH" && (x.Status == 0 || x.Status == 1))
-                .OrderBy(x => x.OrderNumber)
-                .FirstOrDefault();
-        } 
+        //public Order GetLatestGhOrder()
+        //{
+        //    return _orderDal.GetAllOrders()
+        //        .Where(x => x.Type == "GH" && (x.Status == 0 || x.Status == 1))
+        //        .OrderBy(x => x.OrderNumber)
+        //        .FirstOrDefault();
+        //} 
     }
 }

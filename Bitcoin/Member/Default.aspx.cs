@@ -22,7 +22,7 @@ public partial class Member_Default : System.Web.UI.Page
     // Current default of amount bitcoin is 0.5
     private const float AmountBitcoin = (float)0.5;
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 9;
+    private const int UserId = 3;
     private const int StatusPending = 0;
     private const int StatusRequestProcessed = 1;
     private const int StatusDone = 2;
@@ -39,7 +39,7 @@ public partial class Member_Default : System.Web.UI.Page
         {
             txtBitcoinAmount.Text = AmountBitcoin.ToString();
             LoadAllUserOrders();
-            GetGhToInsertIntoOrderDetail();
+            GetGhAndPhInsertToOrderDetail();
             LoadAllUserOrderDetail();
         }
     }
@@ -48,7 +48,7 @@ public partial class Member_Default : System.Web.UI.Page
     {
         if (CheckPhReceived() == false)
         {
-            AddNewBid("Bid");
+            AddNewOrder("Bid");
             DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
             LoadAllUserOrders();
         }
@@ -206,9 +206,18 @@ public partial class Member_Default : System.Web.UI.Page
 
     protected void btnWithdrawRequest_Click(object sender, EventArgs e)
     {
-        AddNewBid("Ask");
-        DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
-        LoadAllUserOrders();
+        var orderProvideHelp = _orderBll.GetOldestOrderProvideHelp(UserId);
+        // để rút tiền phải hoàn tất 100% PH đợt trước và lập tiếp lệnh PH mới bằng hoặc lớn hơn số tiền PH đợt trước
+        if (orderProvideHelp.RemainingAmount == 0)
+        {
+            AddNewOrder("Ask");
+            DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
+            LoadAllUserOrders();
+        }
+        else
+        {
+            DisplayMessage.ShowMessage("You must complete 100% your request PH before withdraw bitcoin", Page);
+        }
     }
 
     protected void btnConfirm_Click(object sender, EventArgs e)
@@ -242,7 +251,11 @@ public partial class Member_Default : System.Web.UI.Page
 
     #region Methods
 
-    private void AddNewBid(string typeAction)
+    /// <summary>
+    /// Insert a order
+    /// </summary>
+    /// <param name="typeAction">Type of order is GH or PH</param>
+    private void AddNewOrder(string typeAction)
     {
         _order.OrderCode = RandomValue.RandomNumberToString();
         while (_orderBll.CheckBidCodeIsExists(_order.OrderCode) == true)
@@ -259,14 +272,18 @@ public partial class Member_Default : System.Web.UI.Page
         }
         else if (typeAction == "Ask")
         {
-            _order.Type = "GH";
-            _order.BitcoinAddress = ddlBitcoinAddress.SelectedValue;
-            _order.Amount = float.Parse(lblTotalWithdrawAmount.Text);
+                _order.Type = "GH";
+                _order.BitcoinAddress = ddlBitcoinAddress.SelectedValue;
+                _order.Amount = float.Parse(lblTotalWithdrawAmount.Text);
+                
         }
         _order.RemainingAmount = _order.Amount;
         _orderBll.InsertOrder(_order);
     }
 
+    /// <summary>
+    /// Display all user orders
+    /// </summary>
     private void LoadAllUserOrders()
     {
         rptOrder.DataSource = _orderBll.GetAllUserPH(UserId);
@@ -293,47 +310,54 @@ public partial class Member_Default : System.Web.UI.Page
         rptOrderDetail.DataBind();
     }
 
-    private void GetGhToInsertIntoOrderDetail()
+    /// <summary>
+    /// Get oldest PH and GH with purpose insert into OrderDetail
+    /// </summary>
+    private void GetGhAndPhInsertToOrderDetail()
     {
-        var order = _orderBll.GetLatestGhOrder();
-        if (order == null) return;
-        var latestUserPH = _orderBll.GetLatestUserPH(UserId);
-        if (latestUserPH == null) return;
-        var userOrderDetail = _orderDetailBll.GetLatestUserOrderDetail(UserId);
-        var userOrderDetailPhOrderCode = _orderDetailBll.GetOrderDetailByPhOrderCode(latestUserPH.OrderCode);
-        //var checkSumOfAmount = _orderDetailBll.SumOfAmount(userOrderDetail.GHOrderCode);
-        if (userOrderDetailPhOrderCode == null 
-            || (userOrderDetailPhOrderCode != null && userOrderDetailPhOrderCode.Status == StatusDone))                                                                   
+        var orderGetHelp = _orderBll.GetOldestOrderGetHelp();
+        if (orderGetHelp == null) return;
+        var orderProvideHelp = _orderBll.GetOldestOrderProvideHelp(UserId);
+        if (orderProvideHelp == null) return;
+
+        // lấy provide help hiện tại của user bên bảng order detail
+        var userOrderDetailPhOrderCode = _orderDetailBll.GetOrderDetailByPhOrderCode(orderProvideHelp.OrderCode);
+
+        if (orderGetHelp.RemainingAmount > 0)
         {
             _orderDetail.OrderDetailCode = RandomValue.RandomNumberToString();
-            _orderDetail.PHOrderCode = latestUserPH.OrderCode;
-            _orderDetail.GHOrderCode = order.OrderCode;
+            _orderDetail.PHOrderCode = orderProvideHelp.OrderCode;
+            _orderDetail.GHOrderCode = orderGetHelp.OrderCode;
             _orderDetail.SenderId = UserId;
-            _orderDetail.ReceiverId = order.UserID;
+            _orderDetail.ReceiverId = orderGetHelp.UserID;
             _orderDetail.Status = 0;
             _orderDetail.CreateDate = Convert.ToDateTime(DateTime.Now.ToLongDateString());
 
-            TimeSpan timeSpan = DateTime.Now - latestUserPH.CreateDate;
-
-            if (timeSpan.TotalDays >= 1)
+            var timeSpan = DateTime.Now - orderProvideHelp.CreateDate;
+            if (timeSpan.TotalDays == 1)
             {
-                if (_orderDetailBll.CheckOrderCodeExistsInOrderDetail(latestUserPH.OrderCode) == false)
+                _orderDetail.Amount = (orderProvideHelp.Amount * 20) / 100;
+
+                if (userOrderDetailPhOrderCode == null || (userOrderDetailPhOrderCode != null && userOrderDetailPhOrderCode.Status == StatusDone))
                 {
-                    _orderDetail.Amount = (latestUserPH.Amount * 20) / 100;
+                    _orderDetailBll.InsertOrderDetail(_orderDetail);
                 }
             }
-
-            if (timeSpan.TotalDays >= 7)
+            if (timeSpan.TotalDays >= 2)
             {
-                if (_orderDetailBll.CheckOrderCodeExistsInOrderDetail(latestUserPH.OrderCode) == true)
+                _orderDetail.Amount = (orderProvideHelp.Amount * 80) / 100;
+
+                if (userOrderDetailPhOrderCode == null || (userOrderDetailPhOrderCode != null && userOrderDetailPhOrderCode.Status == StatusDone))
                 {
-                    _orderDetail.Amount = (latestUserPH.Amount * 80) / 100;
+                    _orderDetailBll.InsertOrderDetail(_orderDetail);
                 }
             }
-            _orderDetailBll.InsertOrderDetail(_orderDetail);
         }
     }
 
+    /// <summary>
+    /// Display list bitcoin addresses of user
+    /// </summary>
     private void LoadAllUserBanks()
     {
         ddlBitcoinAddress.DataSource = _bankBll.GetAllUserBanks(UserId);
