@@ -22,7 +22,7 @@ public partial class Member_Default : System.Web.UI.Page
     // Current default of amount bitcoin is 0.5
     private const float AmountBitcoin = (float)0.5;
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 2;
+    private const int UserId = 3;
     private const int StatusPending = 0;
     private const int StatusRequestProcessed = 1;
     private const int StatusDone = 2;
@@ -242,6 +242,8 @@ public partial class Member_Default : System.Web.UI.Page
         phOrder.Status = 1;
         _orderBll.UpdateOrder(phOrder);
 
+        /// tinh commission
+
         DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
         LoadAllUserOrders();
         LoadAllUserOrderDetail();
@@ -334,7 +336,7 @@ public partial class Member_Default : System.Web.UI.Page
             _orderDetail.CreateDate = Convert.ToDateTime(DateTime.Now.ToLongDateString());
 
             var timeSpan = DateTime.Now - orderProvideHelp.CreateDate;
-            if (timeSpan.TotalDays == 1)
+            if (timeSpan.TotalDays >= 1 && timeSpan.TotalDays < 7)
             {
                 _orderDetail.Amount = (orderProvideHelp.Amount * 20) / 100;
 
@@ -343,7 +345,7 @@ public partial class Member_Default : System.Web.UI.Page
                     _orderDetailBll.InsertOrderDetail(_orderDetail);
                 }
             }
-            if (timeSpan.TotalDays >= 2)
+            if (timeSpan.TotalDays >= 7)
             {
                 _orderDetail.Amount = (orderProvideHelp.Amount * 80) / 100;
 
