@@ -49,6 +49,32 @@ namespace Bitcoin.Data.BLL
             return orderGH;
         }
 
+        //public Order Get_Sum_Amount_Order_Bigger_Than_Sum_Amount_Order_Detail(double amountOrderDetail)
+        //{
+        //    return _orderDal.GetAllOrders()
+        //        .FirstOrDefault(m => m.Amount > amountOrderDetail);
+        //}
+
+       /// <summary>
+       /// Get all order get helps
+       /// </summary>
+       /// <returns>collection get helps</returns>
+        public IEnumerable<Order> GetAllOrderGH()
+        {
+            return _orderDal.GetAllOrders()
+                .Where(m => m.Type == "GH")
+                .OrderBy(m => m.OrderNumber)
+                .ToList();
+        }
+
+        //public Order GetNextOrderGH()
+        //{
+        //    return _orderDal.GetAllOrders()
+        //        .OrderBy(m => m.OrderNumber)
+        //        //.SkipWhile(m => m.Amount == amount)
+        //        .Skip(1)
+        //        .FirstOrDefault(m => m.Type == "GH");
+        //}
         /// <summary>
         /// Get a oldest order provide help
         /// </summary>

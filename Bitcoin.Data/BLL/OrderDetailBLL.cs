@@ -46,6 +46,19 @@ namespace Bitcoin.Data.BLL
                 .FirstOrDefault(m => m.PHOrderCode == phOrderCode);
         }
 
+        public OrderDetail GetOrderDetailByGHOrderCode(string ghOrderCode)
+        {
+            return _orderDetailDal.GetAllOrderDetail()
+                .FirstOrDefault(m => m.GHOrderCode == ghOrderCode);
+        }
+
+        public double SumAmountOrderDetailByGhOrderCode(string ghOrderCode)
+        {
+            return _orderDetailDal.GetAllOrderDetail()
+                .Where(m => m.GHOrderCode == ghOrderCode)
+                .Sum(m => m.Amount);
+        }
+
         public void UpdateOrderDetail(OrderDetail orderDetail)
         {
             _orderDetailDal.UpdateOrderDetail(orderDetail);
@@ -57,7 +70,7 @@ namespace Bitcoin.Data.BLL
                 .FirstOrDefault(m => m.ReceiverId == userId);
         }
 
-        public Double SumOfAmount(string ghOrderCode)
+        public double SumOfAmount(string ghOrderCode)
         {
             var result = _orderDetailDal.GetAllOrderDetail()
                .Where(m => m.GHOrderCode == ghOrderCode)

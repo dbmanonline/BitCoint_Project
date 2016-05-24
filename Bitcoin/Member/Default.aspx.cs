@@ -22,12 +22,13 @@ public partial class Member_Default : System.Web.UI.Page
     // Current default of amount bitcoin is 0.5
     private const float AmountBitcoin = (float)0.5;
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 3;
+    private const int UserId = 2;
     private const int StatusPending = 0;
     private const int StatusRequestProcessed = 1;
     private const int StatusDone = 2;
     private const float GrowthWallet = (float)0.2;
     private const float CommissionWallet = (float)0.1;
+    private DateTime dateTimeNow = Convert.ToDateTime("05/24/2016");
 
     #endregion
 
@@ -44,6 +45,7 @@ public partial class Member_Default : System.Web.UI.Page
         }
     }
 
+    // Hiển thị form lập lệnh PH
     protected void btnSaveBid_Click(object sender, EventArgs e)
     {
         if (CheckPhReceived() == false)
@@ -168,6 +170,7 @@ public partial class Member_Default : System.Web.UI.Page
         }
     }
 
+    // upload hình đính kèm với thông tin chuyển tiền
     protected void btnCompletePayment_Click(object sender, EventArgs e)
     {
         var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(hfOrderDetailCode.Value);
@@ -191,6 +194,7 @@ public partial class Member_Default : System.Web.UI.Page
         LoadAllUserOrderDetail();
     }
 
+    // Hiển thị màn hình rút tiền
     protected void lbtnAskBitcoin_Click(object sender, EventArgs e)
     {
         if (CheckPhReceived() == false)
@@ -204,6 +208,7 @@ public partial class Member_Default : System.Web.UI.Page
         }
     }
 
+    // Rút tiền lãi và hoa hồng
     protected void btnWithdrawRequest_Click(object sender, EventArgs e)
     {
         var orderProvideHelp = _orderBll.GetOldestOrderProvideHelp(UserId);
@@ -220,28 +225,32 @@ public partial class Member_Default : System.Web.UI.Page
         }
     }
 
+    // Xác nhận đã chuyển tiền chưa
     protected void btnConfirm_Click(object sender, EventArgs e)
     {
         var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(hfOrderDetailCode.Value);
         if (orderDetail == null) return;
 
-        orderDetail.OrderDetailCode = hfOrderDetailCode.Value;
+        orderDetail.OrderDetailCode = orderDetail.OrderDetailCode;
         orderDetail.Status = 2;
         _orderDetailBll.UpdateOrderDetail(orderDetail);
 
         var ghOrder = _orderBll.GetByOrderCode(orderDetail.GHOrderCode);
+       
+        ghOrder.OrderCode = ghOrder.OrderCode;
+        var ghRemainingAmount = (ghOrder.RemainingAmount - orderDetail.Amount);
+        ghOrder.RemainingAmount = ghRemainingAmount;
+        ghOrder.Status = 1;
+       _orderBll.UpdateOrder(ghOrder);
+
         var phOrder = _orderBll.GetByOrderCode(orderDetail.PHOrderCode);
 
-        ghOrder.OrderCode = ghOrder.OrderCode;
-        ghOrder.RemainingAmount = ghOrder.RemainingAmount - orderDetail.Amount;
-        ghOrder.Status = 1;
-        _orderBll.UpdateOrder(ghOrder);
-
         phOrder.OrderCode = phOrder.OrderCode;
-        phOrder.RemainingAmount = phOrder.RemainingAmount - orderDetail.Amount;
+        var phRemainingAmount = (phOrder.RemainingAmount - orderDetail.Amount);
+        phOrder.RemainingAmount = phRemainingAmount;
         phOrder.Status = 1;
         _orderBll.UpdateOrder(phOrder);
-
+        
         /// tinh commission
 
         DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
@@ -274,12 +283,11 @@ public partial class Member_Default : System.Web.UI.Page
         }
         else if (typeAction == "Ask")
         {
-                _order.Type = "GH";
-                _order.BitcoinAddress = ddlBitcoinAddress.SelectedValue;
-                _order.Amount = float.Parse(lblTotalWithdrawAmount.Text);
-                
+            _order.Type = "GH";
+            _order.BitcoinAddress = ddlBitcoinAddress.SelectedValue;
+            _order.Amount = float.Parse(lblTotalWithdrawAmount.Text);
         }
-        _order.RemainingAmount = _order.Amount;
+        _order.RemainingAmount = (double)_order.Amount;
         _orderBll.InsertOrder(_order);
     }
 
@@ -317,41 +325,44 @@ public partial class Member_Default : System.Web.UI.Page
     /// </summary>
     private void GetGhAndPhInsertToOrderDetail()
     {
-        var orderGetHelp = _orderBll.GetOldestOrderGetHelp();
-        if (orderGetHelp == null) return;
+        // lay danh sach gh
+        var getHelps = _orderBll.GetAllOrderGH();
+
+        // lay ph moi nhat cua user
         var orderProvideHelp = _orderBll.GetOldestOrderProvideHelp(UserId);
-        if (orderProvideHelp == null) return;
-
-        // lấy provide help hiện tại của user bên bảng order detail
-        var userOrderDetailPhOrderCode = _orderDetailBll.GetOrderDetailByPhOrderCode(orderProvideHelp.OrderCode);
-
-        if (orderGetHelp.RemainingAmount > 0)
+        if (orderProvideHelp == null)
         {
-            _orderDetail.OrderDetailCode = RandomValue.RandomNumberToString();
-            _orderDetail.PHOrderCode = orderProvideHelp.OrderCode;
-            _orderDetail.GHOrderCode = orderGetHelp.OrderCode;
-            _orderDetail.SenderId = UserId;
-            _orderDetail.ReceiverId = orderGetHelp.UserID;
-            _orderDetail.Status = 0;
-            _orderDetail.CreateDate = Convert.ToDateTime(DateTime.Now.ToLongDateString());
-
-            var timeSpan = DateTime.Now - orderProvideHelp.CreateDate;
-            if (timeSpan.TotalDays >= 1 && timeSpan.TotalDays < 7)
+            return;
+        }
+        else
+        {
+            foreach (var getHelp in getHelps)
             {
-                _orderDetail.Amount = (orderProvideHelp.Amount * 20) / 100;
+                var orderDetailByGhCode = _orderDetailBll.GetOrderDetailByGHOrderCode(getHelp.OrderCode);
 
-                if (userOrderDetailPhOrderCode == null || (userOrderDetailPhOrderCode != null && userOrderDetailPhOrderCode.Status == StatusDone))
+                if (orderDetailByGhCode == null ||
+                    (orderDetailByGhCode != null &&
+                     Convert.ToDecimal(_orderDetailBll.SumAmountOrderDetailByGhOrderCode(getHelp.OrderCode)) < Convert.ToDecimal(getHelp.Amount)))
                 {
+                    _orderDetail.PHOrderCode = orderProvideHelp.OrderCode;
+                    _orderDetail.GHOrderCode = getHelp.OrderCode;
+                    _orderDetail.SenderId = UserId;
+                    _orderDetail.ReceiverId = getHelp.UserID;
+                    _orderDetail.Status = 0;
+                    _orderDetail.CreateDate = Convert.ToDateTime(DateTime.Now.ToLongDateString());
+                    var timeSpan = DateTime.Now - orderProvideHelp.CreateDate;
+                    if (timeSpan.TotalDays >= 1 && timeSpan.TotalDays < 7)
+                    {
+                        _orderDetail.Amount = (float)((orderProvideHelp.Amount * 20) / 100);
+                    }
+                    else if (timeSpan.TotalDays > 7)
+                    {
+                        _orderDetail.Amount = (float)((orderProvideHelp.Amount * 80) / 100);
+                    }
+                    _orderDetail.OrderDetailCode = RandomValue.RandomNumberToString();
                     _orderDetailBll.InsertOrderDetail(_orderDetail);
-                }
-            }
-            if (timeSpan.TotalDays >= 7)
-            {
-                _orderDetail.Amount = (orderProvideHelp.Amount * 80) / 100;
-
-                if (userOrderDetailPhOrderCode == null || (userOrderDetailPhOrderCode != null && userOrderDetailPhOrderCode.Status == StatusDone))
-                {
-                    _orderDetailBll.InsertOrderDetail(_orderDetail);
+                    DisplayMessage.ShowMessage(getHelp.OrderCode, Page);
+                    break;
                 }
             }
         }
@@ -360,7 +371,8 @@ public partial class Member_Default : System.Web.UI.Page
     /// <summary>
     /// Display list bitcoin addresses of user
     /// </summary>
-    private void LoadAllUserBanks()
+    private
+    void LoadAllUserBanks()
     {
         ddlBitcoinAddress.DataSource = _bankBll.GetAllUserBanks(UserId);
         ddlBitcoinAddress.DataTextField = "BitcoinAddress";
