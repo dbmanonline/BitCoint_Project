@@ -8,7 +8,6 @@
         <EntityTypeShape EntityType="BitCoinModel.Bank" Width="1.5" PointX="5.25" PointY="2.25" />
         <EntityTypeShape EntityType="BitCoinModel.User" Width="1.5" PointX="3" PointY="1" />
         <AssociationConnector Association="BitCoinModel.FK_Bank_User" />
-        <EntityTypeShape EntityType="BitCoinModel.sysdiagram" Width="1.5" PointX="0.75" PointY="6.75" />
         <EntityTypeShape EntityType="BitCoinModel.Order" Width="1.5" PointX="5.25" PointY="5.5" />
         <EntityTypeShape EntityType="BitCoinModel.OrderDetail" Width="1.5" PointX="7.5" PointY="3" />
         <AssociationConnector Association="BitCoinModel.FK_Order_User" />

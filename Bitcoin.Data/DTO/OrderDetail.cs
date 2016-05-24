@@ -19,7 +19,7 @@ namespace Bitcoin.Data.DTO
         public string GHOrderCode { get; set; }
         public int SenderId { get; set; }
         public int ReceiverId { get; set; }
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
         public string Confirmation { get; set; }
         public byte Status { get; set; }
         public System.DateTime CreateDate { get; set; }

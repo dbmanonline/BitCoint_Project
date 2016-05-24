@@ -20,14 +20,14 @@ public partial class Member_Default : System.Web.UI.Page
     private readonly BankBLL _bankBll = new BankBLL();
 
     // Current default of amount bitcoin is 0.5
-    private const float AmountBitcoin = (float)0.5;
+    private const decimal AmountBitcoin = (decimal)0.5;
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 2;
+    private const int UserId = 6;
     private const int StatusPending = 0;
     private const int StatusRequestProcessed = 1;
     private const int StatusDone = 2;
-    private const float GrowthWallet = (float)0.2;
-    private const float CommissionWallet = (float)0.1;
+    private const decimal GrowthWallet = (decimal)0.2;
+    private const decimal CommissionWallet = (decimal)0.1;
     private DateTime dateTimeNow = Convert.ToDateTime("05/24/2016");
 
     #endregion
@@ -236,21 +236,20 @@ public partial class Member_Default : System.Web.UI.Page
         _orderDetailBll.UpdateOrderDetail(orderDetail);
 
         var ghOrder = _orderBll.GetByOrderCode(orderDetail.GHOrderCode);
-       
+
         ghOrder.OrderCode = ghOrder.OrderCode;
-        var ghRemainingAmount = (ghOrder.RemainingAmount - orderDetail.Amount);
-        ghOrder.RemainingAmount = ghRemainingAmount;
+
+        ghOrder.RemainingAmount = ghOrder.RemainingAmount - orderDetail.Amount;
         ghOrder.Status = 1;
-       _orderBll.UpdateOrder(ghOrder);
+        _orderBll.UpdateOrder(ghOrder);
 
         var phOrder = _orderBll.GetByOrderCode(orderDetail.PHOrderCode);
 
         phOrder.OrderCode = phOrder.OrderCode;
-        var phRemainingAmount = (phOrder.RemainingAmount - orderDetail.Amount);
-        phOrder.RemainingAmount = phRemainingAmount;
+        phOrder.RemainingAmount = phOrder.RemainingAmount - orderDetail.Amount;
         phOrder.Status = 1;
         _orderBll.UpdateOrder(phOrder);
-        
+
         /// tinh commission
 
         DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
@@ -285,9 +284,9 @@ public partial class Member_Default : System.Web.UI.Page
         {
             _order.Type = "GH";
             _order.BitcoinAddress = ddlBitcoinAddress.SelectedValue;
-            _order.Amount = float.Parse(lblTotalWithdrawAmount.Text);
+            _order.Amount = decimal.Parse(lblTotalWithdrawAmount.Text);
         }
-        _order.RemainingAmount = (double)_order.Amount;
+        _order.RemainingAmount = (decimal)_order.Amount;
         _orderBll.InsertOrder(_order);
     }
 
@@ -341,8 +340,9 @@ public partial class Member_Default : System.Web.UI.Page
                 var orderDetailByGhCode = _orderDetailBll.GetOrderDetailByGHOrderCode(getHelp.OrderCode);
 
                 if (orderDetailByGhCode == null ||
-                    (orderDetailByGhCode != null &&
-                     Convert.ToDecimal(_orderDetailBll.SumAmountOrderDetailByGhOrderCode(getHelp.OrderCode)) < Convert.ToDecimal(getHelp.Amount)))
+                    (orderDetailByGhCode != null && 
+                    Convert.ToDecimal(_orderDetailBll.SumAmountOrderDetailByGhOrderCode(getHelp.OrderCode)) < Convert.ToDecimal(getHelp.Amount) 
+                    && !_orderDetailBll.CheckOrderDetailExists(orderProvideHelp.OrderCode, getHelp.OrderCode, UserId)))
                 {
                     _orderDetail.PHOrderCode = orderProvideHelp.OrderCode;
                     _orderDetail.GHOrderCode = getHelp.OrderCode;
@@ -353,15 +353,15 @@ public partial class Member_Default : System.Web.UI.Page
                     var timeSpan = DateTime.Now - orderProvideHelp.CreateDate;
                     if (timeSpan.TotalDays >= 1 && timeSpan.TotalDays < 7)
                     {
-                        _orderDetail.Amount = (float)((orderProvideHelp.Amount * 20) / 100);
+                        _orderDetail.Amount = Convert.ToDecimal((orderProvideHelp.Amount * 20) / 100);
                     }
                     else if (timeSpan.TotalDays > 7)
                     {
-                        _orderDetail.Amount = (float)((orderProvideHelp.Amount * 80) / 100);
+                        _orderDetail.Amount = Convert.ToDecimal((orderProvideHelp.Amount * 80) / 100);
                     }
                     _orderDetail.OrderDetailCode = RandomValue.RandomNumberToString();
                     _orderDetailBll.InsertOrderDetail(_orderDetail);
-                    DisplayMessage.ShowMessage(getHelp.OrderCode, Page);
+                    //DisplayMessage.ShowMessage("insert dc r", Page);
                     break;
                 }
             }

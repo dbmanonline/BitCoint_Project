@@ -52,11 +52,18 @@ namespace Bitcoin.Data.BLL
                 .FirstOrDefault(m => m.GHOrderCode == ghOrderCode);
         }
 
-        public double SumAmountOrderDetailByGhOrderCode(string ghOrderCode)
+        public Decimal SumAmountOrderDetailByGhOrderCode(string ghOrderCode)
         {
             return _orderDetailDal.GetAllOrderDetail()
                 .Where(m => m.GHOrderCode == ghOrderCode)
                 .Sum(m => m.Amount);
+        }
+
+        public bool CheckOrderDetailExists(string phOrderCode, string ghOrderCode, int userId)
+        {
+           bool a =  _orderDetailDal.GetAllOrderDetail()
+             .Any(m => m.PHOrderCode == phOrderCode && m.GHOrderCode == ghOrderCode && m.SenderId == userId);
+            return a;
         }
 
         public void UpdateOrderDetail(OrderDetail orderDetail)
@@ -64,19 +71,19 @@ namespace Bitcoin.Data.BLL
             _orderDetailDal.UpdateOrderDetail(orderDetail);
         }
 
-        public OrderDetail GetLatestUserOrderDetail(int userId)
-        {
-            return _orderDetailDal.GetAllOrderDetail()
-                .FirstOrDefault(m => m.ReceiverId == userId);
-        }
+        //public OrderDetail GetLatestUserOrderDetail(int userId)
+        //{
+        //    return _orderDetailDal.GetAllOrderDetail()
+        //        .FirstOrDefault(m => m.ReceiverId == userId);
+        //}
 
-        public double SumOfAmount(string ghOrderCode)
-        {
-            var result = _orderDetailDal.GetAllOrderDetail()
-               .Where(m => m.GHOrderCode == ghOrderCode)
-               .Select(m => m.Amount)
-               .Sum();
-            return result;
-        }    
+        //public Decimal SumOfAmount(string ghOrderCode)
+        //{
+        //    var result = _orderDetailDal.GetAllOrderDetail()
+        //       .Where(m => m.GHOrderCode == ghOrderCode)
+        //       .Select(m => m.Amount)
+        //       .Sum();
+        //    return result;
+        //}    
     }
 }
