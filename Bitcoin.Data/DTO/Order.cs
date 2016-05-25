@@ -23,7 +23,7 @@ namespace Bitcoin.Data.DTO
     
         public string OrderCode { get; set; }
         public int UserID { get; set; }
-        public decimal Amount { get; set; }
+        public Nullable<decimal> Amount { get; set; }
         public decimal RemainingAmount { get; set; }
         public System.DateTime CreateDate { get; set; }
         public byte Status { get; set; }

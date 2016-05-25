@@ -67,14 +67,6 @@ namespace Bitcoin.Data.BLL
                 .ToList();
         }
 
-        //public Order GetNextOrderGH()
-        //{
-        //    return _orderDal.GetAllOrders()
-        //        .OrderBy(m => m.OrderNumber)
-        //        //.SkipWhile(m => m.Amount == amount)
-        //        .Skip(1)
-        //        .FirstOrDefault(m => m.Type == "GH");
-        //}
         /// <summary>
         /// Get a oldest order provide help
         /// </summary>

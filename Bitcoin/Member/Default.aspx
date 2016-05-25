@@ -329,8 +329,8 @@
                     <!-- footer modal -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <asp:Button ID="btnCompletePayment" runat="server" Text="I complete this payment" class="btn btn-success" OnClick="btnCompletePayment_Click" />
-                        <asp:Button ID="btnConfirm" runat="server" Text="Confirm" class="btn btn-success" OnClick="btnConfirm_Click"/>
+                        <asp:Button ID="btnCompletePayment" runat="server" Text="I complete this payment" class="btn btn-success" onClientClick=" return confirm('Are you sure want to complete this payment ?')" OnClick="btnCompletePayment_Click" />
+                        <asp:Button ID="btnConfirm" runat="server" Text="Confirm" class="btn btn-success" onClientClick=" return confirm('Are you sure want to confirm this give help ?')" OnClick="btnConfirm_Click"/>
                     </div>
                 </div>
             </div>
@@ -358,7 +358,7 @@
                             <span aria-hidden="true">×</span>
                             <span class="sr-only">Close</span>
                         </button>
-                        <strong>Success!</strong> Your Bid have been saved successfully.
+                        <strong>Success!</strong> <asp:Label ID="lblMessageContent" runat="server" Text=""></asp:Label>
                     </div>
                 </div>
             </div>
@@ -384,6 +384,7 @@
         function ShowAsk() {
             $('#withdrawModal').modal('show');
         };
+        
     </script>
 </asp:Content>
 
