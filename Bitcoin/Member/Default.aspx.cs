@@ -22,7 +22,7 @@ public partial class Member_Default : System.Web.UI.Page
     // Current default of amount bitcoin is 0.5
     private const decimal AmountBitcoin = (decimal)0.5;
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 2;
+    private const int UserId = 11;
     private const int StatusPending = 0;
     private const int StatusRequestProcessed = 1;
     private const int StatusDone = 2;
@@ -48,7 +48,9 @@ public partial class Member_Default : System.Web.UI.Page
     // Hiển thị form lập lệnh PH
     protected void btnSaveBid_Click(object sender, EventArgs e)
     {
-        if (CheckPhReceived() == false)
+        var latestUserPH = _orderBll.GetLatestUserPH(UserId);
+
+        if (latestUserPH == null || latestUserPH.RemainingAmount == 0)
         {
             AddNewOrder("Bid");
             DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
