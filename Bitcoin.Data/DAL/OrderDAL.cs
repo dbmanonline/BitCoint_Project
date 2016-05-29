@@ -10,7 +10,7 @@ namespace Bitcoin.Data.DAL
 {
     public class OrderDAL
     {
-        readonly BitcoinEntities _bitCoinEntities = new BitcoinEntities();
+        private BitcoinEntities _bitCoinEntities = new BitcoinEntities();
 
         /// <summary>
         /// Insert Order BitCoin

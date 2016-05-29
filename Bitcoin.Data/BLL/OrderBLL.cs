@@ -10,7 +10,7 @@ namespace Bitcoin.Data.BLL
 {
     public class OrderBLL
     {
-        private static readonly OrderDAL _orderDal = new OrderDAL();
+        private OrderDAL _orderDal = new OrderDAL();
 
         public void InsertOrder(Order order)
         {
@@ -67,14 +67,6 @@ namespace Bitcoin.Data.BLL
                 .ToList();
         }
 
-        //public Order GetNextOrderGH()
-        //{
-        //    return _orderDal.GetAllOrders()
-        //        .OrderBy(m => m.OrderNumber)
-        //        //.SkipWhile(m => m.Amount == amount)
-        //        .Skip(1)
-        //        .FirstOrDefault(m => m.Type == "GH");
-        //}
         /// <summary>
         /// Get a oldest order provide help
         /// </summary>
@@ -82,12 +74,12 @@ namespace Bitcoin.Data.BLL
         public Order GetOldestOrderProvideHelp(int userId)
         {
             var orderGH = _orderDal.GetAllOrders()
-                .OrderBy(m => m.OrderNumber)
+                .OrderByDescending(m => m.OrderNumber)
                 .FirstOrDefault(m => m.UserID == userId && m.Type == "PH" && (m.Status == 0 || m.Status == 1));
             return orderGH;
         }
 
-        public IEnumerable<Order> GetAllUserPH(int userId)
+        public IEnumerable<Order> GetAllUserOrder(int userId)
         {
             var orders = _orderDal.GetAllOrders()
                 .Where(x => x.UserID == userId && (x.Status == 0 || x.Status == 1))
@@ -97,7 +89,7 @@ namespace Bitcoin.Data.BLL
 
         public Order GetLatestUserPH(int userId)
         {
-            var order = GetAllUserPH(userId)
+            var order = GetAllUserOrder(userId)
                 .FirstOrDefault(x => x.Type == "PH");
             return order;
         }

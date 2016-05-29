@@ -10,7 +10,7 @@ namespace Bitcoin.Data.DAL
 {
     public class OrderDetailDAL
     {
-        private readonly BitcoinEntities _bitcoinEntities = new BitcoinEntities();
+        private BitcoinEntities _bitcoinEntities = new BitcoinEntities();
 
         /// <summary>
         /// Get all order details

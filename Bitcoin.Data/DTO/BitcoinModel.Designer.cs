@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\khiem\Documents\GitHub\BitCoint_Project\Bitcoin.Data\DTO\BitCoinModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\khiem\Downloads\BitCoint_Project-1805\Bitcoin.Data\DTO\BitCoinModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

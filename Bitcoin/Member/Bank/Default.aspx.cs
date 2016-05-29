@@ -16,7 +16,8 @@ public partial class Member_Bank_Default : System.Web.UI.Page
     private readonly Bank _bank = new Bank();
 
     // UserId is temporary value that will be changed by session of user 
-    private const int UserId = 1;
+    //private int UserId = -1;
+    public int UserId { get; set; }
 
     #endregion
 
@@ -24,6 +25,8 @@ public partial class Member_Bank_Default : System.Web.UI.Page
 
     protected void Page_Load(object sender, EventArgs e)
     {
+        UserId = BitcoinSession.LoginMemberId;
+
         if (!IsPostBack)
         {
             LoadAllUserBanks();

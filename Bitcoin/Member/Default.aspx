@@ -71,12 +71,12 @@
                                         </div>
                                         <div class="col-md-3 bold">
                                             >
-                                                <asp:Label ID="lblSendAmount" runat="server" Text='<%# Eval("Amount") %>'></asp:Label>
+                                                <asp:Label ID="lblSendAmount" runat="server" Text='<%# Eval("Amount", "{0:0.0}") %>'></asp:Label>
                                             Bitcoin
                                             >
                                         </div>
                                         <div class="col-md-2">
-                                            <asp:Label ID="lblName2" runat="server" Text='<%# Eval("User.AssociateName") %>'></asp:Label>
+                                            <asp:Label ID="lblName2" runat="server" Text='<%# Eval("User.FullName") %>'></asp:Label>
                                         </div>
                                         <div class="col-md-2">
                                             <asp:LinkButton ID="lbtnSendMessage" runat="server" class="label label-primary">Message <span>0</span></asp:LinkButton>
@@ -119,11 +119,11 @@
                                                 <li class="list-group-item"><span class="bold">PARTICIPANT : </span><span>
                                                     <asp:Label ID="lblAssociateName" runat="server" Text='<%# Eval("User.AssociateName") %>'></asp:Label></span></li>
                                                 <li class="list-group-item"><span class="bold">TOTAL BITCOIN : </span><span>
-                                                    <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("Amount") %>'></asp:Label></span></li>
+                                                    <asp:Label ID="lblAmount" runat="server" Text='<%# Eval("Amount", "{0: 0.0}") %>'></asp:Label></span></li>
                                                 <li class="list-group-item"><span class="bold">REMAINING BITCOIN : </span><span>
-                                                    <asp:Label ID="lblRemainingAmount" runat="server" Text='<%# Eval("RemainingAmount") %>'></asp:Label></span></li>
+                                                    <asp:Label ID="lblRemainingAmount" runat="server" Text='<%# Eval("RemainingAmount", "{0: 0.0}") %>'></asp:Label></span></li>
                                                 <li class="list-group-item"><span class="bold">DATE : </span><span>
-                                                    <asp:Label ID="lblCreateDate" runat="server" Text='<%# Eval("CreateDate", "{0:MM/dd/yyyy}") %>'></asp:Label></span></li>
+                                                    <asp:Label ID="lblCreateDate" runat="server" Text='<%# Eval("CreateDate", "{0: dd MMM yyyy}") %>'></asp:Label></span></li>
                                                 <li class="list-group-item"><span class="bold">STATUS : </span><span id="spanStatus" runat="server">
                                                     <asp:Label ID="lblStatus" runat="server" Text='<%# Eval("Status") %>'></asp:Label></span></li>
                                             </ul>
@@ -271,19 +271,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Recepient</td>
-                                            <td>
-                                                <asp:Label ID="lblReceiverName" runat="server" Text=""></asp:Label></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Country</td>
-                                            <td>Korea</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Mobile No</td>
-                                            <td>38976245879</td>
-                                        </tr>
+                                        <asp:Literal ID="ltrUserReceiverInfo" runat="server"></asp:Literal>
                                     </tbody>
                                 </table>
                             </div>
@@ -295,19 +283,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Sender</td>
-                                            <td>
-                                                <asp:Label ID="lblSenderName" runat="server" Text=""></asp:Label></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Country</td>
-                                            <td>Cambodia</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Mobile No</td>
-                                            <td>2579456587</td>
-                                        </tr>
+                                        <asp:Literal ID="ltrUserSenderInfo" runat="server"></asp:Literal>
                                     </tbody>
                                 </table>
                             </div>
@@ -329,8 +305,8 @@
                     <!-- footer modal -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <asp:Button ID="btnCompletePayment" runat="server" Text="I complete this payment" class="btn btn-success" OnClick="btnCompletePayment_Click" />
-                        <asp:Button ID="btnConfirm" runat="server" Text="Confirm" class="btn btn-success" OnClick="btnConfirm_Click"/>
+                        <asp:Button ID="btnCompletePayment" runat="server" Text="I complete this payment" class="btn btn-success" onClientClick=" return confirm('Are you sure want to complete this payment ?')" OnClick="btnCompletePayment_Click" />
+                        <asp:Button ID="btnConfirm" runat="server" Text="Confirm" class="btn btn-success" onClientClick=" return confirm('Are you sure want to confirm this give help ?')" OnClick="btnConfirm_Click"/>
                     </div>
                 </div>
             </div>
@@ -358,7 +334,7 @@
                             <span aria-hidden="true">×</span>
                             <span class="sr-only">Close</span>
                         </button>
-                        <strong>Success!</strong> Your Bid have been saved successfully.
+                        <strong>Success!</strong> <asp:Label ID="lblMessageContent" runat="server" Text=""></asp:Label>
                     </div>
                 </div>
             </div>
@@ -384,6 +360,7 @@
         function ShowAsk() {
             $('#withdrawModal').modal('show');
         };
+        
     </script>
 </asp:Content>
 

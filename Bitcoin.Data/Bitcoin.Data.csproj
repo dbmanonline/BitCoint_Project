@@ -52,13 +52,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLL\BankBLL.cs" />
+    <Compile Include="BLL\CommissionBLL.cs" />
+    <Compile Include="BLL\LevelBLL.cs" />
     <Compile Include="BLL\OrderBLL.cs" />
     <Compile Include="BLL\OrderDetailBLL.cs" />
+    <Compile Include="BLL\PipCoinBLL.cs" />
     <Compile Include="BLL\UserBLL.cs" />
     <Compile Include="DAL\BankDAL.cs" />
+    <Compile Include="DAL\CommissionDAL.cs" />
+    <Compile Include="DAL\LevelDAL.cs" />
     <Compile Include="DAL\OrderDAL.cs" />
     <Compile Include="DAL\OrderDetailDAL.cs" />
+    <Compile Include="DAL\PipCoinDAL.cs" />
     <Compile Include="DAL\UserDAL.cs" />
+    <Compile Include="DTO\Administration.cs">
+      <DependentUpon>BitCoinModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DTO\Bank.cs">
       <DependentUpon>BitCoinModel.tt</DependentUpon>
     </Compile>
@@ -77,10 +86,22 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BitCoinModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="DTO\Commission.cs">
+      <DependentUpon>BitCoinModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DTO\Level.cs">
+      <DependentUpon>BitCoinModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DTO\Order.cs">
       <DependentUpon>BitCoinModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DTO\OrderDetail.cs">
+      <DependentUpon>BitCoinModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DTO\PipCoin.cs">
+      <DependentUpon>BitCoinModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DTO\sysdiagram.cs">
       <DependentUpon>BitCoinModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DTO\User.cs">

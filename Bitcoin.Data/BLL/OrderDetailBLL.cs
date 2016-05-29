@@ -11,7 +11,7 @@ namespace Bitcoin.Data.BLL
 {
     public class OrderDetailBLL
     {
-        private readonly OrderDetailDAL _orderDetailDal = new OrderDetailDAL();
+        private OrderDetailDAL _orderDetailDal = new OrderDetailDAL();
 
         public IEnumerable<OrderDetail> GetAllUserOrderDetails(int userId)
         {
