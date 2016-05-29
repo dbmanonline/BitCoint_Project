@@ -23,12 +23,29 @@ public partial class BitcoinEntities : DbContext
     public BitcoinEntities()
         : base("name=BitcoinEntities")
     {
+<<<<<<< HEAD
 
     }
 
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {
         throw new UnintentionalCodeFirstException();
+=======
+        public BitcoinEntities()
+            : base("name=BitcoinEntities")
+        {
+        }
+    
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            throw new UnintentionalCodeFirstException();
+        }
+    
+        public virtual DbSet<Bank> Banks { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
     }
 
 

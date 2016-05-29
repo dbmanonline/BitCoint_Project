@@ -4,6 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
+<<<<<<< HEAD
     <Schema Namespace="BitCoinModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Administration">
           <Key>
@@ -13,6 +14,9 @@
           <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Password" Type="varchar" MaxLength="256" Nullable="false" />
         </EntityType>
+=======
+      <Schema Namespace="BitCoinModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
         <EntityType Name="Bank">
           <Key>
             <PropertyRef Name="Id" />
@@ -49,7 +53,7 @@
           </Key>
           <Property Name="OrderCode" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
-          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" />
           <Property Name="RemainingAmount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="CreateDate" Type="datetime" Nullable="false" />
           <Property Name="Status" Type="tinyint" Nullable="false" />
@@ -257,10 +261,12 @@
             <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BitCoinModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+<<<<<<< HEAD
         <EntityContainer Name="BitcoinEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Banks" EntityType="BitCoinModel.Bank" />
           <EntitySet Name="Levels" EntityType="BitCoinModel.Level" />
@@ -308,16 +314,19 @@
           </AssociationSet>
           <EntitySet Name="Administrations" EntityType="BitCoinModel.Administration" />
         </EntityContainer>
+=======
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
         <EntityType Name="Bank">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="AccountName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="BitcoinAddress" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="User" Relationship="BitCoinModel.FK_Bank_User" FromRole="Bank" ToRole="User" />
+          <Property Name="AccountName" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BitcoinAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Bank_User" FromRole="Bank" ToRole="User" />
         </EntityType>
+<<<<<<< HEAD
         <EntityType Name="Level">
           <Key>
             <PropertyRef Name="LevelID" />
@@ -401,39 +410,48 @@
           <Property Name="DateCreate" Type="DateTime" Nullable="false" Precision="3" />
           <NavigationProperty Name="Order" Relationship="BitCoinModel.FK_PipCoin_Order" FromRole="PipCoin" ToRole="Order" />
         </EntityType>
+=======
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
         <EntityType Name="Order">
           <Key>
             <PropertyRef Name="OrderCode" />
           </Key>
-          <Property Name="OrderCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="OrderCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="RemainingAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="RemainingAmount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Status" Type="Byte" Nullable="false" />
           <Property Name="OrderNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Type" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="BitcoinAddress" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+<<<<<<< HEAD
           <NavigationProperty Name="User" Relationship="BitCoinModel.FK_Order_User" FromRole="Order" ToRole="User" />
           <NavigationProperty Name="OrderDetails" Relationship="BitCoinModel.FK_OrderDetail_Order" FromRole="Order" ToRole="OrderDetail" />
           <NavigationProperty Name="OrderDetails1" Relationship="BitCoinModel.FK_OrderDetail_Order1" FromRole="Order" ToRole="OrderDetail" />
           <NavigationProperty Name="OrderDetails2" Relationship="BitCoinModel.FK_OrderDetail_Order2" FromRole="Order" ToRole="OrderDetail" />
           <NavigationProperty Name="PipCoins" Relationship="BitCoinModel.FK_PipCoin_Order" FromRole="Order" ToRole="PipCoin" />
+=======
+          <NavigationProperty Name="User" Relationship="Self.FK_Order_User" FromRole="Order" ToRole="User" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_Order2" FromRole="Order" ToRole="OrderDetail" />
+          <NavigationProperty Name="OrderDetails1" Relationship="Self.FK_OrderDetail_Order3" FromRole="Order" ToRole="OrderDetail" />
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
         </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
             <PropertyRef Name="OrderDetailCode" />
           </Key>
-          <Property Name="OrderDetailCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="PHOrderCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="GHOrderCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="OrderDetailCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PHOrderCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="GHOrderCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="SenderId" Type="Int32" Nullable="false" />
           <Property Name="ReceiverId" Type="Int32" Nullable="false" />
-          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Amount" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="Confirmation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Status" Type="Byte" Nullable="false" />
           <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="OrderNumber" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+<<<<<<< HEAD
           <NavigationProperty Name="Order" Relationship="BitCoinModel.FK_OrderDetail_Order" FromRole="OrderDetail" ToRole="Order" />
           <NavigationProperty Name="Order1" Relationship="BitCoinModel.FK_OrderDetail_Order1" FromRole="OrderDetail" ToRole="Order" />
           <NavigationProperty Name="Order2" Relationship="BitCoinModel.FK_OrderDetail_Order2" FromRole="OrderDetail" ToRole="Order" />
@@ -449,10 +467,50 @@
           <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="version" Type="Int32" />
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+=======
+          <NavigationProperty Name="Order" Relationship="Self.FK_OrderDetail_Order2" FromRole="OrderDetail" ToRole="Order" />
+          <NavigationProperty Name="Order1" Relationship="Self.FK_OrderDetail_Order3" FromRole="OrderDetail" ToRole="Order" />
+          <NavigationProperty Name="User" Relationship="Self.FK_OrderDetail_User" FromRole="OrderDetail" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="Self.FK_OrderDetail_User1" FromRole="OrderDetail" ToRole="User" />
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
         </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SponsorID" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EmailID" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Currency" Type="Int32" Nullable="false" />
+          <Property Name="MobileNo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AssociateName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Country" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="State" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="City" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="Byte" Nullable="false" />
+          <Property Name="FullName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Banks" Relationship="Self.FK_Bank_User" FromRole="User" ToRole="Bank" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_Order_User" FromRole="User" ToRole="Order" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetail_User" FromRole="User" ToRole="OrderDetail" />
+          <NavigationProperty Name="OrderDetails1" Relationship="Self.FK_OrderDetail_User1" FromRole="User" ToRole="OrderDetail" />
+        </EntityType>
+        <Association Name="FK_Bank_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Bank" Type="Self.Bank" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Bank">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Order_User">
-          <End Type="BitCoinModel.User" Role="User" Multiplicity="1" />
-          <End Type="BitCoinModel.Order" Role="Order" Multiplicity="*" />
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Order" Type="Self.Order" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="UserID" />
@@ -462,9 +520,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+<<<<<<< HEAD
         <Association Name="FK_OrderDetail_Order">
           <End Type="BitCoinModel.Order" Role="Order" Multiplicity="1" />
           <End Type="BitCoinModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+=======
+        <Association Name="FK_OrderDetail_Order2">
+          <End Role="Order" Type="Self.Order" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
           <ReferentialConstraint>
             <Principal Role="Order">
               <PropertyRef Name="OrderCode" />
@@ -474,9 +538,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+<<<<<<< HEAD
         <Association Name="FK_OrderDetail_Order1">
           <End Type="BitCoinModel.Order" Role="Order" Multiplicity="1" />
           <End Type="BitCoinModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+=======
+        <Association Name="FK_OrderDetail_Order3">
+          <End Role="Order" Type="Self.Order" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
           <ReferentialConstraint>
             <Principal Role="Order">
               <PropertyRef Name="OrderCode" />
@@ -486,6 +556,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+<<<<<<< HEAD
         <Association Name="FK_OrderDetail_Order2">
           <End Type="BitCoinModel.Order" Role="Order" Multiplicity="1" />
           <End Type="BitCoinModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
@@ -513,6 +584,11 @@
         <Association Name="FK_OrderDetail_User1">
           <End Type="BitCoinModel.User" Role="User" Multiplicity="1" />
           <End Type="BitCoinModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+=======
+        <Association Name="FK_OrderDetail_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="UserID" />
@@ -522,9 +598,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+<<<<<<< HEAD
         <Association Name="FK_OrderDetail_User2">
           <End Type="BitCoinModel.User" Role="User" Multiplicity="1" />
           <End Type="BitCoinModel.OrderDetail" Role="OrderDetail" Multiplicity="*" />
+=======
+        <Association Name="FK_OrderDetail_User1">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="OrderDetail" Type="Self.OrderDetail" Multiplicity="*" />
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
           <ReferentialConstraint>
             <Principal Role="User">
               <PropertyRef Name="UserID" />
@@ -534,6 +616,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+<<<<<<< HEAD
         <EntityType Name="Administration">
           <Key>
             <PropertyRef Name="Id" />
@@ -543,6 +626,39 @@
           <Property Name="Password" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
+=======
+        <EntityContainer Name="BitcoinEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Banks" EntityType="Self.Bank" />
+          <EntitySet Name="Orders" EntityType="Self.Order" />
+          <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_Bank_User" Association="Self.FK_Bank_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Bank" EntitySet="Banks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Order_User" Association="Self.FK_Order_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Order" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Order2" Association="Self.FK_OrderDetail_Order2">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_Order3" Association="Self.FK_OrderDetail_Order3">
+            <End Role="Order" EntitySet="Orders" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_User" Association="Self.FK_OrderDetail_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetail_User1" Association="Self.FK_OrderDetail_User1">
+            <End Role="User" EntitySet="Users" />
+            <End Role="OrderDetail" EntitySet="OrderDetails" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -551,10 +667,8 @@
           <EntitySetMapping Name="Banks">
             <EntityTypeMapping TypeName="BitCoinModel.Bank">
               <MappingFragment StoreEntitySet="Bank">
-                <ScalarProperty Name="BitcoinAddress" ColumnName="BitcoinAddress" />
-                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+<<<<<<< HEAD
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -586,7 +700,11 @@
                 <ScalarProperty Name="Currency" ColumnName="Currency" />
                 <ScalarProperty Name="EmailID" ColumnName="EmailID" />
                 <ScalarProperty Name="SponsorID" ColumnName="SponsorID" />
+=======
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+                <ScalarProperty Name="BitcoinAddress" ColumnName="BitcoinAddress" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -617,31 +735,50 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="BitCoinModel.Order">
               <MappingFragment StoreEntitySet="Order">
-                <ScalarProperty Name="BitcoinAddress" ColumnName="BitcoinAddress" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="RemainingAmount" ColumnName="RemainingAmount" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="OrderCode" ColumnName="OrderCode" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="RemainingAmount" ColumnName="RemainingAmount" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="BitcoinAddress" ColumnName="BitcoinAddress" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="OrderDetails">
             <EntityTypeMapping TypeName="BitCoinModel.OrderDetail">
               <MappingFragment StoreEntitySet="OrderDetail">
-                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
-                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Confirmation" ColumnName="Confirmation" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="ReceiverId" ColumnName="ReceiverId" />
-                <ScalarProperty Name="SenderId" ColumnName="SenderId" />
-                <ScalarProperty Name="GHOrderCode" ColumnName="GHOrderCode" />
-                <ScalarProperty Name="PHOrderCode" ColumnName="PHOrderCode" />
                 <ScalarProperty Name="OrderDetailCode" ColumnName="OrderDetailCode" />
+                <ScalarProperty Name="PHOrderCode" ColumnName="PHOrderCode" />
+                <ScalarProperty Name="GHOrderCode" ColumnName="GHOrderCode" />
+                <ScalarProperty Name="SenderId" ColumnName="SenderId" />
+                <ScalarProperty Name="ReceiverId" ColumnName="ReceiverId" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Confirmation" ColumnName="Confirmation" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="OrderNumber" ColumnName="OrderNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="BitCoinModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="SponsorID" ColumnName="SponsorID" />
+                <ScalarProperty Name="EmailID" ColumnName="EmailID" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="MobileNo" ColumnName="MobileNo" />
+                <ScalarProperty Name="AssociateName" ColumnName="AssociateName" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

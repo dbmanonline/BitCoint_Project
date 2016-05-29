@@ -21,6 +21,7 @@ public partial class Order
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
     public Order()
     {
+<<<<<<< HEAD
 
         this.OrderDetails = new HashSet<OrderDetail>();
 
@@ -30,6 +31,30 @@ public partial class Order
 
         this.PipCoins = new HashSet<PipCoin>();
 
+=======
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Order()
+        {
+            this.OrderDetails = new HashSet<OrderDetail>();
+            this.OrderDetails1 = new HashSet<OrderDetail>();
+        }
+    
+        public string OrderCode { get; set; }
+        public int UserID { get; set; }
+        public Nullable<decimal> Amount { get; set; }
+        public decimal RemainingAmount { get; set; }
+        public System.DateTime CreateDate { get; set; }
+        public byte Status { get; set; }
+        public int OrderNumber { get; set; }
+        public string Type { get; set; }
+        public string BitcoinAddress { get; set; }
+    
+        public virtual User User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<OrderDetail> OrderDetails1 { get; set; }
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
     }
 
 

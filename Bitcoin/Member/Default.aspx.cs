@@ -22,6 +22,7 @@ public partial class Member_Default : System.Web.UI.Page
     // Current default of amount bitcoin is 0.5
     private decimal AmountBitcoin = (decimal)0.5;
     // UserId is temporary value that will be changed by session of user 
+<<<<<<< HEAD
     private int UserId = -1;
     private int StatusPending = 0;
     private int StatusRequestProcessed = 1;
@@ -29,6 +30,15 @@ public partial class Member_Default : System.Web.UI.Page
     private decimal GrowthWallet = (decimal)0.2;
     private decimal CommissionWallet = (decimal)0.1;
     private DateTime dateTimeNow = Convert.ToDateTime("6/7/2016");
+=======
+    private const int UserId = 11;
+    private const int StatusPending = 0;
+    private const int StatusRequestProcessed = 1;
+    private const int StatusDone = 2;
+    private const decimal GrowthWallet = (decimal)0.2;
+    private const decimal CommissionWallet = (decimal)0.1;
+    private DateTime dateTimeNow = Convert.ToDateTime("6/5/2016");
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
 
     #endregion
 
@@ -174,6 +184,7 @@ public partial class Member_Default : System.Web.UI.Page
             imgPhotoConfirmation.ImageUrl = "/Member/Upload/PhConfirm/" + orderDetail.Confirmation;
             aViewPhotoConfirmation.HRef = "/Member/Upload/PhConfirm/" + orderDetail.Confirmation;
 
+<<<<<<< HEAD
             //Get info user
             //Nguoi nhan
             string htmlUserReceiver = @"<tr>
@@ -217,6 +228,8 @@ public partial class Member_Default : System.Web.UI.Page
             htmlUserSender = String.Format(htmlUserSender, _uSender.FullName, _uSender.Country, _uSender.MobileNo);
             ltrUserSenderInfo.Text = htmlUserSender;
 
+=======
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
             // hide button confirm if OrderDetail's status equal 2 (StatusDone)
             if (orderDetail.Status == StatusDone)
             {
@@ -272,17 +285,28 @@ public partial class Member_Default : System.Web.UI.Page
         //var orderProvideHelp = _orderBll.GetOldestOrderProvideHelp(UserId);
         var latestUserPH = _orderBll.GetLatestUserPH(UserId);
         // để rút tiền phải hoàn tất 100% PH đợt trước và lập tiếp lệnh PH mới bằng hoặc lớn hơn số tiền PH đợt trước
+<<<<<<< HEAD
         if (latestUserPH.RemainingAmount == 0 && latestUserPH.Status == 1)
         {
             AddNewOrder("Ask");
             lblMessageContent.Text = "Your GH request have been sent successfully.";
+=======
+        if (latestUserPH.RemainingAmount == 0)
+        {
+            AddNewOrder("Ask");
+            lblMessageContent.Text = "Your GH request have been sent successfully !";
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
             DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
             LoadAllUserOrders();
             //DisplayMessage.ShowMessage("You must create a new PH equal or greater latest PH to withdraw.", Page);
         }
         else if (latestUserPH == null)
         {
+<<<<<<< HEAD
             DisplayMessage.ShowMessage("You can not withdraw.", Page);
+=======
+            DisplayMessage.ShowMessage("You must complete 100% your request PH and create a new PH equal or greater latest PH", Page);
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
         }
         //else if (latestUserPH.RemainingAmount != 0)
         //{
@@ -323,9 +347,12 @@ public partial class Member_Default : System.Web.UI.Page
         _orderBll.UpdateOrder(phOrder);
 
         /// tinh commission
+<<<<<<< HEAD
         /// 
         SetCommission(orderDetail.SenderId, float.Parse(orderDetail.Amount.ToString()), 1);
 
+=======
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
         lblMessageContent.Text = "You have been confirmed successfully.";
         DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
         LoadAllUserOrders();
@@ -428,6 +455,7 @@ public partial class Member_Default : System.Web.UI.Page
                 _orderDetail.CreateDate = Convert.ToDateTime(DateTime.Now.ToLongDateString());
 
                 if (latestUserOrderDetail == null)
+<<<<<<< HEAD
                 {
                     _orderDetail.Amount = Convert.ToDecimal((orderProvideHelp.Amount * 20) / 100);
                     _orderDetailBll.InsertOrderDetail(_orderDetail);
@@ -441,6 +469,19 @@ public partial class Member_Default : System.Web.UI.Page
                     break;
                 }
 
+=======
+                {
+                    _orderDetail.Amount = Convert.ToDecimal((orderProvideHelp.Amount * 20) / 100);
+                    _orderDetailBll.InsertOrderDetail(_orderDetail);
+                }
+                else if (orderProvideHelp.RemainingAmount <= getHelp.RemainingAmount
+                    && (DateTime.Now - orderProvideHelp.CreateDate).TotalDays >= 7 && latestUserOrderDetail.Status == StatusDone)
+                {
+                    _orderDetail.Amount = Convert.ToDecimal((orderProvideHelp.Amount * 80) / 100);
+                    _orderDetailBll.InsertOrderDetail(_orderDetail);
+                }
+                break;
+>>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
             }
         }
     }
