@@ -65,7 +65,7 @@
     <Compile Include="DAL\OrderDetailDAL.cs" />
     <Compile Include="DAL\PipCoinDAL.cs" />
     <Compile Include="DAL\UserDAL.cs" />
-    <Compile Include="DTO\Administration.cs">
+    <Compile Include="DTO\AdminUser.cs">
       <DependentUpon>BitCoinModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DTO\Bank.cs">
@@ -99,9 +99,6 @@
       <DependentUpon>BitCoinModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DTO\PipCoin.cs">
-      <DependentUpon>BitCoinModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DTO\sysdiagram.cs">
       <DependentUpon>BitCoinModel.tt</DependentUpon>
     </Compile>
     <Compile Include="DTO\User.cs">

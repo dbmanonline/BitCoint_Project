@@ -4,39 +4,24 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-<<<<<<< HEAD
-      <Diagram DiagramId="8f627ccd3e0c4838be5c57c93ce2f60b" Name="Diagram1">
-        <EntityTypeShape EntityType="BitCoinModel.Bank" Width="1.5" PointX="3" PointY="1.125" />
-        <EntityTypeShape EntityType="BitCoinModel.Level" Width="1.5" PointX="5.375" PointY="0.625" />
-        <EntityTypeShape EntityType="BitCoinModel.User" Width="1.5" PointX="0.75" PointY="2.125" />
-        <AssociationConnector Association="BitCoinModel.FK_Bank_User" />
-        <AssociationConnector Association="BitCoinModel.FK_User_Level" />
-        <EntityTypeShape EntityType="BitCoinModel.Commission" Width="1.5" PointX="7.375" PointY="0.75" />
-        <EntityTypeShape EntityType="BitCoinModel.PipCoin" Width="1.5" PointX="7.375" PointY="3.75" />
-        <EntityTypeShape EntityType="BitCoinModel.Order" Width="1.5" PointX="3" PointY="4.75" />
-        <EntityTypeShape EntityType="BitCoinModel.OrderDetail" Width="1.5" PointX="5.25" PointY="7.375" />
-        <EntityTypeShape EntityType="BitCoinModel.sysdiagram" Width="1.5" PointX="7.375" PointY="7.75" />
-        <AssociationConnector Association="BitCoinModel.FK_Order_User" />
-        <AssociationConnector Association="BitCoinModel.FK_OrderDetail_Order" />
-        <AssociationConnector Association="BitCoinModel.FK_OrderDetail_Order1" />
-        <AssociationConnector Association="BitCoinModel.FK_OrderDetail_Order2" />
-        <AssociationConnector Association="BitCoinModel.FK_PipCoin_Order" />
-        <AssociationConnector Association="BitCoinModel.FK_OrderDetail_User1" />
-        <AssociationConnector Association="BitCoinModel.FK_OrderDetail_User2" />
-        <EntityTypeShape EntityType="BitCoinModel.Administration" Width="1.5" PointX="9.375" PointY="0.75" />
-=======
-      <Diagram DiagramId="86f673d13d30492bb18fb704616feb9e" Name="Diagram1">
-        <EntityTypeShape EntityType="BitCoinModel.Bank" Width="1.5" PointX="3" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="BitCoinModel.Order" Width="1.5" PointX="3" PointY="4.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="BitCoinModel.OrderDetail" Width="1.5" PointX="5.25" PointY="3" IsExpanded="true" />
-        <EntityTypeShape EntityType="BitCoinModel.User" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
+      <Diagram DiagramId="490d594be2cd43b39df4a48c64f9522a" Name="Diagram1">
+        <EntityTypeShape EntityType="BitCoinModel.AdminUser" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BitCoinModel.Bank" Width="1.5" PointX="5.25" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="BitCoinModel.Commission" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BitCoinModel.Level" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BitCoinModel.Order" Width="1.5" PointX="5.25" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BitCoinModel.OrderDetail" Width="1.5" PointX="7.5" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="BitCoinModel.PipCoin" Width="1.5" PointX="7.5" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="BitCoinModel.User" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
         <AssociationConnector Association="BitCoinModel.FK_Bank_User" ManuallyRouted="false" />
+        <AssociationConnector Association="BitCoinModel.FK_User_Level" ManuallyRouted="false" />
         <AssociationConnector Association="BitCoinModel.FK_Order_User" ManuallyRouted="false" />
+        <AssociationConnector Association="BitCoinModel.FK_OrderDetail_Order" ManuallyRouted="false" />
+        <AssociationConnector Association="BitCoinModel.FK_OrderDetail_Order1" ManuallyRouted="false" />
         <AssociationConnector Association="BitCoinModel.FK_OrderDetail_Order2" ManuallyRouted="false" />
-        <AssociationConnector Association="BitCoinModel.FK_OrderDetail_Order3" ManuallyRouted="false" />
-        <AssociationConnector Association="BitCoinModel.FK_OrderDetail_User" ManuallyRouted="false" />
+        <AssociationConnector Association="BitCoinModel.FK_PipCoin_Order" ManuallyRouted="false" />
         <AssociationConnector Association="BitCoinModel.FK_OrderDetail_User1" ManuallyRouted="false" />
->>>>>>> b136c530334d547cff258ab62faba49429e1b4e5
+        <AssociationConnector Association="BitCoinModel.FK_OrderDetail_User2" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
