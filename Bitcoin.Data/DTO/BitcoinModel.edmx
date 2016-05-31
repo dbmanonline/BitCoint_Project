@@ -14,6 +14,7 @@
           <Property Name="Password" Type="varchar" MaxLength="256" Nullable="false" />
           <Property Name="Email" Type="varchar" MaxLength="256" Nullable="false" />
           <Property Name="FullName" Type="varchar" MaxLength="100" />
+          <Property Name="Active" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Bank">
           <Key>
@@ -272,6 +273,7 @@
           <Property Name="Password" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Email" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
           <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Bank">
           <Key>
@@ -544,6 +546,7 @@
           <EntitySetMapping Name="AdminUsers">
             <EntityTypeMapping TypeName="BitCoinModel.AdminUser">
               <MappingFragment StoreEntitySet="AdminUser">
+                <ScalarProperty Name="Active" ColumnName="Active" />
                 <ScalarProperty Name="FullName" ColumnName="FullName" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

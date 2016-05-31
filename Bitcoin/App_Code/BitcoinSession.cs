@@ -46,4 +46,20 @@ public class BitcoinSession
             HttpContext.Current.Session["LoginMemberEmailID"] = value;
         }
     }
+
+    public static int AdminUser
+    {
+        get
+        {
+            var id = HttpContext.Current.Session["AdminUser"];
+            if (id != null)
+                return Convert.ToInt32(id);
+            else
+                return 0;
+        }
+        set
+        {
+            HttpContext.Current.Session["AdminUser"] = value;
+        }
+    }
 }

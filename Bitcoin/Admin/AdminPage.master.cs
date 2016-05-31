@@ -9,6 +9,19 @@ public partial class Admin_AdminPage : System.Web.UI.MasterPage
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (!IsPostBack)
+        {
+            if (BitcoinSession.AdminUser == 0)
+            {
+                Response.Redirect("/Admin/Login.aspx");
+            }
+        }
+    }
 
+    protected void lbtnLogOutLeft_Click(object sender, EventArgs e)
+    {
+        Session.Abandon();
+        Session.Clear();
+        Response.Redirect("/Admin/Login.aspx");
     }
 }

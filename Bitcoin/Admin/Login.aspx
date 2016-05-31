@@ -58,7 +58,7 @@
                         <label class="label">Password</label>
                         <label class="input">
                             <i class="icon-append fa fa-lock"></i>
-                            <asp:TextBox ID="txtPassword" runat="server"></asp:TextBox>
+                            <asp:TextBox ID="txtPassword" runat="server" TextMode="Password"></asp:TextBox>
                             <b class="tooltip tooltip-top-right">Type your Password</b>
                         </label>
                         <label class="checkbox">

@@ -11,7 +11,7 @@ namespace Bitcoin.Data.DAL
 {
     public class AdminUserDAL
     {
-        BitcoinEntities _bitcoinEntities = new BitcoinEntities();
+        private BitcoinEntities _bitcoinEntities = new BitcoinEntities();
 
         /// <summary>
         /// Get all admin users
@@ -37,7 +37,7 @@ namespace Bitcoin.Data.DAL
         /// <summary>
         /// Insert a new admin user
         /// </summary>
-        /// <param name="adminUser"> adminUser </param>
+        /// <param name="adminUser"> Properties of AdminUser class </param>
         public void InsertAdminUser(AdminUser adminUser)
         {
             _bitcoinEntities.AdminUsers.Add(adminUser);
@@ -47,11 +47,21 @@ namespace Bitcoin.Data.DAL
         /// <summary>
         /// Update a single admin user
         /// </summary>
-        /// <param name="adminUser"> adminUser </param>
+        /// <param name="adminUser"> Properties of AdminUser class </param>
         public void UpdateAdminUser(AdminUser adminUser)
         {
             _bitcoinEntities.AdminUsers.Attach(adminUser);
             _bitcoinEntities.Entry(adminUser).State = EntityState.Modified;
+            _bitcoinEntities.SaveChanges();
+        }
+
+        /// <summary>
+        /// Delete a single admin user
+        /// </summary>
+        /// <param name="adminUser">Properties of AdminUser class</param>
+        public void DeleteAdminUser(AdminUser adminUser)
+        {
+            _bitcoinEntities.AdminUsers.Remove(adminUser);
             _bitcoinEntities.SaveChanges();
         }
     }
