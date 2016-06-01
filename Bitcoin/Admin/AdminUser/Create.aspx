@@ -26,9 +26,9 @@
                                             <label>Username</label>
                                             <asp:TextBox ID="txtUserName" runat="server" CssClass="form-control"></asp:TextBox>
                                             <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ForeColor="Red" ErrorMessage="Username is required !" ControlToValidate="txtUserName" SetFocusOnError="True" ValidationGroup="AddNew" Display="Dynamic"></asp:RequiredFieldValidator>
-                                            <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ForeColor="Red" ErrorMessage="Username only input from 5 to 50 characters !"
+                                            <asp:RegularExpressionValidator ID="RegularExpressionValidator1" runat="server" ForeColor="Red" ErrorMessage="Username only input from 5 to 25 characters !"
                                                 ControlToValidate="txtUserName" SetFocusOnError="True" ValidationGroup="AddNew"
-                                                Display="Dynamic" ValidationExpression="^[\s\S]{5,50}$"></asp:RegularExpressionValidator>
+                                                Display="Dynamic" ValidationExpression="^[\s\S]{5,25}$"></asp:RegularExpressionValidator>
                                             <asp:RegularExpressionValidator ID="RegularExpressionValidator3" runat="server" ForeColor="Red" ErrorMessage="Username only input alphabets and number !"
                                                 ControlToValidate="txtUserName" SetFocusOnError="True" ValidationGroup="AddNew"
                                                 Display="Dynamic" ValidationExpression="^[A-Za-z][A-Za-z0-9]*$"></asp:RegularExpressionValidator>
@@ -49,17 +49,6 @@
                                         </div>
                                     </div>
                                 </div>
-<%--                                <div class="row">
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <label>Re-Password</label>
-                                            <asp:TextBox ID="txtRePassword" runat="server" TextMode="Password" CssClass="form-control"></asp:TextBox>
-                                            <asp:CompareValidator ID="CompareValidator1" runat="server" ForeColor="Red" ControlToCompare="txtPassword"
-                                                ControlToValidate="txtRePassword" Display="Dynamic" ErrorMessage="Re-Password and Password not match !"
-                                                SetFocusOnError="True" ValidationGroup="AddNew"></asp:CompareValidator>
-                                        </div>
-                                    </div>
-                                </div>--%>
                                 <div class="row">
                                     <div class="form-group">
                                         <div class="col-md-12">
@@ -69,7 +58,7 @@
                                                 ValidationGroup="AddNew" ControlToValidate="txtEmail" SetFocusOnError="True"
                                                 Display="Dynamic"></asp:RequiredFieldValidator>
                                             <asp:RegularExpressionValidator ID="RegularExpressionValidator4" runat="server" ForeColor="Red"
-                                                 ValidationExpression="\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" ErrorMessage="RegularExpressionValidator" ValidationGroup="AddNew" 
+                                                ValidationExpression="\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" ErrorMessage="RegularExpressionValidator" ValidationGroup="AddNew"
                                                 Display="Dynamic" ControlToValidate="txtEmail" SetFocusOnError="True">
                                             </asp:RegularExpressionValidator>
                                         </div>

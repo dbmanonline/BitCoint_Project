@@ -127,17 +127,7 @@
                             <ul class="dropdown-menu hold-on-click">
                                 <li>
                                     <!-- my calendar -->
-                                    <a href="calendar.html"><i class="fa fa-calendar"></i>Calendar</a>
-                                </li>
-                                <li>
-                                    <!-- my inbox -->
-                                    <a href="#"><i class="fa fa-envelope"></i>Inbox
-										<span class="pull-right label label-default">0</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <!-- settings -->
-                                    <a href="page-user-profile.html"><i class="fa fa-cogs"></i>Settings</a>
+                                    <a href="/Admin/ChangePassword.aspx"><i class="fa fa-key"></i>Change Password</a>
                                 </li>
 
                                 <li class="divider"></li>
