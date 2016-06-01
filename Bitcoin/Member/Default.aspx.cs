@@ -134,6 +134,7 @@ public partial class Member_Default : System.Web.UI.Page
         {
             iconStatus.Attributes.Add("class", "fa fa-check-circle fa-2x");
             iconStatus.Attributes.Add("style", "color:green");
+            fuPhotoConfirmation.Visible = false;
         }
 
         var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(lblOrderDetailCode.Text);
@@ -254,7 +255,7 @@ public partial class Member_Default : System.Web.UI.Page
 
     // Hiển thị màn hình rút tiền
     protected void lbtnAskBitcoin_Click(object sender, EventArgs e)
-    {                                        
+    {
         if (_orderBll.GetLatestUserPH(UserId) != null)
         {
             DisplayMessage.ShowAlertModal("ShowAsk()", Page);
@@ -269,32 +270,14 @@ public partial class Member_Default : System.Web.UI.Page
     // Rút tiền lãi và hoa hồng
     protected void btnWithdrawRequest_Click(object sender, EventArgs e)
     {
-        //var orderProvideHelp = _orderBll.GetOldestOrderProvideHelp(UserId);
         var latestUserPH = _orderBll.GetLatestUserPH(UserId);
-        // để rút tiền phải hoàn tất 100% PH đợt trước và lập tiếp lệnh PH mới bằng hoặc lớn hơn số tiền PH đợt trước
-        if (latestUserPH.RemainingAmount == 0 && latestUserPH.Status == 1)
+        if (latestUserPH.RemainingAmount == 0 && latestUserPH.Status == 1 /*&& string.IsNullOrEmpty(latestUserPH.LastOrderCode)*/)
         {
             AddNewOrder("Ask");
             lblMessageContent.Text = "Your GH request have been sent successfully.";
             DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
             LoadAllUserOrders();
-            //DisplayMessage.ShowMessage("You must create a new PH equal or greater latest PH to withdraw.", Page);
         }
-        else if (latestUserPH == null)
-        {
-            DisplayMessage.ShowMessage("You can not withdraw.", Page);
-        }
-        //else if (latestUserPH.RemainingAmount != 0)
-        //{
-        //    DisplayMessage.ShowMessage("You must complete 100% current your PH", Page);
-        //}
-        //else
-        //{
-        //    AddNewOrder("Ask");
-        //    lblMessageContent.Text = "Your GH request have been sent successfully.";
-        //    DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
-        //    LoadAllUserOrders();
-        //}
     }
 
     // Xác nhận đã chuyển tiền chưa
@@ -352,6 +335,7 @@ public partial class Member_Default : System.Web.UI.Page
         _order.CreateDate = DateTime.Now;
         if (typeAction == "Bid")
         {
+            var latestUserPH = _orderBll.GetLatestUserPH(UserId);
             _order.Amount = AmountBitcoin;
             _order.Type = "PH";
         }
@@ -448,8 +432,7 @@ public partial class Member_Default : System.Web.UI.Page
     /// <summary>
     /// Display list bitcoin addresses of user
     /// </summary>
-    private
-    void LoadAllUserBanks()
+    private void LoadAllUserBanks()
     {
         ddlBitcoinAddress.DataSource = _bankBll.GetAllUserBanks(UserId);
         ddlBitcoinAddress.DataTextField = "BitcoinAddress";
