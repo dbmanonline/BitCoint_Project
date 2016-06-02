@@ -206,6 +206,7 @@
                                 <div class="fancy-form fancy-form-select">
                                     <asp:DropDownList ID="ddlBitcoinAddress" runat="server" class="form-control"></asp:DropDownList>
                                     <i class="fancy-arrow"></i>
+                                    <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" ForeColor="Red" ErrorMessage="Select your bank is required." SetFocusOnError="True" ValidationGroup="Withdraw" ControlToValidate="ddlBitcoinAddress" Display="Dynamic"></asp:RequiredFieldValidator>
                                 </div>
                             </div>
                         </div>
@@ -233,7 +234,7 @@
                     <!-- footer modal -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <asp:Button ID="btnWithdrawRequest" runat="server" Text="Send" class="btn btn-success" OnClick="btnWithdrawRequest_Click" />
+                        <asp:Button ID="btnWithdrawRequest" runat="server" Text="Send" class="btn btn-success" OnClick="btnWithdrawRequest_Click" ValidationGroup="Withdraw" />
                     </div>
                 </div>
             </div>

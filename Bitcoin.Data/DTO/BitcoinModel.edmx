@@ -59,6 +59,7 @@
           <Property Name="OrderNumber" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Type" Type="varchar" MaxLength="5" Nullable="false" />
           <Property Name="BitcoinAddress" Type="varchar" MaxLength="250" />
+          <Property Name="LastOrderCode" Type="varchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
@@ -325,6 +326,7 @@
           <NavigationProperty Name="OrderDetails1" Relationship="Self.FK_OrderDetail_Order1" FromRole="Order" ToRole="OrderDetail" />
           <NavigationProperty Name="OrderDetails2" Relationship="Self.FK_OrderDetail_Order2" FromRole="Order" ToRole="OrderDetail" />
           <NavigationProperty Name="PipCoins" Relationship="Self.FK_PipCoin_Order" FromRole="Order" ToRole="PipCoin" />
+          <Property Name="LastOrderCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="OrderDetail">
           <Key>
@@ -591,6 +593,7 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="BitCoinModel.Order">
               <MappingFragment StoreEntitySet="Order">
+                <ScalarProperty Name="LastOrderCode" ColumnName="LastOrderCode" />
                 <ScalarProperty Name="OrderCode" ColumnName="OrderCode" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="Amount" ColumnName="Amount" />

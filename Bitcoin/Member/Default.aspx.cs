@@ -20,7 +20,8 @@ public partial class Member_Default : System.Web.UI.Page
     private BankBLL _bankBll = new BankBLL();
 
     // Current default of amount bitcoin is 0.5
-    private decimal AmountBitcoin = (decimal)0.5;
+    private const decimal AmountBitcoin = (decimal)0.5;
+
     // UserId is temporary value that will be changed by session of user 
     private int UserId = -1;
     private int StatusPending = 0;
@@ -37,6 +38,7 @@ public partial class Member_Default : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         UserId = BitcoinSession.LoginMemberId;
+
         if (!IsPostBack)
         {
             txtBitcoinAmount.Text = AmountBitcoin.ToString();
@@ -45,17 +47,17 @@ public partial class Member_Default : System.Web.UI.Page
             LoadAllUserOrderDetail();
         }
     }
-
-    // Hiển thị form lập lệnh PH
+    
     protected void btnSaveBid_Click(object sender, EventArgs e)
     {
-        var latestUserPH = _orderBll.GetLatestUserPH(UserId);
+        var latestUserPH = _orderBll.GetLatestUserPh(UserId);
 
         if (latestUserPH == null || latestUserPH.RemainingAmount == 0)
         {
             AddNewOrder("Bid");
             DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
             LoadAllUserOrders();
+            LoadAllUserOrderDetail();
         }
         else
         {
@@ -73,22 +75,31 @@ public partial class Member_Default : System.Web.UI.Page
         var lblOrderTitile = e.Item.FindControl("lblOrderTitle") as Label;
         var lblRemainingAmount = e.Item.FindControl("lblRemainingAmount") as Label;
 
+        // hiển thị span background màu đỏ với những Order nào đang Pending
         if (lblStatus.Text == StatusPending.ToString())
         {
             lblStatus.Text = "PENDING";
             spanStatus.Attributes.Add("class", "label label-danger");
         }
+        // hiển thị span background màu xanh lá cây với những Order nào đã Process
         if (lblStatus.Text == StatusRequestProcessed.ToString())
         {
             lblStatus.Text = "Request Processed";
             spanStatus.Attributes.Add("class", "label label-success");
         }
-
+        // hiển thị span background màu xanh lá cây với những Order nào đã Done
+        if (lblStatus.Text == StatusDone.ToString())
+        {
+            lblStatus.Text = "Done";
+            spanStatus.Attributes.Add("class", "label label-success");
+        }
+        // hiển thị background màu trắng với những Order Details là lệnh ...
         if (lblOrderType.Text == "GH")
         {
             lblOrderTitile.Text = "GET HELP";
             orderPanelBody.Attributes.Add("style", "background-color: #E66454; color: white");
         }
+
         if (lblOrderType.Text == "PH")
         {
             lblOrderTitile.Text = "PROVIDE HELP";
@@ -134,7 +145,6 @@ public partial class Member_Default : System.Web.UI.Page
         {
             iconStatus.Attributes.Add("class", "fa fa-check-circle fa-2x");
             iconStatus.Attributes.Add("style", "color:green");
-            fuPhotoConfirmation.Visible = false;
         }
 
         var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(lblOrderDetailCode.Text);
@@ -256,28 +266,38 @@ public partial class Member_Default : System.Web.UI.Page
     // Hiển thị màn hình rút tiền
     protected void lbtnAskBitcoin_Click(object sender, EventArgs e)
     {
-        if (_orderBll.GetLatestUserPH(UserId) != null)
-        {
-            DisplayMessage.ShowAlertModal("ShowAsk()", Page);
-            LoadAllUserBanks();
-        }
-        else
-        {
-            DisplayMessage.ShowAlertModal("ShowAlertError()", Page);
-        }
+        DisplayMessage.ShowAlertModal("ShowAsk()", Page);
+        LoadAllUserBanks();
     }
 
     // Rút tiền lãi và hoa hồng
     protected void btnWithdrawRequest_Click(object sender, EventArgs e)
     {
-        var latestUserPH = _orderBll.GetLatestUserPH(UserId);
-        if (latestUserPH.RemainingAmount == 0 && latestUserPH.Status == 1 /*&& string.IsNullOrEmpty(latestUserPH.LastOrderCode)*/)
+        var latestUserPH = _orderBll.GetLatestUserPh(UserId);
+        if (latestUserPH == null)
+        {
+            DisplayMessage.ShowMessage("ban chua co lenh PH nao het", Page);
+            return;
+        }
+
+        var lastOrderCode = _orderBll.GetByOrderCode(latestUserPH.LastOrderCode);
+ 
+        if (latestUserPH.Status == 0 && lastOrderCode.Status == 2)
+        {
+            DisplayMessage.ShowMessage("lenh ph 20% moi dang cho dc nhan", Page);
+        }
+        else if (latestUserPH.Status == 1 && lastOrderCode.Status == 2)
         {
             AddNewOrder("Ask");
             lblMessageContent.Text = "Your GH request have been sent successfully.";
             DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
             LoadAllUserOrders();
         }
+        else
+        {
+            DisplayMessage.ShowMessage("ban chua the rut vui long doc ky huong dan", Page);
+        }
+        
     }
 
     // Xác nhận đã chuyển tiền chưa
@@ -302,7 +322,15 @@ public partial class Member_Default : System.Web.UI.Page
 
         phOrder.OrderCode = phOrder.OrderCode;
         phOrder.RemainingAmount = phOrder.RemainingAmount - orderDetail.Amount;
-        phOrder.Status = 1;
+
+        if (phOrder.RemainingAmount != 0)
+        {
+            phOrder.Status = 1;
+        }
+        else
+        {
+            phOrder.Status = 2;
+        }
         _orderBll.UpdateOrder(phOrder);
 
         /// tinh commission
@@ -335,7 +363,8 @@ public partial class Member_Default : System.Web.UI.Page
         _order.CreateDate = DateTime.Now;
         if (typeAction == "Bid")
         {
-            var latestUserPH = _orderBll.GetLatestUserPH(UserId);
+            var latestUserPH = _orderBll.GetLatestUserPh(UserId);
+            _order.LastOrderCode = latestUserPH == null ? _order.OrderCode : latestUserPH.OrderCode;
             _order.Amount = AmountBitcoin;
             _order.Type = "PH";
         }
@@ -360,7 +389,7 @@ public partial class Member_Default : System.Web.UI.Page
 
     private bool CheckPhReceived()
     {
-        var ph = _orderBll.GetLatestUserPH(UserId);
+        var ph = _orderBll.GetLatestUserPh(UserId);
         if (ph != null)
         {
             if (ph.Status == StatusPending) return true;
@@ -439,6 +468,7 @@ public partial class Member_Default : System.Web.UI.Page
         ddlBitcoinAddress.DataValueField = "BitcoinAddress";
         ddlBitcoinAddress.DataBind();
     }
+
     private void SetCommission(int LevelID, float AmountReceived, int CTypeIndex)
     {
         UserBLL _userBLL = new UserBLL();

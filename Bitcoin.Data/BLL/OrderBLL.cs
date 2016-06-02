@@ -37,6 +37,22 @@ namespace Bitcoin.Data.BLL
             _orderDal.UpdateOrder(order);
         }
 
+
+
+
+
+        /// <summary>
+        /// Get latest user's provide help
+        /// </summary>
+        /// <param name="userId"> Id </param>
+        /// <returns>Single provide help</returns>
+        public Order GetLatestUserPh(int userId)
+        {
+            var order = GetAllUserOrder(userId)
+                .FirstOrDefault(x => x.Type == "PH");
+            return order;
+        }
+
         /// <summary>
         /// Get a oldest order get help
         /// </summary>
@@ -48,12 +64,6 @@ namespace Bitcoin.Data.BLL
                 .FirstOrDefault(m => m.Type == "GH" && (m.Status == 0 || m.Status == 1));
             return orderGH;
         }
-
-        //public Order Get_Sum_Amount_Order_Bigger_Than_Sum_Amount_Order_Detail(double amountOrderDetail)
-        //{
-        //    return _orderDal.GetAllOrders()
-        //        .FirstOrDefault(m => m.Amount > amountOrderDetail);
-        //}
 
        /// <summary>
        /// Get all order get helps
@@ -82,16 +92,9 @@ namespace Bitcoin.Data.BLL
         public IEnumerable<Order> GetAllUserOrder(int userId)
         {
             var orders = _orderDal.GetAllOrders()
-                .Where(x => x.UserID == userId && (x.Status == 0 || x.Status == 1))
+                .Where(x => x.UserID == userId && (x.Status == 0 || x.Status == 1 || x.Status == 2))
                 .OrderByDescending(x => x.OrderNumber);
             return orders;
-        }
-
-        public Order GetLatestUserPH(int userId)
-        {
-            var order = GetAllUserOrder(userId)
-                .FirstOrDefault(x => x.Type == "PH");
-            return order;
         }
 
         public bool CheckBidCodeIsExists(string orderCode)
@@ -99,13 +102,5 @@ namespace Bitcoin.Data.BLL
             var checkBidCodeExists = _orderDal.GetAllOrders().Any(x => x.OrderCode == orderCode);
             return checkBidCodeExists == true;
         }
-
-        //public Order GetLatestGhOrder()
-        //{
-        //    return _orderDal.GetAllOrders()
-        //        .Where(x => x.Type == "GH" && (x.Status == 0 || x.Status == 1))
-        //        .OrderBy(x => x.OrderNumber)
-        //        .FirstOrDefault();
-        //} 
     }
 }
