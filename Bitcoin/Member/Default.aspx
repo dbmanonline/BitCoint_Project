@@ -36,6 +36,7 @@
 
         <div class="padding-10">
             <div class="row">
+                <!-- list order details -->
                 <div class="col-md-8">
                     <asp:Repeater ID="rptOrderDetail" runat="server" OnItemDataBound="rptOrderDetail_ItemDataBound" OnItemCommand="rptOrderDetail_ItemCommand">
                         <ItemTemplate>
@@ -88,6 +89,7 @@
                         </ItemTemplate>
                     </asp:Repeater>
                 </div>
+                <!-- list orders -->
                 <div class="col-md-4">
                     <asp:Repeater ID="rptOrder" runat="server" OnItemDataBound="rptOrder_ItemDataBound">
                         <ItemTemplate>
@@ -98,7 +100,8 @@
                                     <span class="elipsis">
                                         <!-- panel title -->
                                         <strong>
-                                            <asp:Label ID="lblOrderTitle" runat="server" Text=""></asp:Label> (
+                                            <asp:Label ID="lblOrderTitle" runat="server" Text=""></asp:Label>
+                                            (
                                             <asp:Label ID="lblOrderType" runat="server" Text='<%# Eval("Type") %>'></asp:Label><asp:Label ID="lblOrderCode" runat="server" Text='<%# Eval("OrderCode") %>'></asp:Label>
                                             )</strong>
                                     </span>
@@ -112,7 +115,7 @@
                                 </div>
 
                                 <!-- panel content -->
-                                <div id="orderPanelBody" runat="server"  class="panel-body" style="display: block;">
+                                <div id="orderPanelBody" runat="server" class="panel-body" style="display: block;">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <ul class="list-group">
@@ -161,7 +164,7 @@
                                     <div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-addon"><i class="fa fa-bitcoin"></i></div>
-                                            <asp:TextBox ID="txtBitcoinAmount" runat="server" class="form-control" ReadOnly="True"></asp:TextBox>
+                                            <asp:TextBox ID="txtBitcoinAmount" runat="server" class="form-control" ReadOnly="True" Text="0.5"></asp:TextBox>
                                         </div>
                                     </div>
                                     <asp:Button ID="btnSaveBid" runat="server" Text="Send" class="btn btn-success" OnClick="btnSaveBid_Click" />
@@ -298,7 +301,9 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <a id="aViewPhotoConfirmation" runat="server" target="_blank"><asp:Image ID="imgPhotoConfirmation" runat="server" Height="100" Width="100" /></a>
+                                <a id="aViewPhotoConfirmation" runat="server" target="_blank">
+                                    <asp:Image ID="imgPhotoConfirmation" runat="server" Height="90" Width="130" onError="this.src='/Member/Upload/photo-default-th.png';" />
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -306,8 +311,8 @@
                     <!-- footer modal -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <asp:Button ID="btnCompletePayment" runat="server" Text="I complete this payment" class="btn btn-success" onClientClick=" return confirm('Are you sure want to complete this payment ?')" OnClick="btnCompletePayment_Click" />
-                        <asp:Button ID="btnConfirm" runat="server" Text="Confirm" class="btn btn-success" onClientClick=" return confirm('Are you sure want to confirm this give help ?')" OnClick="btnConfirm_Click"/>
+                        <asp:Button ID="btnCompletePayment" runat="server" Text="I complete this payment" class="btn btn-success" OnClientClick=" return confirm('Are you sure want to complete this payment ?')" OnClick="btnCompletePayment_Click" />
+                        <asp:Button ID="btnConfirm" runat="server" Text="Confirm" class="btn btn-success" OnClientClick=" return confirm('Are you sure want to confirm this give help ?')" OnClick="btnConfirm_Click" />
                     </div>
                 </div>
             </div>
@@ -335,7 +340,8 @@
                             <span aria-hidden="true">×</span>
                             <span class="sr-only">Close</span>
                         </button>
-                        <strong>Success!</strong> <asp:Label ID="lblMessageContent" runat="server" Text=""></asp:Label>
+                        <strong>Success!</strong>
+                        <asp:Label ID="lblMessageContent" runat="server" Text=""></asp:Label>
                     </div>
                 </div>
             </div>
@@ -361,7 +367,6 @@
         function ShowAsk() {
             $('#withdrawModal').modal('show');
         };
-        
     </script>
 </asp:Content>
 

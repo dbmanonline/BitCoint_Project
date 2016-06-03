@@ -19,21 +19,171 @@ public partial class Member_Default : System.Web.UI.Page
     private OrderDetail _orderDetail = new OrderDetail();
     private BankBLL _bankBll = new BankBLL();
 
+    #endregion
+
+    #region Methods
+
+    // List of stauses
+    private enum Status
+    {
+        Pending = 0,
+        Processed = 1,
+        Done = 2
+    };
+
     // Current default of amount bitcoin is 0.5
     private const decimal AmountBitcoin = (decimal)0.5;
+     
+    // Insert a order
+    // with types of order is GH or PH
+    private void AddNewOrder(string typeAction)
+    {
+        _order.OrderCode = RandomValue.RandomNumberToString();
 
-    // UserId is temporary value that will be changed by session of user 
-    private int UserId = -1;
-    private int StatusPending = 0;
-    private int StatusRequestProcessed = 1;
-    private int StatusDone = 2;
-    private decimal GrowthWallet = (decimal)0.2;
-    private decimal CommissionWallet = (decimal)0.1;
+        // check order code if it already exists 
+        while (_orderBll.CheckBidCodeIsExists(_order.OrderCode) == true)
+        {
+            _order.OrderCode = RandomValue.RandomNumberToString();
+        }
+        _order.UserID = UserId;
+        _order.Status = 0;
+        _order.CreateDate = DateTime.Now;
+
+        if (typeAction == "Bid")
+        {
+            var latestUserPH = _orderBll.GetLatestUserPh(UserId);
+            _order.LastOrderCode = latestUserPH == null ? _order.OrderCode : latestUserPH.OrderCode;
+            _order.Amount = AmountBitcoin;
+            _order.Type = "PH";
+        }
+        else if (typeAction == "Ask")
+        {
+            _order.Type = "GH";
+            _order.BitcoinAddress = ddlBitcoinAddress.SelectedValue;
+            _order.Amount = decimal.Parse(lblTotalWithdrawAmount.Text);
+        }
+        _order.RemainingAmount = (decimal)_order.Amount;
+        _orderBll.InsertOrder(_order);
+    }
+
+    // Display all user's orders
+    private void LoadAllUserOrders()
+    {
+        rptOrder.DataSource = _orderBll.GetAllUserOrder(UserId);
+        rptOrder.DataBind();
+    }
+
+    // Get all user's order details
+    private void LoadAllUserOrderDetail()
+    {
+        rptOrderDetail.DataSource = _orderDetailBll.GetAllUserOrderDetails(UserId);
+        rptOrderDetail.DataBind();
+    }
+
+    // This is a temporary datetime for testing purpose
     private DateTime dateTimeNow = Convert.ToDateTime("6/7/2016");
 
+    // Get oldest PH and GH with purpose insert into OrderDetail
+    private void GetGhAndPhInsertToOrderDetail()
+    {
+        // lay danh sach gh
+        var getHelps = _orderBll.GetAllOrderGH();
+
+        // lay ph moi nhat cua user
+        var orderProvideHelp = _orderBll.GetOldestOrderProvideHelp(UserId);
+        if (orderProvideHelp == null) return;
+
+        // lay order detail moi nhat cua user
+        var latestUserOrderDetail = _orderDetailBll.GetOrderDetailByPhOrderCode(orderProvideHelp.OrderCode);
+
+        foreach (var getHelp in getHelps)
+        {
+            var orderDetailByGhCode = _orderDetailBll.GetOrderDetailByGHOrderCode(getHelp.OrderCode);
+            decimal sumAmountOfOrderDetail = _orderDetailBll.SumAmountOrderDetailByGhOrderCode(getHelp.OrderCode);
+            bool checkOrderDetailExists = _orderDetailBll.CheckOrderDetailExists(orderProvideHelp.OrderCode,
+                getHelp.OrderCode, UserId);
+
+            if (
+                orderDetailByGhCode == null ||
+                (orderDetailByGhCode != null
+                && sumAmountOfOrderDetail < getHelp.Amount
+                && !checkOrderDetailExists))
+            {
+                _orderDetail.OrderDetailCode = RandomValue.RandomNumberToString();
+                _orderDetail.PHOrderCode = orderProvideHelp.OrderCode;
+                _orderDetail.GHOrderCode = getHelp.OrderCode;
+                _orderDetail.SenderId = UserId;
+                _orderDetail.ReceiverId = getHelp.UserID;
+                _orderDetail.Status = 0;
+                _orderDetail.CreateDate = Convert.ToDateTime(DateTime.Now.ToLongDateString());
+
+                if (latestUserOrderDetail == null)
+                {
+                    _orderDetail.Amount = Convert.ToDecimal((orderProvideHelp.Amount * 20) / 100);
+                    _orderDetailBll.InsertOrderDetail(_orderDetail);
+                    break;
+                }
+                else if (orderProvideHelp.RemainingAmount <= getHelp.RemainingAmount
+                    && (dateTimeNow - orderProvideHelp.CreateDate).TotalDays >= 7 && latestUserOrderDetail.Status == (int)Status.Done)
+                {
+                    _orderDetail.Amount = Convert.ToDecimal((orderProvideHelp.Amount * 80) / 100);
+                    _orderDetailBll.InsertOrderDetail(_orderDetail);
+                    break;
+                }
+
+            }
+        }
+    }
+
+    // Display list bitcoin addresses of user
+    private void LoadAllUserBanks()
+    {
+        ddlBitcoinAddress.DataSource = _bankBll.GetAllUserBanks(UserId);
+        ddlBitcoinAddress.DataTextField = "BitcoinAddress";
+        ddlBitcoinAddress.DataValueField = "BitcoinAddress";
+        ddlBitcoinAddress.DataBind();
+    }
+
+    // Compute commission after confirmed PH
+    private void SetCommission(int LevelID, float AmountReceived, int CTypeIndex)
+    {
+        UserBLL _userBLL = new UserBLL();
+
+        //Lấy ID người cho
+        int FromUserId = LevelID;//ID người cho
+        var _FromUser = _userBLL.GetByUserID(FromUserId);
+
+        if (_FromUser == null)
+            return;
+
+        //Lấy ID người nhận tiền hoa hồng gioi thieu truc tiep
+        int ToUserId = 0;
+        var _ToUser = _userBLL.GetByEmailID(_FromUser.SponsorID);
+        if (_ToUser == null)
+            return;
+        ToUserId = _ToUser.UserID;
+
+        float CommissionPrice = (AmountReceived * Convert.ToInt32(_ToUser.Level.Rate)) / 100;
+
+        Commission _c = new Commission();
+        _c.FromUserId = FromUserId;
+        _c.ToUserId = ToUserId;
+        _c.CommissionPrice = CommissionPrice;
+        _c.CommissionDate = DateTime.Now;
+        _c.CommissionType = CTypeIndex;//Nhận tiền hoa hồng giới thiệu tu cap duoi
+
+        CommissionBLL _cBLL = new CommissionBLL();
+        _cBLL.Insert(_c);
+
+        SetCommission(_ToUser.UserID, CommissionPrice, CTypeIndex + 1);
+    }
+    
     #endregion
 
     #region Events
+
+    // UserId is temporary value that will be changed by session of user
+    private int UserId = -1; 
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -41,13 +191,12 @@ public partial class Member_Default : System.Web.UI.Page
 
         if (!IsPostBack)
         {
-            txtBitcoinAmount.Text = AmountBitcoin.ToString();
             LoadAllUserOrders();
             GetGhAndPhInsertToOrderDetail();
             LoadAllUserOrderDetail();
         }
     }
-    
+
     protected void btnSaveBid_Click(object sender, EventArgs e)
     {
         var latestUserPH = _orderBll.GetLatestUserPh(UserId);
@@ -55,6 +204,7 @@ public partial class Member_Default : System.Web.UI.Page
         if (latestUserPH == null || latestUserPH.RemainingAmount == 0)
         {
             AddNewOrder("Bid");
+            lblMessageContent.Text = "You have been sent a Provide Help (PH) request successfully !";
             DisplayMessage.ShowAlertModal("ShowAlertSuccess()", Page);
             LoadAllUserOrders();
             LoadAllUserOrderDetail();
@@ -75,20 +225,22 @@ public partial class Member_Default : System.Web.UI.Page
         var lblOrderTitile = e.Item.FindControl("lblOrderTitle") as Label;
         var lblRemainingAmount = e.Item.FindControl("lblRemainingAmount") as Label;
 
+        int valueOfStatus = Convert.ToInt16(lblStatus.Text);
+
         // hiển thị span background màu đỏ với những Order nào đang Pending
-        if (lblStatus.Text == StatusPending.ToString())
+        if ((int)Status.Pending == valueOfStatus)
         {
             lblStatus.Text = "PENDING";
             spanStatus.Attributes.Add("class", "label label-danger");
         }
         // hiển thị span background màu xanh lá cây với những Order nào đã Process
-        if (lblStatus.Text == StatusRequestProcessed.ToString())
+        if ((int)Status.Processed == valueOfStatus)
         {
             lblStatus.Text = "Request Processed";
             spanStatus.Attributes.Add("class", "label label-success");
         }
         // hiển thị span background màu xanh lá cây với những Order nào đã Done
-        if (lblStatus.Text == StatusDone.ToString())
+        if (valueOfStatus == (int)Status.Done)
         {
             lblStatus.Text = "Done";
             spanStatus.Attributes.Add("class", "label label-success");
@@ -185,6 +337,10 @@ public partial class Member_Default : System.Web.UI.Page
             imgPhotoConfirmation.ImageUrl = "/Member/Upload/PhConfirm/" + orderDetail.Confirmation;
             aViewPhotoConfirmation.HRef = "/Member/Upload/PhConfirm/" + orderDetail.Confirmation;
 
+            // fuPhotoConfirmation will invisible if order's status equal 2
+            if (orderDetail.Status == 2)
+                fuPhotoConfirmation.Visible = false;
+
             //Get info user
             //Nguoi nhan
             string htmlUserReceiver = @"<tr>
@@ -229,14 +385,13 @@ public partial class Member_Default : System.Web.UI.Page
             ltrUserSenderInfo.Text = htmlUserSender;
 
             // hide button confirm if OrderDetail's status equal 2 (StatusDone)
-            if (orderDetail.Status == StatusDone)
+            if (orderDetail.Status == (int)Status.Done)
             {
                 btnConfirm.Visible = false;
             }
         }
     }
 
-    // upload hình đính kèm với thông tin chuyển tiền
     protected void btnCompletePayment_Click(object sender, EventArgs e)
     {
         var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(hfOrderDetailCode.Value);
@@ -263,14 +418,12 @@ public partial class Member_Default : System.Web.UI.Page
         LoadAllUserOrderDetail();
     }
 
-    // Hiển thị màn hình rút tiền
     protected void lbtnAskBitcoin_Click(object sender, EventArgs e)
     {
         DisplayMessage.ShowAlertModal("ShowAsk()", Page);
         LoadAllUserBanks();
     }
 
-    // Rút tiền lãi và hoa hồng
     protected void btnWithdrawRequest_Click(object sender, EventArgs e)
     {
         var latestUserPH = _orderBll.GetLatestUserPh(UserId);
@@ -300,7 +453,6 @@ public partial class Member_Default : System.Web.UI.Page
         
     }
 
-    // Xác nhận đã chuyển tiền chưa
     protected void btnConfirm_Click(object sender, EventArgs e)
     {
         var orderDetail = _orderDetailBll.GetOrderDetailByOrderDetailCode(hfOrderDetailCode.Value);
@@ -345,161 +497,4 @@ public partial class Member_Default : System.Web.UI.Page
 
     #endregion
 
-    #region Methods
-
-    /// <summary>
-    /// Insert a order
-    /// </summary>
-    /// <param name="typeAction">Type of order is GH or PH</param>
-    private void AddNewOrder(string typeAction)
-    {
-        _order.OrderCode = RandomValue.RandomNumberToString();
-        while (_orderBll.CheckBidCodeIsExists(_order.OrderCode) == true)
-        {
-            _order.OrderCode = RandomValue.RandomNumberToString();
-        }
-        _order.UserID = UserId;
-        _order.Status = 0;
-        _order.CreateDate = DateTime.Now;
-        if (typeAction == "Bid")
-        {
-            var latestUserPH = _orderBll.GetLatestUserPh(UserId);
-            _order.LastOrderCode = latestUserPH == null ? _order.OrderCode : latestUserPH.OrderCode;
-            _order.Amount = AmountBitcoin;
-            _order.Type = "PH";
-        }
-        else if (typeAction == "Ask")
-        {
-            _order.Type = "GH";
-            _order.BitcoinAddress = ddlBitcoinAddress.SelectedValue;
-            _order.Amount = decimal.Parse(lblTotalWithdrawAmount.Text);
-        }
-        _order.RemainingAmount = (decimal)_order.Amount;
-        _orderBll.InsertOrder(_order);
-    }
-
-    /// <summary>
-    /// Display all user orders
-    /// </summary>
-    private void LoadAllUserOrders()
-    {
-        rptOrder.DataSource = _orderBll.GetAllUserOrder(UserId);
-        rptOrder.DataBind();
-    }
-
-    private bool CheckPhReceived()
-    {
-        var ph = _orderBll.GetLatestUserPh(UserId);
-        if (ph != null)
-        {
-            if (ph.Status == StatusPending) return true;
-            return false;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    private void LoadAllUserOrderDetail()
-    {
-        rptOrderDetail.DataSource = _orderDetailBll.GetAllUserOrderDetails(UserId);
-        rptOrderDetail.DataBind();
-    }
-
-    /// <summary>
-    /// Get oldest PH and GH with purpose insert into OrderDetail
-    /// </summary>
-    private void GetGhAndPhInsertToOrderDetail()
-    {
-        // lay danh sach gh
-        var getHelps = _orderBll.GetAllOrderGH();
-
-        // lay ph moi nhat cua user
-        var orderProvideHelp = _orderBll.GetOldestOrderProvideHelp(UserId);
-        if (orderProvideHelp == null) return;
-
-        // lay order detail moi nhat cua user
-        var latestUserOrderDetail = _orderDetailBll.GetOrderDetailByPhOrderCode(orderProvideHelp.OrderCode);
-
-        foreach (var getHelp in getHelps)
-        {
-            var orderDetailByGhCode = _orderDetailBll.GetOrderDetailByGHOrderCode(getHelp.OrderCode);
-
-            if (
-                orderDetailByGhCode == null ||
-                (orderDetailByGhCode != null
-                && Convert.ToDecimal(_orderDetailBll.SumAmountOrderDetailByGhOrderCode(getHelp.OrderCode)) < Convert.ToDecimal(getHelp.Amount)
-                && !_orderDetailBll.CheckOrderDetailExists(orderProvideHelp.OrderCode, getHelp.OrderCode, UserId)))
-            {
-                _orderDetail.OrderDetailCode = RandomValue.RandomNumberToString();
-                _orderDetail.PHOrderCode = orderProvideHelp.OrderCode;
-                _orderDetail.GHOrderCode = getHelp.OrderCode;
-                _orderDetail.SenderId = UserId;
-                _orderDetail.ReceiverId = getHelp.UserID;
-                _orderDetail.Status = 0;
-                _orderDetail.CreateDate = Convert.ToDateTime(DateTime.Now.ToLongDateString());
-
-                if (latestUserOrderDetail == null)
-                {
-                    _orderDetail.Amount = Convert.ToDecimal((orderProvideHelp.Amount * 20) / 100);
-                    _orderDetailBll.InsertOrderDetail(_orderDetail);
-                    break;
-                }
-                else if (orderProvideHelp.RemainingAmount <= getHelp.RemainingAmount
-                    && (dateTimeNow - orderProvideHelp.CreateDate).TotalDays >= 7 && latestUserOrderDetail.Status == StatusDone)
-                {
-                    _orderDetail.Amount = Convert.ToDecimal((orderProvideHelp.Amount * 80) / 100);
-                    _orderDetailBll.InsertOrderDetail(_orderDetail);
-                    break;
-                }
-
-            }
-        }
-    }
-
-    /// <summary>
-    /// Display list bitcoin addresses of user
-    /// </summary>
-    private void LoadAllUserBanks()
-    {
-        ddlBitcoinAddress.DataSource = _bankBll.GetAllUserBanks(UserId);
-        ddlBitcoinAddress.DataTextField = "BitcoinAddress";
-        ddlBitcoinAddress.DataValueField = "BitcoinAddress";
-        ddlBitcoinAddress.DataBind();
-    }
-
-    private void SetCommission(int LevelID, float AmountReceived, int CTypeIndex)
-    {
-        UserBLL _userBLL = new UserBLL();
-
-        //Lấy ID người cho
-        int FromUserId = LevelID;//ID người cho
-        var _FromUser = _userBLL.GetByUserID(FromUserId);
-
-        if (_FromUser == null)
-            return;
-
-        //Lấy ID người nhận tiền hoa hồng gioi thieu truc tiep
-        int ToUserId = 0;
-        var _ToUser = _userBLL.GetByEmailID(_FromUser.SponsorID);
-        if (_ToUser == null)
-            return;
-        ToUserId = _ToUser.UserID;
-
-        float CommissionPrice = (AmountReceived * Convert.ToInt32(_ToUser.Level.Rate)) / 100;
-
-        Commission _c = new Commission();
-        _c.FromUserId = FromUserId;
-        _c.ToUserId = ToUserId;
-        _c.CommissionPrice = CommissionPrice;
-        _c.CommissionDate = DateTime.Now;
-        _c.CommissionType = CTypeIndex;//Nhận tiền hoa hồng giới thiệu tu cap duoi
-
-        CommissionBLL _cBLL = new CommissionBLL();
-        _cBLL.Insert(_c);
-
-        SetCommission(_ToUser.UserID, CommissionPrice, CTypeIndex + 1);
-    }
-    #endregion
 }
